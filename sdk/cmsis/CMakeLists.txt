@@ -14,6 +14,7 @@ set(TARGET_C_SOURCES
 
 set(TARGET_C_INCLUDES
         ${N32G031_CMSIS_PATH}/core
+        ${N32G031_CMSIS_PATH}/core/m-profile
         ${N32G031_CMSIS_PATH}/device
         ${N32G031_PERIPHERAL_PATH}/inc
         )
@@ -45,7 +46,6 @@ target_include_directories(N32G031_SDK
 target_link_directories(N32G031_SDK PUBLIC ${TARGET_LIB_DIRECTORIES})
 target_link_libraries(N32G031_SDK PUBLIC "c" "m" "nosys")
 target_link_options(N32G031_SDK
-        PUBLIC "-T${TARGET_LD_SCRIPT}"
         PUBLIC "-Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.map,--cref"
         )
 target_compile_options(N32G031_SDK PRIVATE -w)
