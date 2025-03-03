@@ -7,20 +7,26 @@ enable_language(C)
 enable_language(CXX)
 enable_language(ASM)
 
-# Custom linker script
-set(TARGET_LD_SCRIPT ${CMAKE_SOURCE_DIR}/cmake/n32g031_flash.ld)
-# Custom startup
-set(TARGET_STARTUP_ASM ${CMAKE_SOURCE_DIR}/cmake/startup_n32g031_gcc.s)
-
 # Add N32G031 SDK
 add_subdirectory(sdk)
 
 # Add project sources
-add_executable(n32g031_template cmake/syscall.c Core/src/main.c Core/src/n32g031_it.c)
-target_include_directories(n32g031_template PUBLIC Core/inc)
+add_executable(${PROJECT_NAME}
+        cmake/syscall.c
+        Core/src/main.c
+        Core/src/n32g031_it.c
+)
+target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
 
-target_link_libraries(n32g031_template N32G031_SDK)
+target_link_sdk_libraries(${PROJECT_NAME})
 
-# Generate .bin and .hex
-generate_binary_file(n32g031_template)
-generate_hex_file(n32g031_template)
+target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
+
+set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
+set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}> ${HEX_FILE}
+        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}> ${BIN_FILE}
+        COMMENT "Building ${HEX_FILE}
+Building ${BIN_FILE}"
+)

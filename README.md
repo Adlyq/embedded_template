@@ -13,6 +13,7 @@ There are several ways to configure the toolchain:
 2. Add a new toolchain. Set up `C Compiler` and `C++ Compiler`.
 3. Open [Settings - Build, Execution, Deployment - CMake](jetbrains://CLion/settings?name=Build%2C+Execution%2C+Deployment--CMake).
 4. Add a new profile. Choose the correct toolchain.
+5. `pyocd gdbserver -t N32G031K8 --step-into-interrupts -f 10MHz`
 
 ## Custom ld or startup.s
 Set `TARGET_LD_SCRIPT` and `TARGET_STARTUP_ASM` as your own before `add_subdirectory(sdk)`  
