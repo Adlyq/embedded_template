@@ -13,3 +13,8 @@ _deps
 cmake-build-debug
 cmake-build-release
 cmake-build-debug-stm32
+/keil/keil.uvoptx
+/keil/keil.uvguix.adlyq
+/keil/RTE/
+/keil/Objects/
+/keil/Listings/
