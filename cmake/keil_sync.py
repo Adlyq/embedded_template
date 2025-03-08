@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import xml.etree.ElementTree as et
@@ -31,10 +32,10 @@ target = root.find(f'.//Targets/Target[TargetName="{TARGET_NAME}"]')
 incdir = target.find('.//VariousControls/IncludePath')
 
 # find the groupFiles
+group = target.find(f'.//Groups/Group[GroupName="{GROUP_NAME}"]')
 groupFiles = target.find(f'.//Groups/Group[GroupName="{GROUP_NAME}"]/Files')
 if groupFiles is None:
     groupFiles = et.Element('Files')
-    group = target.find(f'.//Groups/Group[GroupName="{GROUP_NAME}"]')
     if group is None:
         group = et.Element('Group')
         group.append(et.Element('GroupName', text=GROUP_NAME))
@@ -79,5 +80,25 @@ for file in newFiles:
         child = et.SubElement(fileElem, key)
         child.text = str(value)
     groupFiles.append(fileElem)
+et.indent(group, space='  ', level=4)
 
-tree.write('keil/keil.uvprojx', xml_declaration=True, short_empty_elements=False)
+with open('keil/keil.uvprojx', 'rb') as f:
+    backup = f.readlines()
+
+with open('keil/keil.uvprojx', 'wb') as f:
+    try:
+        f.write(b'<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n')
+        f.write(b'<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">\n\n  ')
+
+        for ele in root.findall('*'):
+            if ele.tag == 'LayerInfo' or ele.tag == 'RTE':
+                f.write(et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=True)
+                        .replace(b' />', b'/>'))
+            else:
+                f.write(et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=False))
+
+        f.write(b'</Project>\n')
+    except:
+        f.seek(0)
+        f.writelines(backup)
+        raise
