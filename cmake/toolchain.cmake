@@ -10,8 +10,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS} -O3 -Wall")
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -O3 -Wall")
 else ()
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS} -Og -g -Wall")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -Og -g -Wall")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS} -O0 -g -Wall")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -O0 -g -Wall")
 endif ()
 
 add_compile_options(-mcpu=cortex-m0 -mthumb -mthumb-interwork)
@@ -30,15 +30,6 @@ add_link_options(-T ${TARGET_LD_SCRIPT})
 if (NOT Python_EXECUTABLE)
     message(FATAL_ERROR "Python executable not found")
 endif ()
-execute_process(
-        COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/isr_gen.py
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-)
-
-add_custom_target(generate_isr ALL
-        COMMAND  ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/isr_gen.py
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-)
 
 function(gen_keil_proj)
     execute_process(
