@@ -90,20 +90,17 @@ with open('keil/keil.uvprojx', 'rb') as f:
 output = f'''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
 
-  '''
-for ele in root.findall('*'):
-    if ele.tag == 'LayerInfo' or ele.tag == 'RTE':
-        output += (et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=True)
-                   .decode('utf-8')
-                   .replace(' />', '/>')
-                   )
-    else:
-        output += (et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=False)
-                   .decode('utf-8'))
+  {''.join([
+    et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=(ele.tag in ['LayerInfo', 'RTE']))
+    .decode('utf-8')
+    .replace(' />', '/>')
+    if ele.tag in ['LayerInfo', 'RTE'] else
+    et.tostring(ele, encoding='utf-8', xml_declaration=False).decode('utf-8')
+    for ele in root.findall('*')
+])}</Project>
+'''
 
-output += '</Project>\n'
-
-if  output == backup:
+if output == backup:
     print('No changes detected.')
     sys.exit(0)
 
