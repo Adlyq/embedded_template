@@ -11,30 +11,24 @@ KEIL_DIR = f'{os.getcwd()}/keil'
 DEFAULT_FILE_TYPE = 9
 FILE_TYPE = {'c': 1, 'cpp': 8, 's': 2, 'h': 5, 'txt': 5}
 
+argInc, argSrc = [], []
 flag = True
-argInc = []
-argSrc = []
 for arg in sys.argv[1:]:
     if arg == '-i':
         flag = True
     elif arg == '-s':
         flag = False
     else:
-        if flag:
-            argInc.append(arg)
-        else:
-            argSrc.append(arg)
+        (argInc if flag else argSrc).append(arg)
 
 tree = et.parse('keil/keil.uvprojx')
 root = tree.getroot()
 
-# find the incdir
 target = root.find(f'.//Targets/Target[TargetName="{TARGET_NAME}"]')
 incdir = target.find('.//VariousControls/IncludePath')
 
-# find the groupFiles
 group = target.find(f'.//Groups/Group[GroupName="{GROUP_NAME}"]')
-groupFiles = target.find(f'.//Groups/Group[GroupName="{GROUP_NAME}"]/Files')
+groupFiles = group.find('Files') if group else None
 if groupFiles is None:
     groupFiles = et.Element('Files')
     if group is None:
@@ -43,18 +37,15 @@ if groupFiles is None:
         target.find('.//Groups').append(group)
     group.append(groupFiles)
 
-# generate the new xml
 incDirs = set(incdir.text.split(';') if incdir.text else [])
-newIncDirs = set(os.path.relpath(ai, 'keil') for ai in argInc)
+newIncDirs = {os.path.relpath(ai, 'keil') for ai in argInc}
 for d in incDirs:
     absD = os.path.abspath(os.path.join('keil', d.replace('\\', '/')))
-    if (os.path.isabs(d)) or (
-            os.path.commonpath([absD, PROJECT_DIR]) != PROJECT_DIR) or (
+    if (os.path.isabs(d) or
+            os.path.commonpath([absD, PROJECT_DIR]) != PROJECT_DIR or
             os.path.commonpath([absD, KEIL_DIR]) == KEIL_DIR):
         newIncDirs.add(d)
-newIncDirs = list(newIncDirs)
-newIncDirs.sort()
-incdir.text = ';'.join(newIncDirs)
+incdir.text = ';'.join(sorted(newIncDirs))
 
 newFiles = [
     {
@@ -64,10 +55,10 @@ newFiles = [
     } for asc in argSrc
 ]
 for file in groupFiles:
-    path = file.find('./FilePath').text
+    path = file.find('FilePath').text
     absPath = os.path.abspath(os.path.join('keil', path.replace('\\', '/')))
-    if (os.path.isabs(path)) or (
-            os.path.commonpath([absPath, PROJECT_DIR]) != PROJECT_DIR) or (
+    if (os.path.isabs(path) or
+            os.path.commonpath([absPath, PROJECT_DIR]) != PROJECT_DIR or
             os.path.commonpath([absPath, KEIL_DIR]) == KEIL_DIR):
         newFiles.append({
             'FileName': file.find('./FileName').text,
@@ -79,8 +70,7 @@ groupFiles.clear()
 for file in newFiles:
     fileElem = et.Element('File')
     for key, value in file.items():
-        child = et.SubElement(fileElem, key)
-        child.text = str(value)
+        et.SubElement(fileElem, key).text = str(value)
     groupFiles.append(fileElem)
 et.indent(group, space='  ', level=4)
 
