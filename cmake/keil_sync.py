@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import os
 import sys
 import xml.etree.ElementTree as et
@@ -23,6 +24,8 @@ for arg in sys.argv[1:]:
             argInc.append(arg)
         else:
             argSrc.append(arg)
+argInc.sort()
+argSrc.sort()
 
 tree = et.parse('keil/keil.uvprojx')
 root = tree.getroot()
@@ -85,20 +88,25 @@ et.indent(group, space='  ', level=4)
 with open('keil/keil.uvprojx', 'rb') as f:
     backup = f.readlines()
 
-with open('keil/keil.uvprojx', 'wb') as f:
-    try:
-        f.write(b'<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n')
-        f.write(b'<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">\n\n  ')
+output = f'''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
 
-        for ele in root.findall('*'):
-            if ele.tag == 'LayerInfo' or ele.tag == 'RTE':
-                f.write(et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=True)
-                        .replace(b' />', b'/>'))
-            else:
-                f.write(et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=False))
+  '''
+for ele in root.findall('*'):
+    if ele.tag == 'LayerInfo' or ele.tag == 'RTE':
+        output += (et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=True)
+                   .decode('utf-8')
+                   .replace(' />', '/>')
+                   )
+    else:
+        output += (et.tostring(ele, encoding='utf-8', xml_declaration=False, short_empty_elements=False)
+                   .decode('utf-8'))
 
-        f.write(b'</Project>\n')
-    except:
-        f.seek(0)
-        f.writelines(backup)
-        raise
+output += '</Project>\n'
+
+if  output == backup:
+    print('No changes detected.')
+    sys.exit(0)
+
+with open('keil/keil.uvprojx', 'w') as f:
+    f.write(output)
