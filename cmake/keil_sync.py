@@ -24,8 +24,6 @@ for arg in sys.argv[1:]:
             argInc.append(arg)
         else:
             argSrc.append(arg)
-argInc.sort()
-argSrc.sort()
 
 tree = et.parse('keil/keil.uvprojx')
 root = tree.getroot()
@@ -54,7 +52,8 @@ for d in incDirs:
             os.path.commonpath([absD, PROJECT_DIR]) != PROJECT_DIR) or (
             os.path.commonpath([absD, KEIL_DIR]) == KEIL_DIR):
         newIncDirs.add(d)
-
+newIncDirs = list(newIncDirs)
+newIncDirs.sort()
 incdir.text = ';'.join(newIncDirs)
 
 newFiles = [
