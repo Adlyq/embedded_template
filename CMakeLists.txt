@@ -23,8 +23,6 @@ target_link_sdk_libraries(${PROJECT_NAME})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
 
-add_dependencies(${PROJECT_NAME} generate_isr)
-
 get_target_property(INC_DIRS ${PROJECT_NAME} INCLUDE_DIRECTORIES)
 gen_keil_proj(-i ${INC_DIRS} -s ${SRC_LIST})
 

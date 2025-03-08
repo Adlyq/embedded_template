@@ -80,4 +80,4 @@ for file in newFiles:
         child.text = str(value)
     groupFiles.append(fileElem)
 
-tree.write('keil/keil.uvprojx', xml_declaration=True)
+tree.write('keil/keil.uvprojx', xml_declaration=True, short_empty_elements=False)
