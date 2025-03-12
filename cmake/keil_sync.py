@@ -86,8 +86,8 @@ for file in newFiles:
     groupFiles.append(fileElem)
 et.indent(group, space='  ', level=4)
 
-with open('keil/keil.uvprojx', 'rb') as f:
-    backup = f.readlines()
+with open('keil/keil.uvprojx', 'r') as f:
+    backup = f.read()
 
 output = f'''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
