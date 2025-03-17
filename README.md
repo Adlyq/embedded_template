@@ -1,23 +1,11 @@
 # n32g031-cmake-template
-A simple n32g031 cmake project template.
+n32g031的cmake模板，包含了keil工程文件，cmake文件，和一些常用的库
 
-## Setup project
-There are several ways to configure the toolchain:
-- Install `arm-none-eabi-gcc` to `/usr/arm-none-eabi-gcc`. Project can automatically find toolchain.
-- Pass in parameter `-DCMAKE_C_COMPILER=/path/to/bin/arm-none-eabi-gcc` to cmake.
-- Pass in parameter `-DTOOLCHAIN_PATH="/path/to/GNU Arm Embedded Toolchain"` to cmake.
-- Set toolchain directory to `TOOLCHAIN_PATH` environment variable.
+可以做到与keil工程文件同步，方便使用cmake编译和调试
 
-### For CLion
-1. Open [Settings - Build, Execution, Deployment - Toolchains](jetbrains://CLion/settings?name=Build%2C+Execution%2C+Deployment--Toolchains).
-2. Add a new toolchain. Set up `C Compiler` and `C++ Compiler`.
-3. Open [Settings - Build, Execution, Deployment - CMake](jetbrains://CLion/settings?name=Build%2C+Execution%2C+Deployment--CMake).
-4. Add a new profile. Choose the correct toolchain.
-5. `pyocd gdbserver -t N32G031K8 --step-into-interrupts -f 10MHz`
-
-## Custom ld or startup.s
-Set `TARGET_LD_SCRIPT` and `TARGET_STARTUP_ASM` as your own before `add_subdirectory(sdk)`  
-See: [CMakeLists.txt](CMakeLists.txt)
-
-## License
-See [LICENSE](LICENSE)
+## 约定
+> 1. keil工程文件在./keil/keil.uvprojx
+> 2. 格式化代码使用clang-format， 格式使用.clang-format文件中的配置
+> 3. **头文件放在./Core/inc中, 源文件放在./Core/src中**
+> 4. **cmake中，除syscall.c的源文件都需要放在`SRC_LIST`变量中统一add_executable，以保证与keil同步**
+> 5. 若完全遵循第三条则可忽略第四条，无需改动CMakeLists.txt
