@@ -22,7 +22,7 @@ struct RingBuffer {
 /**
  * @brief get data from ring buffer
  * @param rb RingBuffer
- * @return pointer to data
+ * @return pointer to data, NULL if empty
  */
 bufferType* RingBuffer_get(struct RingBuffer* rb);
 
