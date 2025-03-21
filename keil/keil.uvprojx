@@ -395,6 +395,11 @@
               <FilePath>../Core/src/n32g031_it.c</FilePath>
             </File>
             <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/ring_buffer.c</FilePath>
+            </File>
+            <File>
               <FileName>util.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>../Core/src/util.cpp</FilePath>
