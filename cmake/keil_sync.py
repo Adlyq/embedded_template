@@ -18,6 +18,7 @@ TARGET_NAME = 'Target_1'
 GROUP_NAME = 'Source Group 1'
 PROJECT_DIR = normalize_path(os.getcwd())
 KEIL_DIR = normalize_path(f'{os.getcwd()}/keil')
+KEIL_PROJECT_NAME = 'keil'
 DEFAULT_FILE_TYPE = 9
 FILE_TYPE = {'c': 1, 'cpp': 8, 's': 2, 'h': 5, 'txt': 5}
 
@@ -28,10 +29,19 @@ for arg in sys.argv[1:]:
         flag = True
     elif arg == '-s':
         flag = False
+    elif arg.startswith('TARGET='):
+        TARGET_NAME = arg.split('=')[1]
+    elif arg.startswith('GROUP='):
+        GROUP_NAME = arg.split('=')[1]
+    elif arg.startswith('KEIL='):
+        KEIL_PROJECT_NAME = arg.split('=')[1]
     else:
         (argInc if flag else argSrc).append(normalize_path(arg))
 
-tree = et.parse('keil/keil.uvprojx')
+try:
+    tree = et.parse(f'{KEIL_DIR}/{KEIL_PROJECT_NAME}.uvprojx')
+except FileNotFoundError:
+    tree = et.parse('cmake/keil_def.uvprojx')
 root = tree.getroot()
 
 target = root.find(f'.//Targets/Target[TargetName="{TARGET_NAME}"]')
@@ -86,8 +96,10 @@ for file in newFiles:
     groupFiles.append(fileElem)
 et.indent(group, space='  ', level=4)
 
-with open('keil/keil.uvprojx', 'r') as f:
-    backup = f.read()
+backup = None
+if os.path.exists(f'{KEIL_DIR}/{KEIL_PROJECT_NAME}.uvprojx'):
+    with open(f'{KEIL_DIR}/{KEIL_PROJECT_NAME}.uvprojx', 'r') as f:
+        backup = f.read()
 
 output = f'''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
@@ -104,5 +116,5 @@ if output == backup:
     print('No changes detected.')
     sys.exit(0)
 
-with open('keil/keil.uvprojx', 'w') as f:
+with open(f'{KEIL_DIR}/{KEIL_PROJECT_NAME}.uvprojx', 'w') as f:
     f.write(output)

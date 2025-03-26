@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef __uint16_t u16;
+typedef uint16_t u16;
 
 #define BUFFER_SIZE 10
 typedef int bufferType;
