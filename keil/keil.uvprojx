@@ -400,9 +400,9 @@
               <FilePath>../Core/src/ring_buffer.c</FilePath>
             </File>
             <File>
-              <FileName>util.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>../Core/src/util.cpp</FilePath>
+              <FileName>util.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/util.c</FilePath>
             </File>
           </Files>
         </Group>

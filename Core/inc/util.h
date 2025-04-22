@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <n32g031_tim.h>
 
+#define __NORETURN __attribute__((noreturn))
+
 #define LOOP_UNTIL(condition) while (!(condition)) { }
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
