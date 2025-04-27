@@ -33,6 +33,8 @@
  * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
  */
 #include "n32g031_it.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 /** @addtogroup N32G031_StdPeriph_Template
  * @{
@@ -45,47 +47,51 @@
 /**
  * @brief  This function handles NMI exception.
  */
-void NMI_Handler(void)
-{
+void NMI_Handler(void) {
 }
 
 /**
  * @brief  This function handles Hard Fault exception.
  */
-void HardFault_Handler(void)
-{
+void HardFault_Handler(void) {
     /* Go to infinite loop when Hard Fault exception occurs */
-    while (1)
-    {
+    while (1) {
     }
 }
 
-/**
- * @brief  This function handles SVCall exception.
- */
-void SVC_Handler(void)
-{
-}
+// /**
+//  * @brief  This function handles SVCall exception.
+//  */
+// void SVC_Handler(void)
+// {
+// }
+//
+// /**
+//  * @brief  This function handles PendSV_Handler exception.
+//  */
+// void PendSV_Handler(void)
+// {
+// }
 
-/**
- * @brief  This function handles PendSV_Handler exception.
- */
-void PendSV_Handler(void)
-{
-}
-
+extern void xPortSysTickHandler(void);
 /**
  * @brief  This function handles SysTick Handler.
  */
-void SysTick_Handler(void)
-{
+void SysTick_Handler(void) {
+#if (INCLUDE_xTaskGetSchedulerState == 1)
+    if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+    {
+#endif  /* INCLUDE_xTaskGetSchedulerState */
+    xPortSysTickHandler();
+#if (INCLUDE_xTaskGetSchedulerState == 1)
+    }
+#endif  /* INCLUDE_xTaskGetSchedulerState */
 }
 
 /**
  * @brief  This function handles DMA interrupt request defined in main.h .
  */
-void DMA_IRQ_HANDLER(void)
-{
+void DMA_IRQ_HANDLER(void) {
 }
 
 /******************************************************************************/

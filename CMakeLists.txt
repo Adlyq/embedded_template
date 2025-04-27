@@ -10,6 +10,10 @@ enable_language(ASM)
 # Add N32G031 SDK
 add_subdirectory(sdk)
 
+set(FREERTOS_CONFIG_FILE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Core/inc)
+set(FREERTOS_PORT GCC_ARM_CM0)
+add_subdirectory(rtos)
+
 # Add project sources
 aux_source_directory(Core/src SRC_LIST)
 add_executable(${PROJECT_NAME}
@@ -20,6 +24,7 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
 
 target_link_sdk_libraries(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} freertos_kernel)
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
 

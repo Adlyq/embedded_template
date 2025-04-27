@@ -6,8 +6,7 @@
 #define RING_BUFFER_H
 #include <stdbool.h>
 #include <stdint.h>
-
-typedef __uint16_t u16;
+#include "util.h"
 
 #define BUFFER_SIZE 10
 typedef int bufferType;
