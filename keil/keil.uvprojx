@@ -395,9 +395,19 @@
               <FilePath>../Core/src/n32g031_it.c</FilePath>
             </File>
             <File>
+              <FileName>output.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/output.c</FilePath>
+            </File>
+            <File>
               <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/ring_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>short_circuit_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/short_circuit_protection.c</FilePath>
             </File>
             <File>
               <FileName>util.c</FileName>
