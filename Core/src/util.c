@@ -3,6 +3,11 @@
 //
 #include "util.h"
 
+/**
+ * @brief 产生延时
+ * @param  nCount: time = nCount * 4 / SystemCoreClock;
+ * @retval None
+ */
 void SoftDelay(volatile uint32_t nCount) {
     while (nCount--) {
     }
