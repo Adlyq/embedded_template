@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 include(cmake/toolchain.cmake)
 
 project(n32g031_template)
+set(VERSION 1.0)
 
 enable_language(C)
 enable_language(CXX)
@@ -26,8 +27,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
 get_target_property(INC_DIRS ${PROJECT_NAME} INCLUDE_DIRECTORIES)
 gen_keil_proj(-i ${INC_DIRS} -s ${SRC_LIST})
 
-set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
-set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
+set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}_V${VERSION}.hex)
+set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}_V${VERSION}.bin)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}> ${HEX_FILE}
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}> ${BIN_FILE}
