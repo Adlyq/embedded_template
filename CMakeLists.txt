@@ -23,6 +23,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
 target_link_sdk_libraries(${PROJECT_NAME})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-unused-variable)
+endif ()
 
 get_target_property(INC_DIRS ${PROJECT_NAME} INCLUDE_DIRECTORIES)
 gen_keil_proj(-i ${INC_DIRS} -s ${SRC_LIST})
