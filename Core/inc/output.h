@@ -10,11 +10,11 @@
 
 void outputInit(void);
 
-void outputStart(void);
+void outputLDSet(bool);
 
-void outputStop(void);
+void outputSet(bool);
 
-bool  outputGet(void);
+bool outputGet(void);
 
 void onShortCircuit();
 
