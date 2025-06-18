@@ -12,8 +12,10 @@
 
 #define OUTPUT_LED_PORT      GPIOA
 #define OUTPUT_LED_PIN       GPIO_PIN_4
-#define OUTPUT_LO_PORT       GPIOB
+#define OUTPUT_LO_PORT       GPIOB // 黑
 #define OUTPUT_LO_PIN        GPIO_PIN_1
+#define OUTPUT_DO_PORT       GPIOB // 白
+#define OUTPUT_DO_PIN        GPIO_PIN_6
 
 #ifdef OUTPUT_DEST_L
 #defind LED_OUTPUT() GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN)
@@ -43,6 +45,14 @@ void outputInit(void) {
     gpioInit.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
     gpioInit.GPIO_Pull = GPIO_PULL_DOWN;
     GPIO_InitPeripheral(OUTPUT_LO_PORT, &gpioInit);
+
+#ifdef OUTPUT_DO_PORT
+    GPIO_InitStruct(&gpioInit);
+    gpioInit.Pin       = OUTPUT_DO_PIN;
+    gpioInit.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
+    gpioInit.GPIO_Pull = GPIO_PULL_DOWN;
+    GPIO_InitPeripheral(OUTPUT_DO_PORT, &gpioInit);
+#endif
 }
 
 void outputLDSet(const bool state) {
@@ -54,10 +64,16 @@ void outputSet(const bool state) {
     outputting = state;
     if (state ^ ld) {
         LED_OUTPUT();
-        GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN); // LED
+        GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
+#ifdef OUTPUT_DO_PORT
+        GPIO_SetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+#endif
     } else {
         LED_NO_OUTPUT();
-        GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN); // LED
+        GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
+#ifdef OUTPUT_DO_PORT
+        GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+#endif
     }
 }
 
@@ -70,6 +86,9 @@ void onShortCircuit() {
     flag         = true;
     GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN); // LED
     GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);   // LO
+#ifdef OUTPUT_DO_PORT
+    GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+#endif
 }
 
 void onNotShortCircuit() {
