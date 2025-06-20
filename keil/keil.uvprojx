@@ -385,6 +385,11 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
+              <FileName>iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/iwdg.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/main.c</FilePath>
