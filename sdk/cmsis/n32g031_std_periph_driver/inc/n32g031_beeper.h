@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,43 +27,44 @@
 
 /**
  * @file n32g031_beeper.h
- * @author Nations
+ * @author Nsing
  * @version v1.0.1
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #ifndef __N32G031_BEEPER_H__
 #define __N32G031_BEEPER_H__
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include "n32g031.h"
 
-/** @addtogroup N32G031_StdPeriph_Driver
- * @{
- */
+     /** @addtogroup N32G031_StdPeriph_Driver
+      * @{
+      */
 
-/** @addtogroup BEEPER
- * @{
- */
+     /** @addtogroup BEEPER
+      * @{
+      */
 
-/** @addtogroup BEEPER_Exported_Types
- * @{
- */
+     /** @addtogroup BEEPER_Exported_Types
+      * @{
+      */
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/** @addtogroup BEEPER_Exported_Constants
- * @{
- */
+     /** @addtogroup BEEPER_Exported_Constants
+      * @{
+      */
 
-/** @addtogroup BUZZER_CLKSEL
- * @{
- */
+     /** @addtogroup BUZZER_CLKSEL
+      * @{
+      */
 
 #define BEEPER_BUZZER_CLKSEL_L1 ((uint32_t)0x00000001)
 #define BEEPER_BUZZER_CLKSEL_L2 ((uint32_t)0x00000002)
@@ -89,42 +90,42 @@ extern "C" {
 #define BEEPER_BUZZER_CLKSEL_H6 ((uint32_t)0x00000014)
 #define BEEPER_BUZZER_CLKSEL_H7 ((uint32_t)0x00000015)
 
-#define IS_BEEPER_BUZZER_CLKSEL(CLKSEL)                                                   \
+#define IS_BEEPER_BUZZER_CLKSEL(CLKSEL) \
      (((CLKSEL) >= BEEPER_BUZZER_CLKSEL_L1) && ((CLKSEL) <= BEEPER_BUZZER_CLKSEL_H7))
 
-/** @addtogroup BUZZER_EN
- * @{
- */
+     /** @addtogroup BUZZER_EN
+      * @{
+      */
 
-#define BEEPER_BUZZER_BUZZER_ENABLE  ((uint32_t)0x00000020)
+#define BEEPER_BUZZER_BUZZER_ENABLE ((uint32_t)0x00000020)
 #define BEEPER_BUZZER_BUZZER_DISABLE ((uint32_t)0x00000000)
 
-#define IS_BEEPER_BUZZER_EN(CONFIG)                                                       \
+#define IS_BEEPER_BUZZER_EN(CONFIG) \
      (((CONFIG) == BEEPER_BUZZER_BUZZER_ENABLE) || ((CONFIG) == BEEPER_BUZZER_BUZZER_DISABLE))
 
-/** @addtogroup INV_EN
- * @{
- */
+     /** @addtogroup INV_EN
+      * @{
+      */
 
-#define BEEPER_INV_ENABLE  ((uint32_t)0x00000040)
+#define BEEPER_INV_ENABLE ((uint32_t)0x00000040)
 #define BEEPER_INV_DISABLE ((uint32_t)0x00000000)
 
-#define IS_BEEPER_INV_EN(CONFIG)                                                          \
+#define IS_BEEPER_INV_EN(CONFIG) \
      (((CONFIG) == BEEPER_INV_ENABLE) || ((CONFIG) == BEEPER_INV_DISABLE))
 
-/** @addtogroup BUZZ_LPRUN
- * @{
- */
+     /** @addtogroup BUZZ_LPRUN
+      * @{
+      */
 
-#define BEEPER_LPRUN_MODE  ((uint32_t)0x00002000)
+#define BEEPER_LPRUN_MODE ((uint32_t)0x00002000)
 #define BEEPER_NORMAL_MODE ((uint32_t)0x00000000)
 
-#define IS_BEEPER_RUN_MODE(CONFIG)                                                         \
+#define IS_BEEPER_RUN_MODE(CONFIG) \
      (((CONFIG) == BEEPER_LPRUN_MODE) || ((CONFIG) == BEEPER_NORMAL_MODE))
 
-/** @addtogroup FREQ_SEL
- * @{
- */
+     /** @addtogroup FREQ_SEL
+      * @{
+      */
 
 #define BEEPER_FREQ_APBCLK_00 ((uint32_t)0x00000000)
 #define BEEPER_FREQ_APBCLK_01 ((uint32_t)0x00000080)
@@ -177,38 +178,38 @@ extern "C" {
 #define BEEPER_FREQ_APBCLK_47 ((uint32_t)0x00001780)
 #define BEEPER_FREQ_APBCLK_48 ((uint32_t)0x00001800)
 
-#define IS_BEEPER_FREQ_APBCLK(CLKSEL)                                                          \
+#define IS_BEEPER_FREQ_APBCLK(CLKSEL) \
      (((CLKSEL) >= (BEEPER_FREQ_APBCLK_00 >> 7)) && ((CLKSEL) <= (BEEPER_FREQ_APBCLK_48 >> 7)))
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/** @addtogroup BEEPER_Exported_Macros
- * @{
- */
-/**
- * @}
- */
+     /** @addtogroup BEEPER_Exported_Macros
+      * @{
+      */
+     /**
+      * @}
+      */
 
-/** @addtogroup BEEPER_Exported_Functions
- * @{
- */
+     /** @addtogroup BEEPER_Exported_Functions
+      * @{
+      */
 
-void BEEPER_Init(uint32_t inv_en, uint32_t buzzer_clksel,uint32_t freq_sel);
-void BEEPER_Config(FunctionalState Cmd,uint32_t buzz_lprun);
+     void BEEPER_Init(uint32_t inv_en, uint32_t buzzer_clksel, uint32_t freq_sel);
+     void BEEPER_Config(FunctionalState Cmd, uint32_t buzz_lprun);
 
 #ifdef __cplusplus
 }

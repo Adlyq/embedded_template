@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_spi.c
- * @author Nations
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_spi.h"
 #include "n32g031_rcc.h"
@@ -57,25 +57,25 @@
  */
 
 /* SPI SPEN mask */
-#define CTRL1_SPIEN_ENABLE  ((uint16_t)0x0040)
+#define CTRL1_SPIEN_ENABLE ((uint16_t)0x0040)
 #define CTRL1_SPIEN_DISABLE ((uint16_t)0xFFBF)
 /* I2S I2SEN mask */
-#define I2SCFG_I2SEN_ENABLE  ((uint16_t)0x0400)
+#define I2SCFG_I2SEN_ENABLE ((uint16_t)0x0400)
 #define I2SCFG_I2SEN_DISABLE ((uint16_t)0xFBFF)
 
 /* SPI CRCNEXT mask */
 #define CTRL1_CRCNEXT_ENABLE ((uint16_t)0x1000)
 
 /* SPI CRCEN mask */
-#define CTRL1_CRCEN_ENABLE  ((uint16_t)0x2000)
+#define CTRL1_CRCEN_ENABLE ((uint16_t)0x2000)
 #define CTRL1_CRCEN_DISABLE ((uint16_t)0xDFFF)
 
 /* SPI SSOEN mask */
-#define CTRL2_SSOEN_ENABLE  ((uint16_t)0x0004)
+#define CTRL2_SSOEN_ENABLE ((uint16_t)0x0004)
 #define CTRL2_SSOEN_DISABLE ((uint16_t)0xFFFB)
 
 /* SPI registers Masks */
-#define CTRL1_CLR_MASK  ((uint16_t)0x3040)
+#define CTRL1_CLR_MASK ((uint16_t)0x3040)
 #define I2SCFG_CLR_MASK ((uint16_t)0xF040)
 
 /* SPI or I2S mode selection masks */
@@ -123,7 +123,7 @@
  *         reset values.
  * @param SPIx where x can be 1 or 2 to select the SPI peripheral.
  */
-void SPI_I2S_DeInit(SPI_Module* SPIx)
+void SPI_I2S_DeInit(SPI_Module *SPIx)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -154,7 +154,7 @@ void SPI_I2S_DeInit(SPI_Module* SPIx)
  * @param SPI_InitStruct pointer to a SPI_InitType structure that
  *         contains the configuration information for the specified SPI peripheral.
  */
-void SPI_Init(SPI_Module* SPIx, SPI_InitType* SPI_InitStruct)
+void SPI_Init(SPI_Module *SPIx, SPI_InitType *SPI_InitStruct)
 {
     uint16_t tmpregister = 0;
 
@@ -185,9 +185,7 @@ void SPI_Init(SPI_Module* SPIx, SPI_InitType* SPI_InitStruct)
     /* Set BR bits according to BaudRatePres value */
     /* Set CPOL bit according to CLKPOL value */
     /* Set CPHA bit according to CLKPHA value */
-    tmpregister |= (uint16_t)((uint32_t)SPI_InitStruct->DataDirection | SPI_InitStruct->SpiMode
-                              | SPI_InitStruct->DataLen | SPI_InitStruct->CLKPOL | SPI_InitStruct->CLKPHA
-                              | SPI_InitStruct->NSS | SPI_InitStruct->BaudRatePres | SPI_InitStruct->FirstBit);
+    tmpregister |= (uint16_t)((uint32_t)SPI_InitStruct->DataDirection | SPI_InitStruct->SpiMode | SPI_InitStruct->DataLen | SPI_InitStruct->CLKPOL | SPI_InitStruct->CLKPHA | SPI_InitStruct->NSS | SPI_InitStruct->BaudRatePres | SPI_InitStruct->FirstBit);
     /* Write to SPIx CTRL1 */
     SPIx->CTRL1 = tmpregister;
 
@@ -213,7 +211,7 @@ void SPI_Init(SPI_Module* SPIx, SPI_InitType* SPI_InitStruct)
  *  and the product configuration). But in case the prescaler value is greater
  *  than 511, the default value (0x02) will be configured instead.  *
  */
-void I2S_Init(SPI_Module* SPIx, I2S_InitType* I2S_InitStruct)
+void I2S_Init(SPI_Module *SPIx, I2S_InitType *I2S_InitStruct)
 {
     uint16_t tmpregister = 0, i2sdiv = 2, i2sodd = 0, packetlength = 1;
     uint32_t tmp = 0;
@@ -264,7 +262,7 @@ void I2S_Init(SPI_Module* SPIx, I2S_InitType* I2S_InitStruct)
         /* Get the source clock value: based on System Clock value */
         sourceclock = RCC_Clocks.SysclkFreq;
 
-         /* Compute the Real divider depending on the MCLK output state with a floating point */
+        /* Compute the Real divider depending on the MCLK output state with a floating point */
         if (I2S_InitStruct->MCLKEnable == I2S_MCLK_ENABLE)
         {
             /* MCLK output is enabled */
@@ -275,7 +273,7 @@ void I2S_Init(SPI_Module* SPIx, I2S_InitType* I2S_InitStruct)
             /* MCLK output is disabled */
             tmp = (uint16_t)(((((sourceclock / (32 * packetlength)) * 10) / I2S_InitStruct->AudioFrequency)) + 5);
         }
-        
+
         /* Remove the floating point */
         tmp = tmp / 10;
 
@@ -299,13 +297,9 @@ void I2S_Init(SPI_Module* SPIx, I2S_InitType* I2S_InitStruct)
 
     /* Write to SPIx I2SPREDIV register the computed value */
     SPIx->I2SPREDIV = (uint16_t)(i2sdiv | (uint16_t)(i2sodd | (uint16_t)I2S_InitStruct->MCLKEnable));
-    
+
     /* Configure the I2S with the SPI_InitStruct values */
-    tmpregister |= (uint16_t)(
-        I2S_MODE_ENABLE
-        | (uint16_t)(I2S_InitStruct->I2sMode
-                     | (uint16_t)(I2S_InitStruct->Standard
-                                  | (uint16_t)(I2S_InitStruct->DataFormat | (uint16_t)I2S_InitStruct->CLKPOL))));
+    tmpregister |= (uint16_t)(I2S_MODE_ENABLE | (uint16_t)(I2S_InitStruct->I2sMode | (uint16_t)(I2S_InitStruct->Standard | (uint16_t)(I2S_InitStruct->DataFormat | (uint16_t)I2S_InitStruct->CLKPOL))));
 
     /* Write to SPIx I2SCFG */
     SPIx->I2SCFG = tmpregister;
@@ -315,7 +309,7 @@ void I2S_Init(SPI_Module* SPIx, I2S_InitType* I2S_InitStruct)
  * @brief  Fills each SPI_InitStruct member with its default value.
  * @param SPI_InitStruct pointer to a SPI_InitType structure which will be initialized.
  */
-void SPI_InitStruct(SPI_InitType* SPI_InitStruct)
+void SPI_InitStruct(SPI_InitType *SPI_InitStruct)
 {
     /*--------------- Reset SPI init structure parameters values -----------------*/
     /* Initialize the DataDirection member */
@@ -342,7 +336,7 @@ void SPI_InitStruct(SPI_InitType* SPI_InitStruct)
  * @brief  Fills each I2S_InitStruct member with its default value.
  * @param I2S_InitStruct pointer to a I2S_InitType structure which will be initialized.
  */
-void I2S_InitStruct(I2S_InitType* I2S_InitStruct)
+void I2S_InitStruct(I2S_InitType *I2S_InitStruct)
 {
     /*--------------- Reset I2S init structure parameters values -----------------*/
     /* Initialize the I2sMode member */
@@ -370,7 +364,7 @@ void I2S_InitStruct(I2S_InitType* I2S_InitStruct)
  * @param Cmd new state of the SPIx peripheral.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void SPI_Enable(SPI_Module* SPIx, FunctionalState Cmd)
+void SPI_Enable(SPI_Module *SPIx, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -393,7 +387,7 @@ void SPI_Enable(SPI_Module* SPIx, FunctionalState Cmd)
  * @param Cmd new state of the SPIx peripheral.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void I2S_Enable(SPI_Module* SPIx, FunctionalState Cmd)
+void I2S_Enable(SPI_Module *SPIx, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_SPI_I2S_PERIPH(SPIx));
@@ -423,7 +417,7 @@ void I2S_Enable(SPI_Module* SPIx, FunctionalState Cmd)
  * @param Cmd new state of the specified SPI/I2S interrupt.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void SPI_I2S_EnableInt(SPI_Module* SPIx, uint8_t SPI_I2S_IT, FunctionalState Cmd)
+void SPI_I2S_EnableInt(SPI_Module *SPIx, uint8_t SPI_I2S_IT, FunctionalState Cmd)
 {
     uint16_t itpos = 0, itmask = 0;
     /* Check the parameters */
@@ -461,7 +455,7 @@ void SPI_I2S_EnableInt(SPI_Module* SPIx, uint8_t SPI_I2S_IT, FunctionalState Cmd
  * @param Cmd new state of the selected SPI/I2S DMA transfer request.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void SPI_I2S_EnableDma(SPI_Module* SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState Cmd)
+void SPI_I2S_EnableDma(SPI_Module *SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -486,7 +480,7 @@ void SPI_I2S_EnableDma(SPI_Module* SPIx, uint16_t SPI_I2S_DMAReq, FunctionalStat
  *   - 1 in I2S mode
  * @param Data Data to be transmitted.
  */
-void SPI_I2S_TransmitData(SPI_Module* SPIx, uint16_t Data)
+void SPI_I2S_TransmitData(SPI_Module *SPIx, uint16_t Data)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -502,7 +496,7 @@ void SPI_I2S_TransmitData(SPI_Module* SPIx, uint16_t Data)
  *   - 1 in I2S mode
  * @return The value of the received data.
  */
-uint16_t SPI_I2S_ReceiveData(SPI_Module* SPIx)
+uint16_t SPI_I2S_ReceiveData(SPI_Module *SPIx)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -519,7 +513,7 @@ uint16_t SPI_I2S_ReceiveData(SPI_Module* SPIx)
  *     @arg SPI_NSS_HIGH Set NSS pin internally
  *     @arg SPI_NSS_LOW Reset NSS pin internally
  */
-void SPI_SetNssLevel(SPI_Module* SPIx, uint16_t SPI_NSSInternalSoft)
+void SPI_SetNssLevel(SPI_Module *SPIx, uint16_t SPI_NSSInternalSoft)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -542,7 +536,7 @@ void SPI_SetNssLevel(SPI_Module* SPIx, uint16_t SPI_NSSInternalSoft)
  * @param Cmd new state of the SPIx SS output.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void SPI_SSOutputEnable(SPI_Module* SPIx, FunctionalState Cmd)
+void SPI_SSOutputEnable(SPI_Module *SPIx, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -567,7 +561,7 @@ void SPI_SSOutputEnable(SPI_Module* SPIx, FunctionalState Cmd)
  *     @arg SPI_DATA_SIZE_16BITS Set data frame format to 16bit
  *     @arg SPI_DATA_SIZE_8BITS Set data frame format to 8bit
  */
-void SPI_ConfigDataLen(SPI_Module* SPIx, uint16_t DataLen)
+void SPI_ConfigDataLen(SPI_Module *SPIx, uint16_t DataLen)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -582,7 +576,7 @@ void SPI_ConfigDataLen(SPI_Module* SPIx, uint16_t DataLen)
  * @brief  Transmit the SPIx CRC value.
  * @param SPIx where x can be 1 or 2 to select the SPI peripheral.
  */
-void SPI_TransmitCrcNext(SPI_Module* SPIx)
+void SPI_TransmitCrcNext(SPI_Module *SPIx)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -597,7 +591,7 @@ void SPI_TransmitCrcNext(SPI_Module* SPIx)
  * @param Cmd new state of the SPIx CRC value calculation.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void SPI_EnableCalculateCrc(SPI_Module* SPIx, FunctionalState Cmd)
+void SPI_EnableCalculateCrc(SPI_Module *SPIx, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -623,7 +617,7 @@ void SPI_EnableCalculateCrc(SPI_Module* SPIx, FunctionalState Cmd)
  *     @arg SPI_CRC_RX Selects Rx CRC register
  * @return The selected CRC register value..
  */
-uint16_t SPI_GetCRCDat(SPI_Module* SPIx, uint8_t SPI_CRC)
+uint16_t SPI_GetCRCDat(SPI_Module *SPIx, uint8_t SPI_CRC)
 {
     uint16_t crcreg = 0;
     /* Check the parameters */
@@ -648,7 +642,7 @@ uint16_t SPI_GetCRCDat(SPI_Module* SPIx, uint8_t SPI_CRC)
  * @param SPIx where x can be 1 or 2 to select the SPI peripheral.
  * @return The CRC Polynomial register value.
  */
-uint16_t SPI_GetCRCPoly(SPI_Module* SPIx)
+uint16_t SPI_GetCRCPoly(SPI_Module *SPIx)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -665,7 +659,7 @@ uint16_t SPI_GetCRCPoly(SPI_Module* SPIx)
  *     @arg SPI_BIDIRECTION_TX Selects Tx transmission direction
  *     @arg SPI_BIDIRECTION_RX Selects Rx receive direction
  */
-void SPI_ConfigBidirectionalMode(SPI_Module* SPIx, uint16_t DataDirection)
+void SPI_ConfigBidirectionalMode(SPI_Module *SPIx, uint16_t DataDirection)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -699,7 +693,7 @@ void SPI_ConfigBidirectionalMode(SPI_Module* SPIx, uint16_t DataDirection)
  *     @arg I2S_CHSIDE_FLAG Channel Side flag.
  * @return The new state of SPI_I2S_FLAG (SET or RESET).
  */
-FlagStatus SPI_I2S_GetStatus(SPI_Module* SPIx, uint16_t SPI_I2S_FLAG)
+FlagStatus SPI_I2S_GetStatus(SPI_Module *SPIx, uint16_t SPI_I2S_FLAG)
 {
     FlagStatus bitstatus = RESET;
     /* Check the parameters */
@@ -736,7 +730,7 @@ FlagStatus SPI_I2S_GetStatus(SPI_Module* SPIx, uint16_t SPI_I2S_FLAG)
  *     operation to SPI_STS register (SPI_I2S_GetStatus()) followed by a
  *     write operation to SPI_CTRL1 register (SPI_Enable() to enable the SPI).
  */
-void SPI_I2S_ClrCRCErrFlag(SPI_Module* SPIx, uint16_t SPI_I2S_FLAG)
+void SPI_I2S_ClrCRCErrFlag(SPI_Module *SPIx, uint16_t SPI_I2S_FLAG)
 {
     /* Check the parameters */
     assert_param(IS_SPI_PERIPH(SPIx));
@@ -761,7 +755,7 @@ void SPI_I2S_ClrCRCErrFlag(SPI_Module* SPIx, uint16_t SPI_I2S_FLAG)
  *     @arg I2S_INT_UNDER Underrun Error interrupt.
  * @return The new state of SPI_I2S_IT (SET or RESET).
  */
-INTStatus SPI_I2S_GetIntStatus(SPI_Module* SPIx, uint8_t SPI_I2S_IT)
+INTStatus SPI_I2S_GetIntStatus(SPI_Module *SPIx, uint8_t SPI_I2S_IT)
 {
     INTStatus bitstatus = RESET;
     uint16_t itpos = 0, itmask = 0, enablestatus = 0;
@@ -814,7 +808,7 @@ INTStatus SPI_I2S_GetIntStatus(SPI_Module* SPIx, uint8_t SPI_I2S_IT)
  *     followed by a write operation to SPI_CTRL1 register (SPI_Enable() to enable
  *     the SPI).
  */
-void SPI_I2S_ClrITPendingBit(SPI_Module* SPIx, uint8_t SPI_I2S_IT)
+void SPI_I2S_ClrITPendingBit(SPI_Module *SPIx, uint8_t SPI_I2S_IT)
 {
     uint16_t itpos = 0;
     /* Check the parameters */

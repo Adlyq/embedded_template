@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_rtc.c
- * @author Nations
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_rtc.h"
 #include "n32g031_rcc.h"
@@ -46,25 +46,23 @@
  */
 
 /* Masks Definition */
-#define RTC_TR_RESERVED_MASK   ((uint32_t)0x007F7F7F)
+#define RTC_TR_RESERVED_MASK ((uint32_t)0x007F7F7F)
 #define RTC_DATE_RESERVED_MASK ((uint32_t)0x00FFFF3F)
 
-#define RTC_RSF_MASK           ((uint32_t)0xFFFFFFDF)
-#define RTC_FLAGS_MASK                                                                                                 \
-    ((uint32_t)(RTC_FLAG_TISOVF | RTC_FLAG_TISF | RTC_FLAG_WTF | RTC_FLAG_ALBF | RTC_FLAG_ALAF | RTC_FLAG_INITF        \
-                | RTC_FLAG_RSYF | RTC_FLAG_INITSF | RTC_FLAG_WTWF | RTC_FLAG_ALBWF | RTC_FLAG_ALAWF | RTC_FLAG_RECPF   \
-                | RTC_FLAG_SHOPF))
+#define RTC_RSF_MASK ((uint32_t)0xFFFFFFDF)
+#define RTC_FLAGS_MASK \
+    ((uint32_t)(RTC_FLAG_TISOVF | RTC_FLAG_TISF | RTC_FLAG_WTF | RTC_FLAG_ALBF | RTC_FLAG_ALAF | RTC_FLAG_INITF | RTC_FLAG_RSYF | RTC_FLAG_INITSF | RTC_FLAG_WTWF | RTC_FLAG_ALBWF | RTC_FLAG_ALAWF | RTC_FLAG_RECPF | RTC_FLAG_SHOPF))
 
 #define INITMODE_TIMEOUT ((uint32_t)0x00002000)
-#define SYNCHRO_TIMEOUT  ((uint32_t)0x00008000)
-#define RECALPF_TIMEOUT  ((uint32_t)0x00001000)
-#define SHPF_TIMEOUT     ((uint32_t)0x00002000)
+#define SYNCHRO_TIMEOUT ((uint32_t)0x00008000)
+#define RECALPF_TIMEOUT ((uint32_t)0x00001000)
+#define SHPF_TIMEOUT ((uint32_t)0x00002000)
 
 #ifdef RTC_DELAY_USE_TIM6
 #define RTC_DELAY_1S_PRESCALER_VALUE_TIM6 (100)
-#define RTC_DELAY_1S_RELOAD_VALUE_TIM6    (SystemCoreClock/1000)
+#define RTC_DELAY_1S_RELOAD_VALUE_TIM6 (SystemCoreClock / 1000)
 #else
-#define RTC_DELAY_1S_RELOAD_VALUE_SYSTICK (SystemCoreClock/10)
+#define RTC_DELAY_1S_RELOAD_VALUE_SYSTICK (SystemCoreClock / 10)
 #endif
 
 volatile uint32_t RTC_Delay_Flag = 0;
@@ -120,8 +118,8 @@ static uint8_t RTC_Bcd2ToByte(uint8_t Value);
 ErrorStatus RTC_DeInit(void)
 {
     __IO uint32_t wutcounter = 0x00;
-    uint32_t wutwfstatus     = 0x00;
-    ErrorStatus status       = ERROR;
+    uint32_t wutwfstatus = 0x00;
+    ErrorStatus status = ERROR;
 
     /* Disable the write protection for RTC registers */
     RTC->WRP = 0xCA;
@@ -135,7 +133,7 @@ ErrorStatus RTC_DeInit(void)
     else
     {
         /* Reset TSH, DAT and CTRL registers */
-        RTC->TSH  = (uint32_t)0x00000000;
+        RTC->TSH = (uint32_t)0x00000000;
         RTC->DATE = (uint32_t)0x00002101;
 
         /* Reset All CTRL bits except CTRL[2:0] */
@@ -156,18 +154,17 @@ ErrorStatus RTC_DeInit(void)
         {
             /* Reset all RTC CTRL register bits */
             RTC->CTRL &= (uint32_t)0x00000000;
-            RTC->WKUPT   = (uint32_t)0x0000FFFF;
-            RTC->PRE     = (uint32_t)0x007F00FF;
-            RTC->ALARMA  = (uint32_t)0x00000000;
-            RTC->ALARMB  = (uint32_t)0x00000000;
-            RTC->SCTRL   = (uint32_t)0x00000000;
-            RTC->CALIB   = (uint32_t)0x00000000;
+            RTC->WKUPT = (uint32_t)0x0000FFFF;
+            RTC->PRE = (uint32_t)0x007F00FF;
+            RTC->ALARMA = (uint32_t)0x00000000;
+            RTC->ALARMB = (uint32_t)0x00000000;
+            RTC->SCTRL = (uint32_t)0x00000000;
+            RTC->CALIB = (uint32_t)0x00000000;
             RTC->ALRMASS = (uint32_t)0x00000000;
             RTC->ALRMBSS = (uint32_t)0x00000000;
 
             /* Reset INTSTS register and exit initialization mode */
             RTC->INITSTS = (uint32_t)0x00000000;
-
 
             /* Wait till the RTC RSYF flag is set */
             if (RTC_WaitForSynchro() == ERROR)
@@ -192,7 +189,7 @@ ErrorStatus RTC_DeInit(void)
  * @param RTC_InitStruct pointer to a RTC_InitType structure which will be
  *         initialized.
  */
-void RTC_StructInit(RTC_InitType* RTC_InitStruct)
+void RTC_StructInit(RTC_InitType *RTC_InitStruct)
 {
     /* Initialize the RTC_HourFormat member */
     RTC_InitStruct->RTC_HourFormat = RTC_24HOUR_FORMAT;
@@ -241,12 +238,15 @@ void RTC_EnableWriteProtection(FunctionalState Cmd)
 ErrorStatus RTC_EnterInitMode(void)
 {
     __IO uint32_t initcounter = 0x00;
-    ErrorStatus status        = ERROR;
-    uint32_t initstatus       = 0x00;
+    ErrorStatus status = ERROR;
+    uint32_t initstatus = 0x00;
 
     /* Check if the Initialization mode is set */
     if ((RTC->INITSTS & RTC_INITSTS_INITF) == (uint32_t)RESET)
     {
+        /* SUBS is not less than 2 before entering the initialization mode*/
+        while (RTC->SUBS <= 3)
+            ;
         /* Set the Initialization mode */
         RTC->INITSTS = (uint32_t)RTC_INITSTS_INITM;
 
@@ -321,8 +321,8 @@ static void delay_ms(uint16_t count)
 ErrorStatus RTC_WaitForSynchro(void)
 {
     __IO uint32_t synchrocounter = 0;
-    ErrorStatus status           = ERROR;
-    uint32_t synchrostatus       = 0x00;
+    ErrorStatus status = ERROR;
+    uint32_t synchrostatus = 0x00;
 
     /* Disable the write protection for RTC registers */
     RTC->WRP = 0xCA;
@@ -338,7 +338,7 @@ ErrorStatus RTC_WaitForSynchro(void)
         delay_ms(1);
         synchrocounter++;
     } while ((synchrocounter < 5500) && (synchrostatus == 0x00));
-    
+
     if ((RTC->INITSTS & RTC_INITSTS_RSYF) != RESET)
     {
         status = SUCCESS;
@@ -434,195 +434,190 @@ void RTC_EnableBypassShadow(FunctionalState Cmd)
 }
 
 /**
-  * @brief  Calendar initialization configuration.
-  * @param RTC_Format: specifies the format of the entered parameters.
-  *   This parameter can be one of the following values:
-  *     @arg RTC_FORMAT_BIN: Binary data format.
-  *     @arg RTC_FORMAT_BCD: BCD data format.
-  * @param RTC_InitStruct: pointer to a RTC_InitType structure that contains the configuration
-  *         information for the RTC peripheral.When the user does not need to configure this 
-  *         parameter, note that NULL can be passed in.
-  *   Note: The RTC Prescaler register is write protected and can be written in initialization
-  *         mode only.
-  * @param RTC_DateStruct: pointer to a RTC_DateType structure that contains the date configuration
-  *         information for the RTC.When the user does not need to configure this parameter,
-  *         note that NULL can be passed in.
-  *   Note: The RTC Date register is write protected and can be written in initialization
-  *         mode only.
-  * @param RTC_TimeStruct: pointer to a RTC_TimeType structure that contains the time configuration
-  *         information for the RTC.When the user does not need to configure this parameter, 
-  *         note that NULL can be passed in.
-  *   Note: The RTC Time register is write protected and can be written in initialization
-  *         mode only.
-  * @param  RTC_DelayCmd: Enable or disable 1 second delay.
-  *   This parameter can be: ENABLE or DISABLE.
-  *   Note: 1. This parameter is configured according to the user's needs. If the user needs
-  *         to call this function multiple times within 1 second to configure the calendar, it must
-  *         be enabled, because we stipulate that the interval between two calendar configurations 
-  *         must be at least 1 second.
-  *         2. If this parameter is enabled, We provide two timers to help users complete this delay 
-  *			operation (SysTick and TIM6). Users can choose which timer to use according to their needs,
-  *			and use the macro RTC_DELAY_USE_TIM6 to select. At the same time, the user should also pay  
-  *			attention to the usage of the watchdog. If necessary, the dog can be fed in the interrupt 
-  *			handler to prevent the watchdog generating a system reset due to the delay in this function.
-  * @return An ErrorStatus enumeration value:
-  *         - SUCCESS: RTC PRE register, Date register, Time register is configured
-  *         - ERROR: RTC PRE register, Date register, Time register is not configured
-  */
-ErrorStatus RTC_ConfigCalendar(uint32_t RTC_Format, RTC_InitType* RTC_InitStruct, RTC_DateType* RTC_DateStruct, RTC_TimeType* RTC_TimeStruct, FunctionalState RTC_DelayCmd)
+ * @brief  Calendar initialization configuration.
+ * @param RTC_Format: specifies the format of the entered parameters.
+ *   This parameter can be one of the following values:
+ *     @arg RTC_FORMAT_BIN: Binary data format.
+ *     @arg RTC_FORMAT_BCD: BCD data format.
+ * @param RTC_InitStruct: pointer to a RTC_InitType structure that contains the configuration
+ *         information for the RTC peripheral.When the user does not need to configure this
+ *         parameter, note that NULL can be passed in.
+ *   Note: The RTC Prescaler register is write protected and can be written in initialization
+ *         mode only.
+ * @param RTC_DateStruct: pointer to a RTC_DateType structure that contains the date configuration
+ *         information for the RTC.When the user does not need to configure this parameter,
+ *         note that NULL can be passed in.
+ *   Note: The RTC Date register is write protected and can be written in initialization
+ *         mode only.
+ * @param RTC_TimeStruct: pointer to a RTC_TimeType structure that contains the time configuration
+ *         information for the RTC.When the user does not need to configure this parameter,
+ *         note that NULL can be passed in.
+ *   Note: The RTC Time register is write protected and can be written in initialization
+ *         mode only.
+ * @param  RTC_DelayCmd: Enable or disable 1 second delay.
+ *   This parameter can be: ENABLE or DISABLE.
+ *   Note: 1. This parameter is configured according to the user's needs. If the user needs
+ *         to call this function multiple times within 1 second to configure the calendar, it must
+ *         be enabled, because we stipulate that the interval between two calendar configurations
+ *         must be at least 1 second.
+ *         2. If this parameter is enabled, We provide two timers to help users complete this delay
+ *			operation (SysTick and TIM6). Users can choose which timer to use according to their needs,
+ *			and use the macro RTC_DELAY_USE_TIM6 to select. At the same time, the user should also pay
+ *			attention to the usage of the watchdog. If necessary, the dog can be fed in the interrupt
+ *			handler to prevent the watchdog generating a system reset due to the delay in this function.
+ * @return An ErrorStatus enumeration value:
+ *         - SUCCESS: RTC PRE register, Date register, Time register is configured
+ *         - ERROR: RTC PRE register, Date register, Time register is not configured
+ */
+ErrorStatus RTC_ConfigCalendar(uint32_t RTC_Format, RTC_InitType *RTC_InitStruct, RTC_DateType *RTC_DateStruct, RTC_TimeType *RTC_TimeStruct, FunctionalState RTC_DelayCmd)
 {
-	static uint32_t first_init_flag = 1;
-	uint32_t tmpregister1 = 0, tmpregister2 = 0;
-    ErrorStatus status    = ERROR;
-	
+    static uint32_t first_init_flag = 1;
+    uint32_t tmpregister1 = 0, tmpregister2 = 0;
+    ErrorStatus status = ERROR;
+
     /* Check the parameters */
     assert_param(IS_RTC_FORMAT(RTC_Format));
-	
-	if(RTC_InitStruct != NULL)
-	{
-		assert_param(IS_RTC_HOUR_FORMAT(RTC_InitStruct->RTC_HourFormat));
-		assert_param(IS_RTC_PREDIV_ASYNCH(RTC_InitStruct->RTC_AsynchPrediv));
-		assert_param(IS_RTC_PREDIV_SYNCH(RTC_InitStruct->RTC_SynchPrediv));
-	}
-	
-	if(RTC_DateStruct != NULL)
-	{
-		if ((RTC_Format == RTC_FORMAT_BIN) && ((RTC_DateStruct->Month & 0x10) == 0x10))
-		{
-			RTC_DateStruct->Month = (RTC_DateStruct->Month & (uint32_t) ~(0x10)) + 0x0A;
-		}
-	}
-	
+
+    if (RTC_InitStruct != NULL)
+    {
+        assert_param(IS_RTC_HOUR_FORMAT(RTC_InitStruct->RTC_HourFormat));
+        assert_param(IS_RTC_PREDIV_ASYNCH(RTC_InitStruct->RTC_AsynchPrediv));
+        assert_param(IS_RTC_PREDIV_SYNCH(RTC_InitStruct->RTC_SynchPrediv));
+    }
+
+    if (RTC_DateStruct != NULL)
+    {
+        if ((RTC_Format == RTC_FORMAT_BIN) && ((RTC_DateStruct->Month & 0x10) == 0x10))
+        {
+            RTC_DateStruct->Month = (RTC_DateStruct->Month & (uint32_t) ~(0x10)) + 0x0A;
+        }
+    }
+
     if (RTC_Format == RTC_FORMAT_BIN)
     {
-		if(RTC_DateStruct != NULL)
-		{
-			assert_param(IS_RTC_YEAR(RTC_DateStruct->Year));
-			assert_param(IS_RTC_MONTH(RTC_DateStruct->Month));
-			assert_param(IS_RTC_DATE(RTC_DateStruct->Date));
-			assert_param(IS_RTC_WEEKDAY(RTC_DateStruct->WeekDay));
-		}		
-		if(RTC_TimeStruct != NULL)
-		{
-			if(RTC_InitStruct != NULL)
-			{
-				if(RTC_InitStruct->RTC_HourFormat == RTC_12HOUR_FORMAT)
-				{
-					assert_param(IS_RTC_12HOUR(RTC_TimeStruct->Hours));
-					assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
-				}
-				else
-				{
-					RTC_TimeStruct->H12 = RTC_AM_H12;
-					assert_param(IS_RTC_24HOUR(RTC_TimeStruct->Hours));
-				}
-			}
-			else
-			{
-				if ((RTC->CTRL & RTC_CTRL_HFMT) != (uint32_t)RESET)
-				{
-					assert_param(IS_RTC_12HOUR(RTC_TimeStruct->Hours));
-					assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
-				}
-				else
-				{
-					RTC_TimeStruct->H12 = RTC_AM_H12;
-					assert_param(IS_RTC_24HOUR(RTC_TimeStruct->Hours));
-				}
-			}
-			assert_param(IS_RTC_MINUTES(RTC_TimeStruct->Minutes));
-			assert_param(IS_RTC_SECONDS(RTC_TimeStruct->Seconds));
-		}
+        if (RTC_DateStruct != NULL)
+        {
+            assert_param(IS_RTC_YEAR(RTC_DateStruct->Year));
+            assert_param(IS_RTC_MONTH(RTC_DateStruct->Month));
+            assert_param(IS_RTC_DATE(RTC_DateStruct->Date));
+            assert_param(IS_RTC_WEEKDAY(RTC_DateStruct->WeekDay));
+        }
+        if (RTC_TimeStruct != NULL)
+        {
+            if (RTC_InitStruct != NULL)
+            {
+                if (RTC_InitStruct->RTC_HourFormat == RTC_12HOUR_FORMAT)
+                {
+                    assert_param(IS_RTC_12HOUR(RTC_TimeStruct->Hours));
+                    assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
+                }
+                else
+                {
+                    RTC_TimeStruct->H12 = RTC_AM_H12;
+                    assert_param(IS_RTC_24HOUR(RTC_TimeStruct->Hours));
+                }
+            }
+            else
+            {
+                if ((RTC->CTRL & RTC_CTRL_HFMT) != (uint32_t)RESET)
+                {
+                    assert_param(IS_RTC_12HOUR(RTC_TimeStruct->Hours));
+                    assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
+                }
+                else
+                {
+                    RTC_TimeStruct->H12 = RTC_AM_H12;
+                    assert_param(IS_RTC_24HOUR(RTC_TimeStruct->Hours));
+                }
+            }
+            assert_param(IS_RTC_MINUTES(RTC_TimeStruct->Minutes));
+            assert_param(IS_RTC_SECONDS(RTC_TimeStruct->Seconds));
+        }
     }
     else
     {
-		if(RTC_DateStruct != NULL)
-		{
-			assert_param(IS_RTC_YEAR(RTC_Bcd2ToByte(RTC_DateStruct->Year)));
-			assert_param(IS_RTC_MONTH(RTC_Bcd2ToByte(RTC_DateStruct->Month)));
-			assert_param(IS_RTC_DATE(RTC_Bcd2ToByte(RTC_DateStruct->Date)));
-			assert_param(IS_RTC_WEEKDAY(RTC_DateStruct->WeekDay));
-		}		
-		if(RTC_TimeStruct != NULL)
-		{
-			if(RTC_InitStruct != NULL)
-			{
-				if(RTC_InitStruct->RTC_HourFormat == RTC_12HOUR_FORMAT)
-				{
-					assert_param(IS_RTC_12HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
-					assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
-				}
-				else
-				{
-					RTC_TimeStruct->H12 = RTC_AM_H12;
-					assert_param(IS_RTC_24HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
-				}
-			}
-			else
-			{
-				if ((RTC->CTRL & RTC_CTRL_HFMT) != (uint32_t)RESET)
-				{
-					assert_param(IS_RTC_12HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
-					assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
-				}
-				else
-				{
-					RTC_TimeStruct->H12 = RTC_AM_H12;
-					assert_param(IS_RTC_24HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
-				}				
-			}
-			assert_param(IS_RTC_MINUTES(RTC_Bcd2ToByte(RTC_TimeStruct->Minutes)));
-			assert_param(IS_RTC_SECONDS(RTC_Bcd2ToByte(RTC_TimeStruct->Seconds)));
-		}
+        if (RTC_DateStruct != NULL)
+        {
+            assert_param(IS_RTC_YEAR(RTC_Bcd2ToByte(RTC_DateStruct->Year)));
+            assert_param(IS_RTC_MONTH(RTC_Bcd2ToByte(RTC_DateStruct->Month)));
+            assert_param(IS_RTC_DATE(RTC_Bcd2ToByte(RTC_DateStruct->Date)));
+            assert_param(IS_RTC_WEEKDAY(RTC_DateStruct->WeekDay));
+        }
+        if (RTC_TimeStruct != NULL)
+        {
+            if (RTC_InitStruct != NULL)
+            {
+                if (RTC_InitStruct->RTC_HourFormat == RTC_12HOUR_FORMAT)
+                {
+                    assert_param(IS_RTC_12HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
+                    assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
+                }
+                else
+                {
+                    RTC_TimeStruct->H12 = RTC_AM_H12;
+                    assert_param(IS_RTC_24HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
+                }
+            }
+            else
+            {
+                if ((RTC->CTRL & RTC_CTRL_HFMT) != (uint32_t)RESET)
+                {
+                    assert_param(IS_RTC_12HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
+                    assert_param(IS_RTC_H12(RTC_TimeStruct->H12));
+                }
+                else
+                {
+                    RTC_TimeStruct->H12 = RTC_AM_H12;
+                    assert_param(IS_RTC_24HOUR(RTC_Bcd2ToByte(RTC_TimeStruct->Hours)));
+                }
+            }
+            assert_param(IS_RTC_MINUTES(RTC_Bcd2ToByte(RTC_TimeStruct->Minutes)));
+            assert_param(IS_RTC_SECONDS(RTC_Bcd2ToByte(RTC_TimeStruct->Seconds)));
+        }
     }
 
     /* Check the input parameters format */
     if (RTC_Format != RTC_FORMAT_BIN)
     {
-		if(RTC_DateStruct != NULL)
-		{
-			tmpregister1 = (((uint32_t)(RTC_DateStruct->Year) << 16) | (((uint32_t)RTC_DateStruct->Month) << 8)
-			   | ((uint32_t)RTC_DateStruct->Date) | (((uint32_t)RTC_DateStruct->WeekDay) << 13));
-		}
-		
-		if(RTC_TimeStruct != NULL)
-		{
-			tmpregister2 = (((uint32_t)(RTC_TimeStruct->Hours) << 16) | ((uint32_t)(RTC_TimeStruct->Minutes) << 8)
-			   | ((uint32_t)RTC_TimeStruct->Seconds) | ((uint32_t)(RTC_TimeStruct->H12) << 16));
-		}
+        if (RTC_DateStruct != NULL)
+        {
+            tmpregister1 = (((uint32_t)(RTC_DateStruct->Year) << 16) | (((uint32_t)RTC_DateStruct->Month) << 8) | ((uint32_t)RTC_DateStruct->Date) | (((uint32_t)RTC_DateStruct->WeekDay) << 13));
+        }
+
+        if (RTC_TimeStruct != NULL)
+        {
+            tmpregister2 = (((uint32_t)(RTC_TimeStruct->Hours) << 16) | ((uint32_t)(RTC_TimeStruct->Minutes) << 8) | ((uint32_t)RTC_TimeStruct->Seconds) | ((uint32_t)(RTC_TimeStruct->H12) << 16));
+        }
     }
     else
     {
-		if(RTC_DateStruct != NULL)
-		{
-			tmpregister1 = (((uint32_t)RTC_ByteToBcd2(RTC_DateStruct->Year) << 16)
-			   | ((uint32_t)RTC_ByteToBcd2(RTC_DateStruct->Month) << 8)
-			   | ((uint32_t)RTC_ByteToBcd2(RTC_DateStruct->Date)) | ((uint32_t)RTC_DateStruct->WeekDay << 13));
-		}
-		
-		if(RTC_TimeStruct != NULL)
-		{
-			tmpregister2 = (uint32_t)(((uint32_t)RTC_ByteToBcd2(RTC_TimeStruct->Hours) << 16)
-			   | ((uint32_t)RTC_ByteToBcd2(RTC_TimeStruct->Minutes) << 8)
-			   | ((uint32_t)RTC_ByteToBcd2(RTC_TimeStruct->Seconds)) | (((uint32_t)RTC_TimeStruct->H12) << 16));
-		}		
+        if (RTC_DateStruct != NULL)
+        {
+            tmpregister1 = (((uint32_t)RTC_ByteToBcd2(RTC_DateStruct->Year) << 16) | ((uint32_t)RTC_ByteToBcd2(RTC_DateStruct->Month) << 8) | ((uint32_t)RTC_ByteToBcd2(RTC_DateStruct->Date)) | ((uint32_t)RTC_DateStruct->WeekDay << 13));
+        }
+
+        if (RTC_TimeStruct != NULL)
+        {
+            tmpregister2 = (uint32_t)(((uint32_t)RTC_ByteToBcd2(RTC_TimeStruct->Hours) << 16) | ((uint32_t)RTC_ByteToBcd2(RTC_TimeStruct->Minutes) << 8) | ((uint32_t)RTC_ByteToBcd2(RTC_TimeStruct->Seconds)) | (((uint32_t)RTC_TimeStruct->H12) << 16));
+        }
     }
 
     /* Disable the write protection for RTC registers */
     RTC->WRP = 0xCA;
     RTC->WRP = 0x53;
 
-	if(RTC_DelayCmd == ENABLE)
-	{
-		/* The first initialization does not execute the delay */
-		if(!first_init_flag)
-		{
-			/* Wait for the 1.1 second delay flag to be set */
-			while(!RTC_Delay_Flag);
-			RTC_Delay_Flag = 0;
-		}
-	}
-		
+    if (RTC_DelayCmd == ENABLE)
+    {
+        /* The first initialization does not execute the delay */
+        if (!first_init_flag)
+        {
+            /* Wait for the 1.1 second delay flag to be set */
+            while (!RTC_Delay_Flag)
+                ;
+            RTC_Delay_Flag = 0;
+        }
+    }
+
     /* Set Initialization mode */
     if (RTC_EnterInitMode() == ERROR)
     {
@@ -630,32 +625,32 @@ ErrorStatus RTC_ConfigCalendar(uint32_t RTC_Format, RTC_InitType* RTC_InitStruct
     }
     else
     {
-		if(RTC_InitStruct != NULL)
-		{
-			/* Clear RTC CTRL HFMT Bit */
-			RTC->CTRL &= ((uint32_t) ~(RTC_CTRL_HFMT));
-			/* Set RTC_CTRL register */
-			RTC->CTRL |= ((uint32_t)(RTC_InitStruct->RTC_HourFormat));
+        if (RTC_InitStruct != NULL)
+        {
+            /* Clear RTC CTRL HFMT Bit */
+            RTC->CTRL &= ((uint32_t) ~(RTC_CTRL_HFMT));
+            /* Set RTC_CTRL register */
+            RTC->CTRL |= ((uint32_t)(RTC_InitStruct->RTC_HourFormat));
 
-			/* Configure the RTC PRE */
-			RTC->PRE = (uint32_t)(RTC_InitStruct->RTC_SynchPrediv);
-			RTC->PRE |= (uint32_t)(RTC_InitStruct->RTC_AsynchPrediv << 16);
-		}
-		
-		if(RTC_DateStruct != NULL)
-		{
-			/* Set the RTC_DATE register */
-			RTC->DATE = (uint32_t)(tmpregister1 & RTC_DATE_RESERVED_MASK);
-		}
+            /* Configure the RTC PRE */
+            RTC->PRE = (uint32_t)(RTC_InitStruct->RTC_SynchPrediv);
+            RTC->PRE |= (uint32_t)(RTC_InitStruct->RTC_AsynchPrediv << 16);
+        }
 
-		if(RTC_TimeStruct != NULL)
-		{
-			/* Set the RTC_TSH register */
-			RTC->TSH = (uint32_t)(tmpregister2 & RTC_TR_RESERVED_MASK);
-		}
-		
+        if (RTC_DateStruct != NULL)
+        {
+            /* Set the RTC_DATE register */
+            RTC->DATE = (uint32_t)(tmpregister1 & RTC_DATE_RESERVED_MASK);
+        }
+
+        if (RTC_TimeStruct != NULL)
+        {
+            /* Set the RTC_TSH register */
+            RTC->TSH = (uint32_t)(tmpregister2 & RTC_TR_RESERVED_MASK);
+        }
+
         /* Exit Initialization mode */
-        RTC_ExitInitMode();	
+        RTC_ExitInitMode();
 
         /* If  RTC_CTRL_BYPS bit = 0, wait for synchro else this check is not needed */
         if ((RTC->CTRL & RTC_CTRL_BYPS) == RESET)
@@ -673,48 +668,48 @@ ErrorStatus RTC_ConfigCalendar(uint32_t RTC_Format, RTC_InitType* RTC_InitStruct
         {
             status = SUCCESS;
         }
-		
-		if(RTC_DelayCmd == ENABLE)
-		{		
-			if(first_init_flag)
-			{
-				/* Clear the first initialization flag */
-				first_init_flag = 0;
-			}
-			
+
+        if (RTC_DelayCmd == ENABLE)
+        {
+            if (first_init_flag)
+            {
+                /* Clear the first initialization flag */
+                first_init_flag = 0;
+            }
+
 #ifdef RTC_DELAY_USE_TIM6
-			/* Set Interrupt Priority */
-			NVIC_SetPriority(LPTIM_TIM6_IRQn, (1<<__NVIC_PRIO_BITS) - 1);
-			NVIC->ISER[0] = (1 << ((uint32_t)(LPTIM_TIM6_IRQn) & 0x1F));
-			/* Enable the TIM6 clock*/
-			RCC->APB1PCLKEN |= RCC_APB1_PERIPH_TIM6;
-			RCC->APB1PRST |= RCC_APB1_PERIPH_TIM6;
-			RCC->APB1PRST &= ~RCC_APB1_PERIPH_TIM6;
-			/* Set the Autoreload value */
-			TIM6->AR = RTC_DELAY_1S_RELOAD_VALUE_TIM6;
-			/* Prescaler configuration */
-			TIM6->PSC = RTC_DELAY_1S_PRESCALER_VALUE_TIM6 - 1;
-			/* Set or reset the UG Bit */
-			TIM6->EVTGEN = TIM_PSC_RELOAD_MODE_IMMEDIATE;
-			/* TIM6 enable update irq */
-			TIM6->DINTEN |= TIM_INT_UPDATE;
-			/* Clear the flag */
-			TIM6->STS &= (uint32_t)~TIM_FLAG_UPDATE;
-			/* TIM6 enable counter */
-			TIM6->CTRL1 |= TIM_CTRL1_CNTEN;
+            /* Set Interrupt Priority */
+            NVIC_SetPriority(LPTIM_TIM6_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
+            NVIC->ISER[0] = (1 << ((uint32_t)(LPTIM_TIM6_IRQn) & 0x1F));
+            /* Enable the TIM6 clock*/
+            RCC->APB1PCLKEN |= RCC_APB1_PERIPH_TIM6;
+            RCC->APB1PRST |= RCC_APB1_PERIPH_TIM6;
+            RCC->APB1PRST &= ~RCC_APB1_PERIPH_TIM6;
+            /* Set the Autoreload value */
+            TIM6->AR = RTC_DELAY_1S_RELOAD_VALUE_TIM6;
+            /* Prescaler configuration */
+            TIM6->PSC = RTC_DELAY_1S_PRESCALER_VALUE_TIM6 - 1;
+            /* Set or reset the UG Bit */
+            TIM6->EVTGEN = TIM_PSC_RELOAD_MODE_IMMEDIATE;
+            /* TIM6 enable update irq */
+            TIM6->DINTEN |= TIM_INT_UPDATE;
+            /* Clear the flag */
+            TIM6->STS &= (uint32_t)~TIM_FLAG_UPDATE;
+            /* TIM6 enable counter */
+            TIM6->CTRL1 |= TIM_CTRL1_CNTEN;
 #else
-			/* Set Interrupt Priority */
-			NVIC_SetPriority (SysTick_IRQn, (1<<__NVIC_PRIO_BITS) - 1);
-			/* set reload register */
-			SysTick->LOAD  = (RTC_DELAY_1S_RELOAD_VALUE_SYSTICK & SysTick_LOAD_RELOAD_Msk) - 1;
-			/* Load the SysTick Counter Value */
-			SysTick->VAL   = 0;
-			/* Enable SysTick IRQ and SysTick Timer */
-			SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
-						     SysTick_CTRL_TICKINT_Msk   |
-						     SysTick_CTRL_ENABLE_Msk;
+            /* Set Interrupt Priority */
+            NVIC_SetPriority(SysTick_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
+            /* set reload register */
+            SysTick->LOAD = (RTC_DELAY_1S_RELOAD_VALUE_SYSTICK & SysTick_LOAD_RELOAD_Msk) - 1;
+            /* Load the SysTick Counter Value */
+            SysTick->VAL = 0;
+            /* Enable SysTick IRQ and SysTick Timer */
+            SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                            SysTick_CTRL_TICKINT_Msk |
+                            SysTick_CTRL_ENABLE_Msk;
 #endif
-		}
+        }
     }
     /* Enable the write protection for RTC registers */
     RTC->WRP = 0xFF;
@@ -740,18 +735,17 @@ ErrorStatus RTC_ConfigCalendar(uint32_t RTC_Format, RTC_InitType* RTC_InitStruct
   * @{
   */
 
-
 /**
  * @brief  Fills each RTC_TimeStruct member with its default value
  *         (Time = 00h:00min:00sec).
  * @param RTC_TimeStruct pointer to a RTC_TimeType structure which will be
  *         initialized.
  */
-void RTC_TimeStructInit(RTC_TimeType* RTC_TimeStruct)
+void RTC_TimeStructInit(RTC_TimeType *RTC_TimeStruct)
 {
     /* Time = 00h:00min:00sec */
-    RTC_TimeStruct->H12     = RTC_AM_H12;
-    RTC_TimeStruct->Hours   = 0;
+    RTC_TimeStruct->H12 = RTC_AM_H12;
+    RTC_TimeStruct->Hours = 0;
     RTC_TimeStruct->Minutes = 0;
     RTC_TimeStruct->Seconds = 0;
 }
@@ -765,7 +759,7 @@ void RTC_TimeStructInit(RTC_TimeType* RTC_TimeStruct)
  * @param RTC_TimeStruct pointer to a RTC_TimeType structure that will
  *                        contain the returned current time configuration.
  */
-void RTC_GetTime(uint32_t RTC_Format, RTC_TimeType* RTC_TimeStruct)
+void RTC_GetTime(uint32_t RTC_Format, RTC_TimeType *RTC_TimeStruct)
 {
     uint32_t tmpregister = 0;
 
@@ -776,19 +770,20 @@ void RTC_GetTime(uint32_t RTC_Format, RTC_TimeType* RTC_TimeStruct)
     tmpregister = (uint32_t)(RTC->TSH & RTC_TR_RESERVED_MASK);
 
     /* Fill the structure fields with the read parameters */
-    RTC_TimeStruct->Hours   = (uint8_t)((tmpregister & (RTC_TSH_HOT | RTC_TSH_HOU)) >> 16);
+    RTC_TimeStruct->Hours = (uint8_t)((tmpregister & (RTC_TSH_HOT | RTC_TSH_HOU)) >> 16);
     RTC_TimeStruct->Minutes = (uint8_t)((tmpregister & (RTC_TSH_MIT | RTC_TSH_MIU)) >> 8);
     RTC_TimeStruct->Seconds = (uint8_t)(tmpregister & (RTC_TSH_SCT | RTC_TSH_SCU));
-    RTC_TimeStruct->H12     = (uint8_t)((tmpregister & (RTC_TSH_APM)) >> 16);
+    RTC_TimeStruct->H12 = (uint8_t)((tmpregister & (RTC_TSH_APM)) >> 16);
 
     /* Check the input parameters format */
     if (RTC_Format == RTC_FORMAT_BIN)
     {
         /* Convert the structure parameters to Binary format */
-        RTC_TimeStruct->Hours   = (uint8_t)RTC_Bcd2ToByte(RTC_TimeStruct->Hours);
+        RTC_TimeStruct->Hours = (uint8_t)RTC_Bcd2ToByte(RTC_TimeStruct->Hours);
         RTC_TimeStruct->Minutes = (uint8_t)RTC_Bcd2ToByte(RTC_TimeStruct->Minutes);
         RTC_TimeStruct->Seconds = (uint8_t)RTC_Bcd2ToByte(RTC_TimeStruct->Seconds);
     }
+    RTC->DATE;
 }
 
 /**
@@ -801,10 +796,9 @@ uint32_t RTC_GetSubSecond(void)
 
     /* Get subseconds values from the correspondent registers*/
     tmpregister = (uint32_t)(RTC->SUBS);
-
+    RTC->DATE;
     return (tmpregister);
 }
-
 
 /**
  * @brief  Fills each RTC_DateStruct member with its default value
@@ -812,13 +806,13 @@ uint32_t RTC_GetSubSecond(void)
  * @param RTC_DateStruct pointer to a RTC_DateType structure which will be
  *         initialized.
  */
-void RTC_DateStructInit(RTC_DateType* RTC_DateStruct)
+void RTC_DateStructInit(RTC_DateType *RTC_DateStruct)
 {
     /* Monday, January 01 xx00 */
     RTC_DateStruct->WeekDay = RTC_WEEKDAY_MONDAY;
-    RTC_DateStruct->Date    = 1;
-    RTC_DateStruct->Month   = RTC_MONTH_JANUARY;
-    RTC_DateStruct->Year    = 0;
+    RTC_DateStruct->Date = 1;
+    RTC_DateStruct->Month = RTC_MONTH_JANUARY;
+    RTC_DateStruct->Year = 0;
 }
 
 /**
@@ -830,7 +824,7 @@ void RTC_DateStructInit(RTC_DateType* RTC_DateStruct)
  * @param RTC_DateStruct pointer to a RTC_DateType structure that will
  *                        contain the returned current date configuration.
  */
-void RTC_GetDate(uint32_t RTC_Format, RTC_DateType* RTC_DateStruct)
+void RTC_GetDate(uint32_t RTC_Format, RTC_DateType *RTC_DateStruct)
 {
     uint32_t tmpregister = 0;
 
@@ -841,18 +835,18 @@ void RTC_GetDate(uint32_t RTC_Format, RTC_DateType* RTC_DateStruct)
     tmpregister = (uint32_t)(RTC->DATE & RTC_DATE_RESERVED_MASK);
 
     /* Fill the structure fields with the read parameters */
-    RTC_DateStruct->Year    = (uint8_t)((tmpregister & (RTC_DATE_YRT | RTC_DATE_YRU)) >> 16);
-    RTC_DateStruct->Month   = (uint8_t)((tmpregister & (RTC_DATE_MOT | RTC_DATE_MOU)) >> 8);
-    RTC_DateStruct->Date    = (uint8_t)(tmpregister & (RTC_DATE_DAT | RTC_DATE_DAU));
+    RTC_DateStruct->Year = (uint8_t)((tmpregister & (RTC_DATE_YRT | RTC_DATE_YRU)) >> 16);
+    RTC_DateStruct->Month = (uint8_t)((tmpregister & (RTC_DATE_MOT | RTC_DATE_MOU)) >> 8);
+    RTC_DateStruct->Date = (uint8_t)(tmpregister & (RTC_DATE_DAT | RTC_DATE_DAU));
     RTC_DateStruct->WeekDay = (uint8_t)((tmpregister & (RTC_DATE_WDU)) >> 13);
 
     /* Check the input parameters format */
     if (RTC_Format == RTC_FORMAT_BIN)
     {
         /* Convert the structure parameters to Binary format */
-        RTC_DateStruct->Year  = (uint8_t)RTC_Bcd2ToByte(RTC_DateStruct->Year);
+        RTC_DateStruct->Year = (uint8_t)RTC_Bcd2ToByte(RTC_DateStruct->Year);
         RTC_DateStruct->Month = (uint8_t)RTC_Bcd2ToByte(RTC_DateStruct->Month);
-        RTC_DateStruct->Date  = (uint8_t)RTC_Bcd2ToByte(RTC_DateStruct->Date);
+        RTC_DateStruct->Date = (uint8_t)RTC_Bcd2ToByte(RTC_DateStruct->Date);
     }
 }
 
@@ -889,7 +883,7 @@ void RTC_GetDate(uint32_t RTC_Format, RTC_DateType* RTC_DateStruct)
  * @param RTC_AlarmStruct pointer to a RTC_AlarmType structure that
  *                          contains the alarm configuration parameters.
  */
-void RTC_SetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType* RTC_AlarmStruct)
+void RTC_SetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType *RTC_AlarmStruct)
 {
     uint32_t tmpregister = 0;
 
@@ -956,19 +950,11 @@ void RTC_SetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType* RTC_Al
     if (RTC_Format != RTC_FORMAT_BIN)
     {
         tmpregister =
-            (((uint32_t)(RTC_AlarmStruct->AlarmTime.Hours) << 16)
-             | ((uint32_t)(RTC_AlarmStruct->AlarmTime.Minutes) << 8) | ((uint32_t)RTC_AlarmStruct->AlarmTime.Seconds)
-             | ((uint32_t)(RTC_AlarmStruct->AlarmTime.H12) << 16) | ((uint32_t)(RTC_AlarmStruct->DateWeekValue) << 24)
-             | ((uint32_t)RTC_AlarmStruct->DateWeekMode) | ((uint32_t)RTC_AlarmStruct->AlarmMask));
+            (((uint32_t)(RTC_AlarmStruct->AlarmTime.Hours) << 16) | ((uint32_t)(RTC_AlarmStruct->AlarmTime.Minutes) << 8) | ((uint32_t)RTC_AlarmStruct->AlarmTime.Seconds) | ((uint32_t)(RTC_AlarmStruct->AlarmTime.H12) << 16) | ((uint32_t)(RTC_AlarmStruct->DateWeekValue) << 24) | ((uint32_t)RTC_AlarmStruct->DateWeekMode) | ((uint32_t)RTC_AlarmStruct->AlarmMask));
     }
     else
     {
-        tmpregister = (((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->AlarmTime.Hours) << 16)
-                       | ((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->AlarmTime.Minutes) << 8)
-                       | ((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->AlarmTime.Seconds))
-                       | ((uint32_t)(RTC_AlarmStruct->AlarmTime.H12) << 16)
-                       | ((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->DateWeekValue) << 24)
-                       | ((uint32_t)RTC_AlarmStruct->DateWeekMode) | ((uint32_t)RTC_AlarmStruct->AlarmMask));
+        tmpregister = (((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->AlarmTime.Hours) << 16) | ((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->AlarmTime.Minutes) << 8) | ((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->AlarmTime.Seconds)) | ((uint32_t)(RTC_AlarmStruct->AlarmTime.H12) << 16) | ((uint32_t)RTC_ByteToBcd2(RTC_AlarmStruct->DateWeekValue) << 24) | ((uint32_t)RTC_AlarmStruct->DateWeekMode) | ((uint32_t)RTC_AlarmStruct->AlarmMask));
     }
 
     /* Disable the write protection for RTC registers */
@@ -996,16 +982,16 @@ void RTC_SetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType* RTC_Al
  * @param RTC_AlarmStruct pointer to a @ref RTC_AlarmType structure which
  *         will be initialized.
  */
-void RTC_AlarmStructInit(RTC_AlarmType* RTC_AlarmStruct)
+void RTC_AlarmStructInit(RTC_AlarmType *RTC_AlarmStruct)
 {
     /* Alarm Time Settings : Time = 00h:00mn:00sec */
-    RTC_AlarmStruct->AlarmTime.H12     = RTC_AM_H12;
-    RTC_AlarmStruct->AlarmTime.Hours   = 0;
+    RTC_AlarmStruct->AlarmTime.H12 = RTC_AM_H12;
+    RTC_AlarmStruct->AlarmTime.Hours = 0;
     RTC_AlarmStruct->AlarmTime.Minutes = 0;
     RTC_AlarmStruct->AlarmTime.Seconds = 0;
 
     /* Alarm Date Settings : Date = 1st day of the month */
-    RTC_AlarmStruct->DateWeekMode  = RTC_ALARM_SEL_WEEKDAY_DATE;
+    RTC_AlarmStruct->DateWeekMode = RTC_ALARM_SEL_WEEKDAY_DATE;
     RTC_AlarmStruct->DateWeekValue = 1;
 
     /* Alarm Masks Settings : Mask =  all fields are not masked */
@@ -1025,7 +1011,7 @@ void RTC_AlarmStructInit(RTC_AlarmType* RTC_AlarmStruct)
  * @param RTC_AlarmStruct pointer to a RTC_AlarmType structure that will
  *                          contains the output alarm configuration values.
  */
-void RTC_GetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType* RTC_AlarmStruct)
+void RTC_GetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType *RTC_AlarmStruct)
 {
     uint32_t tmpregister = 0;
 
@@ -1044,20 +1030,20 @@ void RTC_GetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType* RTC_Al
     }
 
     /* Fill the structure with the read parameters */
-    RTC_AlarmStruct->AlarmTime.Hours   = (uint32_t)((tmpregister & (RTC_ALARMA_HOT | RTC_ALARMA_HOU)) >> 16);
+    RTC_AlarmStruct->AlarmTime.Hours = (uint32_t)((tmpregister & (RTC_ALARMA_HOT | RTC_ALARMA_HOU)) >> 16);
     RTC_AlarmStruct->AlarmTime.Minutes = (uint32_t)((tmpregister & (RTC_ALARMA_MIT | RTC_ALARMA_MIU)) >> 8);
     RTC_AlarmStruct->AlarmTime.Seconds = (uint32_t)(tmpregister & (RTC_ALARMA_SET | RTC_ALARMA_SEU));
-    RTC_AlarmStruct->AlarmTime.H12     = (uint32_t)((tmpregister & RTC_ALARMA_APM) >> 16);
-    RTC_AlarmStruct->DateWeekValue     = (uint32_t)((tmpregister & (RTC_ALARMA_DTT | RTC_ALARMA_DTU)) >> 24);
-    RTC_AlarmStruct->DateWeekMode      = (uint32_t)(tmpregister & RTC_ALARMA_WKDSEL);
-    RTC_AlarmStruct->AlarmMask         = (uint32_t)(tmpregister & RTC_ALARMMASK_ALL);
+    RTC_AlarmStruct->AlarmTime.H12 = (uint32_t)((tmpregister & RTC_ALARMA_APM) >> 16);
+    RTC_AlarmStruct->DateWeekValue = (uint32_t)((tmpregister & (RTC_ALARMA_DTT | RTC_ALARMA_DTU)) >> 24);
+    RTC_AlarmStruct->DateWeekMode = (uint32_t)(tmpregister & RTC_ALARMA_WKDSEL);
+    RTC_AlarmStruct->AlarmMask = (uint32_t)(tmpregister & RTC_ALARMMASK_ALL);
 
     if (RTC_Format == RTC_FORMAT_BIN)
     {
-        RTC_AlarmStruct->AlarmTime.Hours   = RTC_Bcd2ToByte(RTC_AlarmStruct->AlarmTime.Hours);
+        RTC_AlarmStruct->AlarmTime.Hours = RTC_Bcd2ToByte(RTC_AlarmStruct->AlarmTime.Hours);
         RTC_AlarmStruct->AlarmTime.Minutes = RTC_Bcd2ToByte(RTC_AlarmStruct->AlarmTime.Minutes);
         RTC_AlarmStruct->AlarmTime.Seconds = RTC_Bcd2ToByte(RTC_AlarmStruct->AlarmTime.Seconds);
-        RTC_AlarmStruct->DateWeekValue     = RTC_Bcd2ToByte(RTC_AlarmStruct->DateWeekValue);
+        RTC_AlarmStruct->DateWeekValue = RTC_Bcd2ToByte(RTC_AlarmStruct->DateWeekValue);
     }
 }
 
@@ -1076,8 +1062,8 @@ void RTC_GetAlarm(uint32_t RTC_Format, uint32_t RTC_Alarm, RTC_AlarmType* RTC_Al
 ErrorStatus RTC_EnableAlarm(uint32_t RTC_Alarm, FunctionalState Cmd)
 {
     __IO uint32_t alarmcounter = 0x00;
-    uint32_t alarmstatus       = 0x00;
-    ErrorStatus status         = ERROR;
+    uint32_t alarmstatus = 0x00;
+    ErrorStatus status = ERROR;
 
     /* Check the parameters */
     assert_param(IS_RTC_ALARM_ENABLE(RTC_Alarm));
@@ -1312,8 +1298,8 @@ uint32_t RTC_GetWakeUpCounter(void)
 ErrorStatus RTC_EnableWakeUp(FunctionalState Cmd)
 {
     __IO uint32_t wutcounter = 0x00;
-    uint32_t wutwfstatus     = 0x00;
-    ErrorStatus status       = ERROR;
+    uint32_t wutwfstatus = 0x00;
+    ErrorStatus status = ERROR;
 
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
@@ -1571,7 +1557,7 @@ ErrorStatus RTC_ConfigSmoothCalib(uint32_t RTC_SmoothCalibPeriod,
                                   uint32_t RTC_SmoothCalibPlusPulses,
                                   uint32_t RTC_SmouthCalibMinusPulsesValue)
 {
-    ErrorStatus status    = ERROR;
+    ErrorStatus status = ERROR;
     uint32_t recalpfcount = 0;
 
     /* Check the parameters */
@@ -1597,8 +1583,7 @@ ErrorStatus RTC_ConfigSmoothCalib(uint32_t RTC_SmoothCalibPeriod,
     if ((RTC->INITSTS & RTC_INITSTS_RECPF) == RESET)
     {
         /* Configure the Smooth calibration settings */
-        RTC->CALIB = (uint32_t)((uint32_t)RTC_SmoothCalibPeriod | (uint32_t)RTC_SmoothCalibPlusPulses
-                                | (uint32_t)RTC_SmouthCalibMinusPulsesValue);
+        RTC->CALIB = (uint32_t)((uint32_t)RTC_SmoothCalibPeriod | (uint32_t)RTC_SmoothCalibPlusPulses | (uint32_t)RTC_SmouthCalibMinusPulsesValue);
 
         status = SUCCESS;
     }
@@ -1685,40 +1670,40 @@ void RTC_EnableTimeStamp(uint32_t RTC_TimeStampEdge, FunctionalState Cmd)
  * @param RTC_StampDateStruct pointer to a RTC_DateType structure that will
  *                             contains the TimeStamp date values.
  */
-void RTC_GetTimeStamp(uint32_t RTC_Format, RTC_TimeType* RTC_StampTimeStruct, RTC_DateType* RTC_StampDateStruct)
+void RTC_GetTimeStamp(uint32_t RTC_Format, RTC_TimeType *RTC_StampTimeStruct, RTC_DateType *RTC_StampDateStruct)
 {
     uint32_t tmptime = 0, tmpdate = 0;
-    
+
     /* Check the parameters */
     assert_param(IS_RTC_FORMAT(RTC_Format));
 
     /* Get the TimeStamp time and date registers values */
     tmptime = (uint32_t)(RTC->TST & RTC_TR_RESERVED_MASK);
     tmpdate = (uint32_t)(RTC->TSD & RTC_DATE_RESERVED_MASK);
-    
+
     /* Fill the Time structure fields with the read parameters */
-    RTC_StampTimeStruct->Hours   = (uint8_t)((tmptime & (RTC_TSH_HOT | RTC_TSH_HOU)) >> 16);
+    RTC_StampTimeStruct->Hours = (uint8_t)((tmptime & (RTC_TSH_HOT | RTC_TSH_HOU)) >> 16);
     RTC_StampTimeStruct->Minutes = (uint8_t)((tmptime & (RTC_TSH_MIT | RTC_TSH_MIU)) >> 8);
     RTC_StampTimeStruct->Seconds = (uint8_t)(tmptime & (RTC_TSH_SCT | RTC_TSH_SCU));
-    RTC_StampTimeStruct->H12     = (uint8_t)((tmptime & (RTC_TSH_APM)) >> 16);
+    RTC_StampTimeStruct->H12 = (uint8_t)((tmptime & (RTC_TSH_APM)) >> 16);
 
     /* Fill the Date structure fields with the read parameters */
-    RTC_StampDateStruct->Year    = (uint8_t)((tmpdate & (RTC_DATE_YRT | RTC_DATE_YRU)) >> 16);
-    RTC_StampDateStruct->Month   = (uint8_t)((tmpdate & (RTC_DATE_MOT | RTC_DATE_MOU)) >> 8);
-    RTC_StampDateStruct->Date    = (uint8_t)(tmpdate & (RTC_DATE_DAT | RTC_DATE_DAU));
+    RTC_StampDateStruct->Year = (uint8_t)((tmpdate & (RTC_DATE_YRT | RTC_DATE_YRU)) >> 16);
+    RTC_StampDateStruct->Month = (uint8_t)((tmpdate & (RTC_DATE_MOT | RTC_DATE_MOU)) >> 8);
+    RTC_StampDateStruct->Date = (uint8_t)(tmpdate & (RTC_DATE_DAT | RTC_DATE_DAU));
     RTC_StampDateStruct->WeekDay = (uint8_t)((tmpdate & (RTC_DATE_WDU)) >> 13);
 
     /* Check the input parameters format */
     if (RTC_Format == RTC_FORMAT_BIN)
     {
         /* Convert the Time structure parameters to Binary format */
-        RTC_StampTimeStruct->Hours   = (uint8_t)RTC_Bcd2ToByte(RTC_StampTimeStruct->Hours);
+        RTC_StampTimeStruct->Hours = (uint8_t)RTC_Bcd2ToByte(RTC_StampTimeStruct->Hours);
         RTC_StampTimeStruct->Minutes = (uint8_t)RTC_Bcd2ToByte(RTC_StampTimeStruct->Minutes);
         RTC_StampTimeStruct->Seconds = (uint8_t)RTC_Bcd2ToByte(RTC_StampTimeStruct->Seconds);
 
         /* Convert the Date structure parameters to Binary format */
-        RTC_StampDateStruct->Month   = (uint8_t)RTC_Bcd2ToByte(RTC_StampDateStruct->Month);
-        RTC_StampDateStruct->Date    = (uint8_t)RTC_Bcd2ToByte(RTC_StampDateStruct->Date);
+        RTC_StampDateStruct->Month = (uint8_t)RTC_Bcd2ToByte(RTC_StampDateStruct->Month);
+        RTC_StampDateStruct->Date = (uint8_t)RTC_Bcd2ToByte(RTC_StampDateStruct->Date);
         RTC_StampDateStruct->WeekDay = (uint8_t)RTC_Bcd2ToByte(RTC_StampDateStruct->WeekDay);
     }
 }
@@ -1748,8 +1733,6 @@ uint32_t RTC_GetTimeStampSubSecond(void)
 @endverbatim
   * @{
   */
-
-
 
 /**
  * @}
@@ -1987,8 +1970,7 @@ void RTC_ClrFlag(uint32_t RTC_FLAG)
     assert_param(IS_RTC_CLEAR_FLAG(RTC_FLAG));
 
     /* Clear the Flags in the RTC_INITSTS register */
-    RTC->INITSTS = (uint32_t)(
-        (uint32_t)(~((RTC_FLAG | RTC_INITSTS_INITM) & 0x0001FFFF) | (uint32_t)(RTC->INITSTS & RTC_INITSTS_INITM)) & RTC_INT_FLAG_RESERVED_MASK);
+    RTC->INITSTS = (uint32_t)((uint32_t)(~((RTC_FLAG | RTC_INITSTS_INITM) & 0x0001FFFF) | (uint32_t)(RTC->INITSTS & RTC_INITSTS_INITM)) & RTC_INT_FLAG_RESERVED_MASK);
 }
 
 /**
@@ -2003,16 +1985,16 @@ void RTC_ClrFlag(uint32_t RTC_FLAG)
  */
 INTStatus RTC_GetITStatus(uint32_t RTC_INT)
 {
-    INTStatus bitstatus  = RESET;
+    INTStatus bitstatus = RESET;
     uint32_t tmpregister = 0, enablestatus = 0;
     uint8_t tamperEnable = 0;
     /* Check the parameters */
     assert_param(IS_RTC_GET_INT(RTC_INT));
-    
+
     /* Get the Interrupt enable Status */
     if ((RTC_INT == RTC_INT_TAMP1) || (RTC_INT == RTC_INT_TAMP2))
     {
-        tamperEnable = ((RTC->TMPCFG & 0x00ff0000)>>16);
+        tamperEnable = ((RTC->TMPCFG & 0x00ff0000) >> 16);
         if (tamperEnable > 0)
         {
             enablestatus = SET;
@@ -2020,8 +2002,7 @@ INTStatus RTC_GetITStatus(uint32_t RTC_INT)
     }
     else
     {
-       enablestatus = (uint32_t)((RTC->CTRL & RTC_INT));
-    
+        enablestatus = (uint32_t)((RTC->CTRL & RTC_INT));
     }
     /* Get the Interrupt pending bit */
     tmpregister = (uint32_t)((RTC->INITSTS & (uint32_t)(RTC_INT >> 4)));
@@ -2058,8 +2039,7 @@ void RTC_ClrIntPendingBit(uint32_t RTC_INT)
     tmpregister = (uint32_t)(RTC_INT >> 4);
 
     /* Clear the interrupt pending bits in the RTC_INITSTS register */
-    RTC->INITSTS = (uint32_t)(
-        (uint32_t)(~((tmpregister | RTC_INITSTS_INITM) & 0x0000FFFF) | (uint32_t)(RTC->INITSTS & RTC_INITSTS_INITM)) & RTC_INT_FLAG_RESERVED_MASK);
+    RTC->INITSTS = (uint32_t)((uint32_t)(~((tmpregister | RTC_INITSTS_INITM) & 0x0000FFFF) | (uint32_t)(RTC->INITSTS & RTC_INITSTS_INITM)) & RTC_INT_FLAG_RESERVED_MASK);
 }
 
 /**
@@ -2092,13 +2072,12 @@ static uint8_t RTC_ByteToBcd2(uint8_t Value)
 static uint8_t RTC_Bcd2ToByte(uint8_t Value)
 {
     uint8_t tmp = 0;
-    tmp         = ((uint8_t)(Value & (uint8_t)0xF0) >> (uint8_t)0x4) * 10;
+    tmp = ((uint8_t)(Value & (uint8_t)0xF0) >> (uint8_t)0x4) * 10;
     return (tmp + (Value & (uint8_t)0x0F));
 }
 
-
 /** @defgroup RTC_Group9 Tampers configuration functions
- *  @brief   Tampers configuration functions 
+ *  @brief   Tampers configuration functions
  *
 @verbatim
  ===============================================================================
@@ -2116,8 +2095,8 @@ static uint8_t RTC_Bcd2ToByte(uint8_t Value)
   *     @arg RTC_Tamper_1: Select Tamper 1.
   *     @arg RTC_Tamper_2: Select Tamper 2.
 
-  * @param  RTC_TamperTrigger: Specifies the trigger on the tamper pin that 
-  *                            stimulates tamper event. 
+  * @param  RTC_TamperTrigger: Specifies the trigger on the tamper pin that
+  *                            stimulates tamper event.
   *   This parameter can be one of the following values:
   *     @arg RTC_TamperTrigger_RisingEdge: Rising Edge of the tamper pin causes tamper event.
   *     @arg RTC_TamperTrigger_FallingEdge: Falling Edge of the tamper pin causes tamper event.
@@ -2128,234 +2107,230 @@ static uint8_t RTC_Bcd2ToByte(uint8_t Value)
 void RTC_TamperTriggerConfig(uint32_t RTC_Tamper, uint32_t RTC_TamperTrigger)
 {
     /* Check the parameters */
-    assert_param(IS_RTC_TAMPER(RTC_Tamper)); 
-    assert_param(IS_RTC_TAMPER_TRIGGER(RTC_TamperTrigger));  
-   if (RTC_Tamper == RTC_TAMPER_2)
+    assert_param(IS_RTC_TAMPER(RTC_Tamper));
+    assert_param(IS_RTC_TAMPER_TRIGGER(RTC_TamperTrigger));
+    if (RTC_Tamper == RTC_TAMPER_2)
     {
         RTC_TamperTrigger <<= 3;
-        RTC->TMPCFG &= (uint32_t)(~RTC_TMPCFG_TP2TRG); 
+        RTC->TMPCFG &= (uint32_t)(~RTC_TMPCFG_TP2TRG);
     }
-    else 
+    else
     {
-        RTC->TMPCFG &= (uint32_t)(~RTC_TMPCFG_TP1TRG); 
-    
-    }        
-      
+        RTC->TMPCFG &= (uint32_t)(~RTC_TMPCFG_TP1TRG);
+    }
+
     /* Configure the RTC_TAMPCR register */
-    RTC->TMPCFG |= (uint32_t)( RTC_TamperTrigger);     
-    
+    RTC->TMPCFG |= (uint32_t)(RTC_TamperTrigger);
 }
 
 /**
-  * @brief  Enables or Disables the Tamper detection.
-  * @param  RTC_Tamper: Selected tamper pin.
-  *   This parameter can be any combination of the following values:
-  *     @arg RTC_TAMPER_1: Select Tamper 1.
-  *     @arg RTC_TAMPER_2: Select Tamper 2.
-  * @param  NewState: new state of the tamper pin.
-  *         This parameter can be: ENABLE or DISABLE.                   
-  * @retval None
-  */
+ * @brief  Enables or Disables the Tamper detection.
+ * @param  RTC_Tamper: Selected tamper pin.
+ *   This parameter can be any combination of the following values:
+ *     @arg RTC_TAMPER_1: Select Tamper 1.
+ *     @arg RTC_TAMPER_2: Select Tamper 2.
+ * @param  NewState: new state of the tamper pin.
+ *         This parameter can be: ENABLE or DISABLE.
+ * @retval None
+ */
 void RTC_TamperCmd(uint32_t RTC_Tamper, FunctionalState NewState)
 {
-  /* Check the parameters */
-  assert_param(IS_RTC_TAMPER(RTC_Tamper));  
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
-  if (NewState != DISABLE)
-  {
-    /* Enable the selected Tamper pin */
-    RTC->TMPCFG |= (uint32_t)RTC_Tamper;
-  }
-  else
-  {
-    /* Disable the selected Tamper pin */
-    RTC->TMPCFG &= (uint32_t)~RTC_Tamper;    
-  }  
+    /* Check the parameters */
+    assert_param(IS_RTC_TAMPER(RTC_Tamper));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
+
+    if (NewState != DISABLE)
+    {
+        /* Enable the selected Tamper pin */
+        RTC->TMPCFG |= (uint32_t)RTC_Tamper;
+    }
+    else
+    {
+        /* Disable the selected Tamper pin */
+        RTC->TMPCFG &= (uint32_t)~RTC_Tamper;
+    }
 }
 
 /**
-  * @brief  Configures the Tampers Filter.
-  * @param  RTC_TamperFilter: Specifies the tampers filter.
-  *   This parameter can be one of the following values:
-  *     @arg RTC_TamperFilter_Disable: Tamper filter is disabled.
-  *     @arg RTC_TamperFilter_2Sample: Tamper is activated after 2 consecutive 
-  *                                    samples at the active level.
-  *     @arg RTC_TamperFilter_4Sample: Tamper is activated after 4 consecutive 
-  *                                    samples at the active level.
-  *     @arg RTC_TamperFilter_8Sample: Tamper is activated after 8 consecutive 
-  *                                    samples at the active level.
-  * @retval None
-  */
+ * @brief  Configures the Tampers Filter.
+ * @param  RTC_TamperFilter: Specifies the tampers filter.
+ *   This parameter can be one of the following values:
+ *     @arg RTC_TamperFilter_Disable: Tamper filter is disabled.
+ *     @arg RTC_TamperFilter_2Sample: Tamper is activated after 2 consecutive
+ *                                    samples at the active level.
+ *     @arg RTC_TamperFilter_4Sample: Tamper is activated after 4 consecutive
+ *                                    samples at the active level.
+ *     @arg RTC_TamperFilter_8Sample: Tamper is activated after 8 consecutive
+ *                                    samples at the active level.
+ * @retval None
+ */
 void RTC_TamperFilterConfig(uint32_t RTC_TamperFilter)
 {
-  /* Check the parameters */
-  assert_param(IS_RTC_TAMPER_FILTER(RTC_TamperFilter));
-   
-  /* Clear TAMPFLT[1:0] bits in the RTC_TAMPCR register */
-  RTC->TMPCFG &= (uint32_t)~(RTC_TMPCFG_TPFLT);
+    /* Check the parameters */
+    assert_param(IS_RTC_TAMPER_FILTER(RTC_TamperFilter));
 
-  /* Configure the RTC_TAMPCR register */
-  RTC->TMPCFG |= (uint32_t)RTC_TamperFilter;
+    /* Clear TAMPFLT[1:0] bits in the RTC_TAMPCR register */
+    RTC->TMPCFG &= (uint32_t) ~(RTC_TMPCFG_TPFLT);
+
+    /* Configure the RTC_TAMPCR register */
+    RTC->TMPCFG |= (uint32_t)RTC_TamperFilter;
 }
 
 /**
-  * @brief  Configures the Tampers Sampling Frequency.
-  * @param  RTC_TamperSamplingFreq: Specifies the tampers Sampling Frequency.
-  *   This parameter can be one of the following values:
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div32768: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 32768
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div16384: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 16384
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div8192: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 8192
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div4096: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 4096
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div2048: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 2048
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div1024: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 1024
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div512: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 512  
-  *     @arg RTC_TamperSamplingFreq_RTCCLK_Div256: Each of the tamper inputs are sampled
-  *                                           with a frequency =  RTCCLK / 256  
-  * @retval None
-  */
+ * @brief  Configures the Tampers Sampling Frequency.
+ * @param  RTC_TamperSamplingFreq: Specifies the tampers Sampling Frequency.
+ *   This parameter can be one of the following values:
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div32768: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 32768
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div16384: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 16384
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div8192: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 8192
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div4096: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 4096
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div2048: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 2048
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div1024: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 1024
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div512: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 512
+ *     @arg RTC_TamperSamplingFreq_RTCCLK_Div256: Each of the tamper inputs are sampled
+ *                                           with a frequency =  RTCCLK / 256
+ * @retval None
+ */
 void RTC_TamperSamplingFreqConfig(uint32_t RTC_TamperSamplingFreq)
 {
-  /* Check the parameters */
-  assert_param(IS_RTC_TAMPER_SAMPLING_FREQ(RTC_TamperSamplingFreq));
- 
-  /* Clear TAMPFREQ[2:0] bits in the RTC_TAMPCR register */
-  RTC->TMPCFG &= (uint32_t)~(RTC_TAMPCR_TAMPFREQ);
+    /* Check the parameters */
+    assert_param(IS_RTC_TAMPER_SAMPLING_FREQ(RTC_TamperSamplingFreq));
 
-  /* Configure the RTC_TAMPCR register */
-  RTC->TMPCFG |= (uint32_t)RTC_TamperSamplingFreq;
+    /* Clear TAMPFREQ[2:0] bits in the RTC_TAMPCR register */
+    RTC->TMPCFG &= (uint32_t) ~(RTC_TAMPCR_TAMPFREQ);
+
+    /* Configure the RTC_TAMPCR register */
+    RTC->TMPCFG |= (uint32_t)RTC_TamperSamplingFreq;
 }
 
 /**
-  * @brief  Configures the Tampers Pins input Precharge Duration.
-  * @param  RTC_TamperPrechargeDuration: Specifies the Tampers Pins input
-  *         Precharge Duration.
-  *   This parameter can be one of the following values:
-  *     @arg RTC_TamperPrechargeDuration_1RTCCLK: Tamper pins are pre-charged before sampling during 1 RTCCLK cycle.
-  *     @arg RTC_TamperPrechargeDuration_2RTCCLK: Tamper pins are pre-charged before sampling during 2 RTCCLK cycle.
-  *     @arg RTC_TamperPrechargeDuration_4RTCCLK: Tamper pins are pre-charged before sampling during 4 RTCCLK cycle.
-  *     @arg RTC_TamperPrechargeDuration_8RTCCLK: Tamper pins are pre-charged before sampling during 8 RTCCLK cycle.
-  * @retval None
-  */
+ * @brief  Configures the Tampers Pins input Precharge Duration.
+ * @param  RTC_TamperPrechargeDuration: Specifies the Tampers Pins input
+ *         Precharge Duration.
+ *   This parameter can be one of the following values:
+ *     @arg RTC_TamperPrechargeDuration_1RTCCLK: Tamper pins are pre-charged before sampling during 1 RTCCLK cycle.
+ *     @arg RTC_TamperPrechargeDuration_2RTCCLK: Tamper pins are pre-charged before sampling during 2 RTCCLK cycle.
+ *     @arg RTC_TamperPrechargeDuration_4RTCCLK: Tamper pins are pre-charged before sampling during 4 RTCCLK cycle.
+ *     @arg RTC_TamperPrechargeDuration_8RTCCLK: Tamper pins are pre-charged before sampling during 8 RTCCLK cycle.
+ * @retval None
+ */
 void RTC_TamperPinsPrechargeDuration(uint32_t RTC_TamperPrechargeDuration)
 {
-  /* Check the parameters */
-  assert_param(IS_RTC_TAMPER_PRECHARGE_DURATION(RTC_TamperPrechargeDuration));
-   
-  /* Clear TAMPPRCH[1:0] bits in the RTC_TAMPCR register */
-  RTC->TMPCFG &= (uint32_t)~(RTC_TMPCFG_TPPRCH);
+    /* Check the parameters */
+    assert_param(IS_RTC_TAMPER_PRECHARGE_DURATION(RTC_TamperPrechargeDuration));
 
-  /* Configure the RTC_TAMPCR register */
-  RTC->TMPCFG |= (uint32_t)RTC_TamperPrechargeDuration;
+    /* Clear TAMPPRCH[1:0] bits in the RTC_TAMPCR register */
+    RTC->TMPCFG &= (uint32_t) ~(RTC_TMPCFG_TPPRCH);
+
+    /* Configure the RTC_TAMPCR register */
+    RTC->TMPCFG |= (uint32_t)RTC_TamperPrechargeDuration;
 }
 
 /**
-  * @brief  Enables or Disables the TimeStamp on Tamper Detection Event.
-  * @note   The timestamp is valid even the TSEN bit in tamper control register 
-  *         is reset.   
-  * @param  NewState: new state of the timestamp on tamper event.
-  *         This parameter can be: ENABLE or DISABLE.
-  * @retval None
-  */
+ * @brief  Enables or Disables the TimeStamp on Tamper Detection Event.
+ * @note   The timestamp is valid even the TSEN bit in tamper control register
+ *         is reset.
+ * @param  NewState: new state of the timestamp on tamper event.
+ *         This parameter can be: ENABLE or DISABLE.
+ * @retval None
+ */
 void RTC_TimeStampOnTamperDetectionCmd(FunctionalState NewState)
 {
-  /* Check the parameters */
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-   
-  if (NewState != DISABLE)
-  {
-    /* Save timestamp on tamper detection event */
-    RTC->TMPCFG |= (uint32_t)RTC_TMPCFG_TPTS;
-  }
-  else
-  {
-    /* Tamper detection does not cause a timestamp to be saved */
-    RTC->TMPCFG &= (uint32_t)~RTC_TMPCFG_TPTS;    
-  }
+    /* Check the parameters */
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
+
+    if (NewState != DISABLE)
+    {
+        /* Save timestamp on tamper detection event */
+        RTC->TMPCFG |= (uint32_t)RTC_TMPCFG_TPTS;
+    }
+    else
+    {
+        /* Tamper detection does not cause a timestamp to be saved */
+        RTC->TMPCFG &= (uint32_t)~RTC_TMPCFG_TPTS;
+    }
 }
 
 /**
-  * @brief  Enables or Disables the Precharge of Tamper pin.
-  * @param  NewState: new state of tamper pull up.
-  *   This parameter can be: ENABLE or DISABLE.                   
-  * @retval None
-  */
+ * @brief  Enables or Disables the Precharge of Tamper pin.
+ * @param  NewState: new state of tamper pull up.
+ *   This parameter can be: ENABLE or DISABLE.
+ * @retval None
+ */
 void RTC_TamperPullUpCmd(FunctionalState NewState)
 {
-  /* Check the parameters */
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
- if (NewState != DISABLE)
-  {
-    /* Enable precharge of the selected Tamper pin */
-    RTC->TMPCFG &= (uint32_t)~RTC_TMPCFG_TPPUDIS; 
-  }
-  else
-  {
-    /* Disable precharge of the selected Tamper pin */
-    RTC->TMPCFG |= (uint32_t)RTC_TMPCFG_TPPUDIS;    
-  } 
+    /* Check the parameters */
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
+
+    if (NewState != DISABLE)
+    {
+        /* Enable precharge of the selected Tamper pin */
+        RTC->TMPCFG &= (uint32_t)~RTC_TMPCFG_TPPUDIS;
+    }
+    else
+    {
+        /* Disable precharge of the selected Tamper pin */
+        RTC->TMPCFG |= (uint32_t)RTC_TMPCFG_TPPUDIS;
+    }
 }
 
 /**
-  * @brief  Enables or Disables the TAMPTS.
-  * @param  NewState: new state of TAMPTS.
-  *   This parameter can be: ENABLE or DISABLE.                   
-  * @retval None
-  */
+ * @brief  Enables or Disables the TAMPTS.
+ * @param  NewState: new state of TAMPTS.
+ *   This parameter can be: ENABLE or DISABLE.
+ * @retval None
+ */
 void RTC_TamperTAMPTSCmd(FunctionalState NewState)
 {
-  /* Check the parameters */
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
- if (NewState != DISABLE)
-  {
-    /* Enable precharge of the selected Tamper pin */
-    RTC->TMPCFG |= (uint32_t)RTC_TMPCFG_TPTS;  
-  }
-  else
-  {
-    /* Disable precharge of the selected Tamper pin */
-    RTC->TMPCFG &= (uint32_t)~RTC_TMPCFG_TPTS;
-  } 
+    /* Check the parameters */
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
+
+    if (NewState != DISABLE)
+    {
+        /* Enable precharge of the selected Tamper pin */
+        RTC->TMPCFG |= (uint32_t)RTC_TMPCFG_TPTS;
+    }
+    else
+    {
+        /* Disable precharge of the selected Tamper pin */
+        RTC->TMPCFG &= (uint32_t)~RTC_TMPCFG_TPTS;
+    }
 }
 
 /**
-  * @brief  Enables or Disables the Tamper detection.
-  * @param  RTC_Tamper: Selected tamper pin.
-  *   This parameter can be any combination of the following values:
-  *     @arg RTC_TAMPER1_INT: Select Tamper 1.
-  *     @arg RTC_TAMPER2_INT: Select Tamper 2.
-  * @param  NewState: new state of the tamper pin.
-  *         This parameter can be: ENABLE or DISABLE.                   
-  * @retval None
-  */
+ * @brief  Enables or Disables the Tamper detection.
+ * @param  RTC_Tamper: Selected tamper pin.
+ *   This parameter can be any combination of the following values:
+ *     @arg RTC_TAMPER1_INT: Select Tamper 1.
+ *     @arg RTC_TAMPER2_INT: Select Tamper 2.
+ * @param  NewState: new state of the tamper pin.
+ *         This parameter can be: ENABLE or DISABLE.
+ * @retval None
+ */
 void RTC_TamperIECmd(uint32_t TAMPxIE, FunctionalState NewState)
 {
-  /* Check the parameters */
-  assert_param(IS_RTC_TAMPER_INT(TAMPxIE));  
-  assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
-  if (NewState != DISABLE)
-  {
-    /* Enable the selected Tamper pin */
-    RTC->TMPCFG |= (uint32_t)TAMPxIE;
-  }
-  else
-  {
-    /* Disable the selected Tamper pin */
-    RTC->TMPCFG &= (uint32_t)~TAMPxIE;    
-  }  
+    /* Check the parameters */
+    assert_param(IS_RTC_TAMPER_INT(TAMPxIE));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
+
+    if (NewState != DISABLE)
+    {
+        /* Enable the selected Tamper pin */
+        RTC->TMPCFG |= (uint32_t)TAMPxIE;
+    }
+    else
+    {
+        /* Disable the selected Tamper pin */
+        RTC->TMPCFG &= (uint32_t)~TAMPxIE;
+    }
 }
-
-
 
 /**
  * @}

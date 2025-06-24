@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_dma.c
- * @author Nations
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_dma.h"
 #include "n32g031_rcc.h"
@@ -103,7 +103,7 @@
  * @param DMAyChx where y can be 1 or 2 to select the DMA and
  *   x can be 1 to 5 for DMA1 and 1 to 5 for DMA2 to select the DMA Channel.
  */
-void DMA_DeInit(DMA_ChannelType* DMAChx)
+void DMA_DeInit(DMA_ChannelType *DMAChx)
 {
     /* Check the parameters */
     assert_param(IS_DMA_ALL_PERIPH(DMAChx));
@@ -157,7 +157,7 @@ void DMA_DeInit(DMA_ChannelType* DMAChx)
  * @param DMA_InitParam pointer to a DMA_InitType structure that
  *         contains the configuration information for the specified DMA Channel.
  */
-void DMA_Init(DMA_ChannelType* DMAChx, DMA_InitType* DMA_InitParam)
+void DMA_Init(DMA_ChannelType *DMAChx, DMA_InitType *DMA_InitParam)
 {
     uint32_t tmpregister = 0;
 
@@ -187,9 +187,7 @@ void DMA_Init(DMA_ChannelType* DMAChx, DMA_InitType* DMA_InitParam)
     /* Set MSIZE bits according to MemDataSize value */
     /* Set PL bits according to Priority value */
     /* Set the MEM2MEM bit according to Mem2Mem value */
-    tmpregister |= DMA_InitParam->Direction | DMA_InitParam->CircularMode | DMA_InitParam->PeriphInc
-                   | DMA_InitParam->DMA_MemoryInc | DMA_InitParam->PeriphDataSize | DMA_InitParam->MemDataSize
-                   | DMA_InitParam->Priority | DMA_InitParam->Mem2Mem;
+    tmpregister |= DMA_InitParam->Direction | DMA_InitParam->CircularMode | DMA_InitParam->PeriphInc | DMA_InitParam->DMA_MemoryInc | DMA_InitParam->PeriphDataSize | DMA_InitParam->MemDataSize | DMA_InitParam->Priority | DMA_InitParam->Mem2Mem;
 
     /* Write to DMAy Channelx CHCFG */
     DMAChx->CHCFG = tmpregister;
@@ -212,7 +210,7 @@ void DMA_Init(DMA_ChannelType* DMAChx, DMA_InitType* DMA_InitParam)
  * @param DMA_InitParam pointer to a DMA_InitType structure which will
  *         be initialized.
  */
-void DMA_StructInit(DMA_InitType* DMA_InitParam)
+void DMA_StructInit(DMA_InitType *DMA_InitParam)
 {
     /*-------------- Reset DMA init structure parameters values ------------------*/
     /* Initialize the PeriphAddr member */
@@ -245,7 +243,7 @@ void DMA_StructInit(DMA_InitType* DMA_InitParam)
  * @param Cmd new state of the DMA Channelx.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void DMA_EnableChannel(DMA_ChannelType* DMAChx, FunctionalState Cmd)
+void DMA_EnableChannel(DMA_ChannelType *DMAChx, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_DMA_ALL_PERIPH(DMAChx));
@@ -275,7 +273,7 @@ void DMA_EnableChannel(DMA_ChannelType* DMAChx, FunctionalState Cmd)
  * @param Cmd new state of the specified DMA interrupts.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void DMA_ConfigInt(DMA_ChannelType* DMAChx, uint32_t DMAInt, FunctionalState Cmd)
+void DMA_ConfigInt(DMA_ChannelType *DMAChx, uint32_t DMAInt, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_DMA_ALL_PERIPH(DMAChx));
@@ -300,7 +298,7 @@ void DMA_ConfigInt(DMA_ChannelType* DMAChx, uint32_t DMAInt, FunctionalState Cmd
  *         transfer.
  * @note   This function can only be used when the DMAyChx is disabled.
  */
-void DMA_SetCurrDataCounter(DMA_ChannelType* DMAChx, uint16_t DataNumber)
+void DMA_SetCurrDataCounter(DMA_ChannelType *DMAChx, uint16_t DataNumber)
 {
     /* Check the parameters */
     assert_param(IS_DMA_ALL_PERIPH(DMAChx));
@@ -317,7 +315,7 @@ void DMA_SetCurrDataCounter(DMA_ChannelType* DMAChx, uint16_t DataNumber)
  * @return The number of remaining data units in the current DMA Channelx
  *         transfer.
  */
-uint16_t DMA_GetCurrDataCounter(DMA_ChannelType* DMAChx)
+uint16_t DMA_GetCurrDataCounter(DMA_ChannelType *DMAChx)
 {
     /* Check the parameters */
     assert_param(IS_DMA_ALL_PERIPH(DMAChx));
@@ -354,7 +352,7 @@ uint16_t DMA_GetCurrDataCounter(DMA_ChannelType* DMAChx)
  *     @arg DMA .
  * @return The new state of DMAFlag (SET or RESET).
  */
-FlagStatus DMA_GetFlagStatus(uint32_t DMAFlag, DMA_Module* DMAy)
+FlagStatus DMA_GetFlagStatus(uint32_t DMAFlag, DMA_Module *DMAy)
 {
     FlagStatus bitstatus = RESET;
     uint32_t tmpregister = 0;
@@ -410,7 +408,7 @@ FlagStatus DMA_GetFlagStatus(uint32_t DMAFlag, DMA_Module* DMAy)
  *   This parameter can be one of the following values:
  *     @arg DMA .
  */
-void DMA_ClearFlag(uint32_t DMAFlag, DMA_Module* DMAy)
+void DMA_ClearFlag(uint32_t DMAFlag, DMA_Module *DMAy)
 {
     /* Check the parameters */
     assert_param(IS_DMA_CLEAR_FLAG(DMAFlag));
@@ -449,9 +447,9 @@ void DMA_ClearFlag(uint32_t DMAFlag, DMA_Module* DMAy)
  *     @arg DMA .
  * @return The new state of DMA_IT (SET or RESET).
  */
-INTStatus DMA_GetIntStatus(uint32_t DMA_IT, DMA_Module* DMAy)
+INTStatus DMA_GetIntStatus(uint32_t DMA_IT, DMA_Module *DMAy)
 {
-    INTStatus bitstatus  = RESET;
+    INTStatus bitstatus = RESET;
     uint32_t tmpregister = 0;
 
     /* Check the parameters */
@@ -504,7 +502,7 @@ INTStatus DMA_GetIntStatus(uint32_t DMA_IT, DMA_Module* DMAy)
  *   This parameter can be one of the following values:
  *     @arg DMA .
  */
-void DMA_ClrIntPendingBit(uint32_t DMA_IT, DMA_Module* DMAy)
+void DMA_ClrIntPendingBit(uint32_t DMA_IT, DMA_Module *DMAy)
 {
     /* Check the parameters */
     assert_param(IS_DMA_CLR_INT(DMA_IT));
@@ -552,7 +550,7 @@ void DMA_ClrIntPendingBit(uint32_t DMA_IT, DMA_Module* DMAy)
  *     @arg DMA_REMAP_TIM3_CH4       DMA Request For TIM3_CH4.
  *     @arg DMA_REMAP_TIM3_UP        DMA Request For TIM3_UP.
  *     @arg DMA_REMAP_TIM3_TRIG      DMA Request For TIM3_TRIG.
- *     @arg DMA_REMAP_TIM6           DMA Request For TIM6.			
+ *     @arg DMA_REMAP_TIM6           DMA Request For TIM6.
  * @param DMAy DMA
  *   This parameter can be one of the following values:
  *     @arg DMA .
@@ -560,7 +558,7 @@ void DMA_ClrIntPendingBit(uint32_t DMA_IT, DMA_Module* DMAy)
  * @param Cmd new state of the DMA Channelx.
  *   This parameter can be: ENABLE or DISABLE.
  */
-void DMA_RequestRemap(uint32_t DMA_REMAP, DMA_Module* DMAy, DMA_ChannelType* DMAChx, FunctionalState Cmd)
+void DMA_RequestRemap(uint32_t DMA_REMAP, DMA_Module *DMAy, DMA_ChannelType *DMAChx, FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_DMA_REMAP(DMA_REMAP));

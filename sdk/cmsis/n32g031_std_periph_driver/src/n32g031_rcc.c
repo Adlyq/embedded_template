@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_rcc.c
- * @author Nations
+ * @author Nsing
  * @version v1.0.1
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_rcc.h"
 
@@ -58,72 +58,72 @@
 /* ---------------------- RCC registers bit mask ------------------------ */
 
 /* CTRL register bit mask */
-#define CTRL_PLLEN_RESET    ((uint32_t)0xFEFFFFFF)
-#define CTRL_PLLEN_SET      ((uint32_t)0x01000000)
+#define CTRL_PLLEN_RESET ((uint32_t)0xFEFFFFFF)
+#define CTRL_PLLEN_SET ((uint32_t)0x01000000)
 #define CTRL_PLLOUTEN_RESET ((uint32_t)0xFF7FFFFF)
-#define CTRL_PLLOUTEN_SET   ((uint32_t)0x00800000)
-#define CTRL_CLKSSEN_RESET  ((uint32_t)0xFFF7FFFF)
-#define CTRL_CLKSSEN_SET    ((uint32_t)0x00080000)
-#define CTRL_HSEEN_RESET    ((uint32_t)0xFFFEFFFF)
-#define CTRL_HSEEN_SET      ((uint32_t)0x00010000)
-#define CTRL_HSEBP_RESET    ((uint32_t)0xFFFBFFFF)
-#define CTRL_HSEBP_SET      ((uint32_t)0x00040000)
-#define CTRL_HSITRIM_MASK   ((uint32_t)0xFFFFFF07)
-#define CTRL_HSIEN_RESET    ((uint32_t)0xFFFFFFFE)
-#define CTRL_HSIEN_SET      ((uint32_t)0x00000001)
+#define CTRL_PLLOUTEN_SET ((uint32_t)0x00800000)
+#define CTRL_CLKSSEN_RESET ((uint32_t)0xFFF7FFFF)
+#define CTRL_CLKSSEN_SET ((uint32_t)0x00080000)
+#define CTRL_HSEEN_RESET ((uint32_t)0xFFFEFFFF)
+#define CTRL_HSEEN_SET ((uint32_t)0x00010000)
+#define CTRL_HSEBP_RESET ((uint32_t)0xFFFBFFFF)
+#define CTRL_HSEBP_SET ((uint32_t)0x00040000)
+#define CTRL_HSITRIM_MASK ((uint32_t)0xFFFFFF07)
+#define CTRL_HSIEN_RESET ((uint32_t)0xFFFFFFFE)
+#define CTRL_HSIEN_SET ((uint32_t)0x00000001)
 
 /* CFG register bit mask */
 #define CFG_PLL_MASK ((uint32_t)0xFEC0FFFF)
 
-#define CFG_PLLSRC_MASK         ((uint32_t)0x01000000)
-#define CFG_PLLOUTDIV_MASK      ((uint32_t)0x00C00000)
-#define CFG_PLLPRE_MASK         ((uint32_t)0x00300000)
-#define CFG_PLLMULFCT_MASK      ((uint32_t)0x000F0000)
+#define CFG_PLLSRC_MASK ((uint32_t)0x01000000)
+#define CFG_PLLOUTDIV_MASK ((uint32_t)0x00C00000)
+#define CFG_PLLPRE_MASK ((uint32_t)0x00300000)
+#define CFG_PLLMULFCT_MASK ((uint32_t)0x000F0000)
 #define CFG_APB2PRES_RESET_MASK ((uint32_t)0xFFFFC7FF)
-#define CFG_APB2PRES_SET_MASK   ((uint32_t)0x00003800)
+#define CFG_APB2PRES_SET_MASK ((uint32_t)0x00003800)
 #define CFG_APB1PRES_RESET_MASK ((uint32_t)0xFFFFF8FF)
-#define CFG_APB1PRES_SET_MASK   ((uint32_t)0x00000700)
-#define CFG_AHBPRES_RESET_MASK  ((uint32_t)0xFFFFFF0F)
-#define CFG_AHBPRES_SET_MASK    ((uint32_t)0x000000F0)
-#define CFG_SCLKSTS_MASK        ((uint32_t)0x0000C008)
-#define CFG_SCLKSW_MASK         ((uint32_t)0xFFFFFFF8)
+#define CFG_APB1PRES_SET_MASK ((uint32_t)0x00000700)
+#define CFG_AHBPRES_RESET_MASK ((uint32_t)0xFFFFFF0F)
+#define CFG_AHBPRES_SET_MASK ((uint32_t)0x000000F0)
+#define CFG_SCLKSTS_MASK ((uint32_t)0x0000C008)
+#define CFG_SCLKSW_MASK ((uint32_t)0xFFFFFFF8)
 
 /* CLKINT register bit mask */
-#define CLKINT_RAMCERRRST_SET_MASK   ((uint32_t)0x00004000)
+#define CLKINT_RAMCERRRST_SET_MASK ((uint32_t)0x00004000)
 #define CLKINT_RAMCERRRST_RESET_MASK ((uint32_t)0xFFFFBFFF)
 
 /* LSCTRL register bit mask */
-#define LSCTRL_LSIEN_SET_MASK         ((uint32_t)0x00000001)
-#define LSCTRL_LSIEN_RESET_MASK       ((uint32_t)0xFFFFFFFE)
-#define LSCTRL_LSEEN_SET_MASK         ((uint32_t)0x00000004)
-#define LSCTRL_LSEEN_RESET_MASK       ((uint32_t)0xFFFFFFFB)
-#define LSCTRL_LSEBP_SET_MASK         ((uint32_t)0x00000010)
-#define LSCTRL_LSEBP_RESET_MASK       ((uint32_t)0xFFFFFFEF)
-#define LSCTRL_RTCSEL_SET_MASK        ((uint32_t)0x00000060)
-#define LSCTRL_RTCSEL_RESET_MASK      ((uint32_t)0xFFFFFF9F)
-#define LSCTRL_RTCEN_SET_MASK         ((uint32_t)0x00000080)
-#define LSCTRL_RTCEN_RESET_MASK       ((uint32_t)0xFFFFFF7F)
-#define LSCTRL_RTCRST_SET_MASK        ((uint32_t)0x00000100)
-#define LSCTRL_RTCRST_RESET_MASK      ((uint32_t)0xFFFFFEFF)
-#define LSCTRL_LPRUNCLKSEL_SET_MASK   ((uint32_t)0x00000200)
+#define LSCTRL_LSIEN_SET_MASK ((uint32_t)0x00000001)
+#define LSCTRL_LSIEN_RESET_MASK ((uint32_t)0xFFFFFFFE)
+#define LSCTRL_LSEEN_SET_MASK ((uint32_t)0x00000004)
+#define LSCTRL_LSEEN_RESET_MASK ((uint32_t)0xFFFFFFFB)
+#define LSCTRL_LSEBP_SET_MASK ((uint32_t)0x00000010)
+#define LSCTRL_LSEBP_RESET_MASK ((uint32_t)0xFFFFFFEF)
+#define LSCTRL_RTCSEL_SET_MASK ((uint32_t)0x00000060)
+#define LSCTRL_RTCSEL_RESET_MASK ((uint32_t)0xFFFFFF9F)
+#define LSCTRL_RTCEN_SET_MASK ((uint32_t)0x00000080)
+#define LSCTRL_RTCEN_RESET_MASK ((uint32_t)0xFFFFFF7F)
+#define LSCTRL_RTCRST_SET_MASK ((uint32_t)0x00000100)
+#define LSCTRL_RTCRST_RESET_MASK ((uint32_t)0xFFFFFEFF)
+#define LSCTRL_LPRUNCLKSEL_SET_MASK ((uint32_t)0x00000200)
 #define LSCTRL_LPRUNCLKSEL_RESET_MASK ((uint32_t)0xFFFFFDFF)
 
 /* CFG2 register bit mask */
-#define CFG2_TIM18CLKSEL_SET_MASK   ((uint32_t)0x80000000)
+#define CFG2_TIM18CLKSEL_SET_MASK ((uint32_t)0x80000000)
 #define CFG2_TIM18CLKSEL_RESET_MASK ((uint32_t)0x7FFFFFFF)
 
-#define CFG2_LPUARTCLK_SET_MASK     ((uint32_t)0x0E000000)
-#define CFG2_LPUARTCLK_RESET_MASK   ((uint32_t)0xF1FFFFFF)
-#define CFG2_LPTIMCLK_SET_MASK      ((uint32_t)0x00E00000)
-#define CFG2_LPTIMCLK_RESET_MASK    ((uint32_t)0xFF1FFFFF)
-#define CFG2_ADC1MSEL_SET_MASK      ((uint32_t)0x00000400)
-#define CFG2_ADC1MSEL_RESET_MASK    ((uint32_t)0xFFFFFBFF)
-#define CFG2_ADC1MPRES_SET_MASK     ((uint32_t)0x0000F800)
-#define CFG2_ADC1MPRES_RESET_MASK   ((uint32_t)0xFFFF07FF)
-#define CFG2_ADCPLLPRES_SET_MASK    ((uint32_t)0x000001F0)
-#define CFG2_ADCPLLPRES_RESET_MASK  ((uint32_t)0xFFFFFE0F)
-#define CFG2_ADCHPRES_SET_MASK      ((uint32_t)0x0000000F)
-#define CFG2_ADCHPRES_RESET_MASK    ((uint32_t)0xFFFFFFF0)
+#define CFG2_LPUARTCLK_SET_MASK ((uint32_t)0x0E000000)
+#define CFG2_LPUARTCLK_RESET_MASK ((uint32_t)0xF1FFFFFF)
+#define CFG2_LPTIMCLK_SET_MASK ((uint32_t)0x00E00000)
+#define CFG2_LPTIMCLK_RESET_MASK ((uint32_t)0xFF1FFFFF)
+#define CFG2_ADC1MSEL_SET_MASK ((uint32_t)0x00000400)
+#define CFG2_ADC1MSEL_RESET_MASK ((uint32_t)0xFFFFFBFF)
+#define CFG2_ADC1MPRES_SET_MASK ((uint32_t)0x0000F800)
+#define CFG2_ADC1MPRES_RESET_MASK ((uint32_t)0xFFFF07FF)
+#define CFG2_ADCPLLPRES_SET_MASK ((uint32_t)0x000001F0)
+#define CFG2_ADCPLLPRES_RESET_MASK ((uint32_t)0xFFFFFE0F)
+#define CFG2_ADCHPRES_SET_MASK ((uint32_t)0x0000000F)
+#define CFG2_ADCHPRES_RESET_MASK ((uint32_t)0xFFFFFFF0)
 
 /* CTRLSTS register bit mask */
 #define CSR_RMRSTF_SET ((uint32_t)0x00000001)
@@ -154,8 +154,8 @@
  * @{
  */
 
-static const uint8_t s_ApbAhbPresTable[16]     = {0, 0, 0, 0, 1, 2, 3, 4, 1, 2, 3, 4, 6, 7, 8, 9};
-static const uint8_t s_AdcHclkPresTable[16]    = {1, 2, 4, 6, 8, 10, 12, 16, 32, 32, 32, 32, 32, 32, 32, 32};
+static const uint8_t s_ApbAhbPresTable[16] = {0, 0, 0, 0, 1, 2, 3, 4, 1, 2, 3, 4, 6, 7, 8, 9};
+static const uint8_t s_AdcHclkPresTable[16] = {1, 2, 4, 6, 8, 10, 12, 16, 32, 32, 32, 32, 32, 32, 32, 32};
 static const uint16_t s_AdcPllClkPresTable[16] = {1, 2, 4, 6, 8, 10, 12, 16, 32, 64, 128, 256, 256, 256, 256, 256};
 
 /**
@@ -190,7 +190,7 @@ void RCC_DeInit(void)
 
     /* Reset PLLBPbit */
     RCC->CTRL &= (uint32_t)0xFFBFFFFF;
-  
+
     /* Reset PLLMULFCT, PLLPRE, PLLOUTDIV and PLLSRC bits */
     RCC->CFG &= (uint32_t)0xFE00FFFF;
 
@@ -222,18 +222,18 @@ void RCC_ConfigHse(uint32_t RCC_HSE)
     /* Configure HSE (RCC_HSE_DISABLE is already covered by the code section above) */
     switch (RCC_HSE)
     {
-        case RCC_HSE_ENABLE:
-            /* Set HSEEN bit */
-            RCC->CTRL |= CTRL_HSEEN_SET;
-            break;
+    case RCC_HSE_ENABLE:
+        /* Set HSEEN bit */
+        RCC->CTRL |= CTRL_HSEEN_SET;
+        break;
 
-        case RCC_HSE_BYPASS:
-            /* Set HSEIOSEL and HSEEN bits */
-            RCC->CTRL |= RCC_HSE_BYPASS | CTRL_HSEEN_SET;
-            break;
+    case RCC_HSE_BYPASS:
+        /* Set HSEIOSEL and HSEEN bits */
+        RCC->CTRL |= RCC_HSE_BYPASS | CTRL_HSEEN_SET;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -246,8 +246,8 @@ void RCC_ConfigHse(uint32_t RCC_HSE)
 ErrorStatus RCC_WaitHseStable(void)
 {
     __IO uint32_t StartUpCounter = 0;
-    ErrorStatus status           = ERROR;
-    FlagStatus HSEStatus         = RESET;
+    ErrorStatus status = ERROR;
+    FlagStatus HSEStatus = RESET;
 
     /* Wait till HSE is ready and if Time out is reached exit */
     do
@@ -284,13 +284,13 @@ void RCC_ConfigHsi(uint32_t RCC_HSI)
     /* Configure HSI */
     switch (RCC_HSI)
     {
-        case RCC_HSI_ENABLE:
-            /* Set HSIEN bit */
-            RCC->CTRL |= CTRL_HSIEN_SET;
-            break;
+    case RCC_HSI_ENABLE:
+        /* Set HSIEN bit */
+        RCC->CTRL |= CTRL_HSIEN_SET;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -303,8 +303,8 @@ void RCC_ConfigHsi(uint32_t RCC_HSI)
 ErrorStatus RCC_WaitHsiStable(void)
 {
     __IO uint32_t StartUpCounter = 0;
-    ErrorStatus status           = ERROR;
-    FlagStatus HSIStatus         = RESET;
+    ErrorStatus status = ERROR;
+    FlagStatus HSIStatus = RESET;
 
     /* Wait till HSI is ready and if Time out is reached exit */
     do
@@ -353,16 +353,16 @@ void RCC_EnableHsi(FunctionalState Cmd)
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
 
-   if(Cmd == ENABLE)
-   {
-       /* Set HSIEN bit */
-       RCC->CTRL |= CTRL_HSIEN_SET;
-   }
-   else
-   {
-       /* Reset HSIEN bit */
-       RCC->CTRL &= CTRL_HSIEN_RESET;
-   }
+    if (Cmd == ENABLE)
+    {
+        /* Set HSIEN bit */
+        RCC->CTRL |= CTRL_HSIEN_SET;
+    }
+    else
+    {
+        /* Reset HSIEN bit */
+        RCC->CTRL &= CTRL_HSIEN_RESET;
+    }
 }
 
 /**
@@ -392,7 +392,7 @@ void RCC_ConfigPll(uint32_t RCC_PLLSource, uint32_t RCC_PLLMul, uint32_t RCC_PLL
     assert_param(IS_RCC_PLL_MUL(RCC_PLLMul));
     assert_param(IS_RCC_PLL_PRE(RCC_PLLPRE));
     assert_param(IS_RCC_PLLOUT_DIV(RCC_PLLOUTDIV));
-    
+
     /* Clear PLLOUTDIV PLLPRE bits */
     RCC->CFG &= (~CFG_PLLOUTDIV_MASK);
 
@@ -401,7 +401,7 @@ void RCC_ConfigPll(uint32_t RCC_PLLSource, uint32_t RCC_PLLMul, uint32_t RCC_PLL
     tmpregister &= CFG_PLL_MASK;
 
     /* Set the PLL configuration bits */
-    if((RCC_PLLSource == RCC_PLL_SRC_HSI) || (RCC_PLLSource == RCC_PLL_SRC_HSE))
+    if ((RCC_PLLSource == RCC_PLL_SRC_HSI) || (RCC_PLLSource == RCC_PLL_SRC_HSE))
     {
         tmpregister |= (RCC_PLLSource | RCC_PLLMul | RCC_PLLPRE | RCC_PLLOUTDIV);
     }
@@ -410,12 +410,12 @@ void RCC_ConfigPll(uint32_t RCC_PLLSource, uint32_t RCC_PLLMul, uint32_t RCC_PLL
     {
         rccctrlregister = RCC->CTRL;
 
-        tmpregister     |= RCC_PLLOUTDIV;
+        tmpregister |= RCC_PLLOUTDIV;
         rccctrlregister |= RCC_PLL_SRC_BP;
         RCC->CTRL = rccctrlregister;
     }
     /* Store the new value */
-    RCC->CFG  = tmpregister;
+    RCC->CFG = tmpregister;
 }
 
 /**
@@ -428,16 +428,16 @@ void RCC_EnablePll(FunctionalState Cmd)
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
 
-    if(Cmd == ENABLE)
-   {
-       /* Set PLLEN bit */
-       RCC->CTRL |= CTRL_PLLEN_SET;
-   }
-   else
-   {
-       /* Reset PLLEN bit */
-       RCC->CTRL &= CTRL_PLLEN_RESET;
-   }
+    if (Cmd == ENABLE)
+    {
+        /* Set PLLEN bit */
+        RCC->CTRL |= CTRL_PLLEN_SET;
+    }
+    else
+    {
+        /* Reset PLLEN bit */
+        RCC->CTRL &= CTRL_PLLEN_RESET;
+    }
 }
 
 /**
@@ -450,16 +450,16 @@ void RCC_EnablePllClockOut(FunctionalState Cmd)
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
 
-    if(Cmd == ENABLE)
-   {
-       /* Set PLLOUTEN bit */
-       RCC->CTRL |= CTRL_PLLOUTEN_SET;
-   }
-   else
-   {
-       /* Reset PLLOUTEN bit */
-       RCC->CTRL &= CTRL_PLLOUTEN_RESET;
-   }
+    if (Cmd == ENABLE)
+    {
+        /* Set PLLOUTEN bit */
+        RCC->CTRL |= CTRL_PLLOUTEN_SET;
+    }
+    else
+    {
+        /* Reset PLLOUTEN bit */
+        RCC->CTRL &= CTRL_PLLOUTEN_RESET;
+    }
 }
 
 /**
@@ -603,12 +603,12 @@ void RCC_ConfigInt(uint8_t RccInt, FunctionalState Cmd)
     if (Cmd != DISABLE)
     {
         /* Perform Byte access to RCC_CLKINT bits to enable the selected interrupts */
-        *(__IO uint32_t*)CLKINT_ADDR |= (((uint32_t)RccInt) << 8);
+        *(__IO uint32_t *)CLKINT_ADDR |= (((uint32_t)RccInt) << 8);
     }
     else
     {
         /* Perform Byte access to RCC_CLKINT bits to disable the selected interrupts */
-        *(__IO uint32_t*)CLKINT_ADDR &= (~(((uint32_t)RccInt) << 8));
+        *(__IO uint32_t *)CLKINT_ADDR &= (~(((uint32_t)RccInt) << 8));
     }
 }
 
@@ -837,21 +837,21 @@ uint32_t RCC_GetLPUARTClkSrc(void)
 /**
  * @brief  Configures the External Low Speed oscillator (LSE) Trim.
  * @param   LSE_Trim(LSE Driver Trim Level):
- * 		        - 0x00~0x03    
+ * 		        - 0x00~0x03
  */
 void RCC_LSE_Trim_Config(uint8_t LSE_Trim)
 {
     uint32_t temp_value = 0;
-	
-    temp_value = *(__IO uint32_t*)LSE_TRIMR_ADDR;
+
+    temp_value = *(__IO uint32_t *)LSE_TRIMR_ADDR;
     /*clear lse trim*/
     temp_value &= (~(LSE_GM_MASK_VALUE));
-		/*Check trim value */
-    (LSE_Trim>LSE_GM_MAX_VALUE) ? (LSE_Trim = LSE_GM_MAX_VALUE):(LSE_Trim &= LSE_GM_MAX_VALUE);
+    /*Check trim value */
+    (LSE_Trim > LSE_GM_MAX_VALUE) ? (LSE_Trim = LSE_GM_MAX_VALUE) : (LSE_Trim &= LSE_GM_MAX_VALUE);
     /*Set bit[10:9] */
-		temp_value |= (LSE_Trim<<9);
-		/* Store the new value */
-    *(__IO uint32_t*)LSE_TRIMR_ADDR = temp_value;
+    temp_value |= (LSE_Trim << 9);
+    /* Store the new value */
+    *(__IO uint32_t *)LSE_TRIMR_ADDR = temp_value;
 }
 
 /**
@@ -871,23 +871,23 @@ void RCC_ConfigLse(uint8_t RCC_LSE, uint8_t LSE_Trim)
     /* Check the parameters */
     assert_param(IS_RCC_LSE(RCC_LSE));
     /* Reset LSEEN and LSEBYP bits before configuring the LSE ------------------*/
-    *(__IO uint32_t*)LSCTRL_ADDR &= (~(RCC_LSCTRL_LSEEN | RCC_LSCTRL_LSEBP));
+    *(__IO uint32_t *)LSCTRL_ADDR &= (~(RCC_LSCTRL_LSEEN | RCC_LSCTRL_LSEBP));
     /* Configure LSE (RCC_LSE_DISABLE is already covered by the code section above) */
     switch (RCC_LSE)
     {
-        case RCC_LSE_ENABLE:
-            /* Set LSEON bit */
-            *(__IO uint32_t*)LSCTRL_ADDR |= RCC_LSE_ENABLE;
-						RCC_LSE_Trim_Config(LSE_Trim);
-            break;
+    case RCC_LSE_ENABLE:
+        /* Set LSEON bit */
+        *(__IO uint32_t *)LSCTRL_ADDR |= RCC_LSE_ENABLE;
+        RCC_LSE_Trim_Config(LSE_Trim);
+        break;
 
-        case RCC_LSE_BYPASS:
-            /* Set LSEBYP and LSEON bits */
-            *(__IO uint32_t*)LSCTRL_ADDR |= (RCC_LSE_BYPASS | RCC_LSE_ENABLE);
-            break;
+    case RCC_LSE_BYPASS:
+        /* Set LSEBYP and LSEON bits */
+        *(__IO uint32_t *)LSCTRL_ADDR |= RCC_LSE_BYPASS;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -900,16 +900,16 @@ void RCC_EnableLsi(FunctionalState Cmd)
 {
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
-  
-    if(Cmd == ENABLE)
+
+    if (Cmd == ENABLE)
     {
         /* Set LSIEN bit */
-        *(__IO uint32_t*)LSCTRL_ADDR |= LSCTRL_LSIEN_SET_MASK;
+        *(__IO uint32_t *)LSCTRL_ADDR |= LSCTRL_LSIEN_SET_MASK;
     }
     else
     {
         /* Reset PLLEN bit */
-        *(__IO uint32_t*)LSCTRL_ADDR &= LSCTRL_LSIEN_RESET_MASK;
+        *(__IO uint32_t *)LSCTRL_ADDR &= LSCTRL_LSIEN_RESET_MASK;
     }
 }
 
@@ -959,19 +959,17 @@ void RCC_EnableRtcClk(FunctionalState Cmd)
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
 
-    if(Cmd == ENABLE)
+    if (Cmd == ENABLE)
     {
         /* Set LSIEN bit */
-        *(__IO uint32_t*)LSCTRL_ADDR |= LSCTRL_RTCEN_SET_MASK;
+        *(__IO uint32_t *)LSCTRL_ADDR |= LSCTRL_RTCEN_SET_MASK;
     }
     else
     {
         /* Reset PLLEN bit */
-        *(__IO uint32_t*)LSCTRL_ADDR &= LSCTRL_RTCEN_RESET_MASK;
+        *(__IO uint32_t *)LSCTRL_ADDR &= LSCTRL_RTCEN_RESET_MASK;
     }
 }
-
-
 
 /**
  * @brief Forces or releases RTC reset.
@@ -1030,20 +1028,20 @@ uint32_t RCC_GetLPRUNClkSrc(void)
  * @note   The result of this function could be not correct when using
  *         fractional value for HSE crystal.
  */
-void RCC_GetClocksFreqValue(RCC_ClocksType* RCC_Clocks)
+void RCC_GetClocksFreqValue(RCC_ClocksType *RCC_Clocks)
 {
     uint32_t tmp = 0, pllclk = 0, pllmull = 0, pllpre = 0, plloutdiv = 0, pllsource = 0, presc = 0;
 
     /* Get PLL clock source, PLL Pre-Divider, PLL out div and multiplication factor ----------------------*/
-    pllmull   = RCC->CFG & CFG_PLLMULFCT_MASK;
-    pllpre    = RCC->CFG & CFG_PLLPRE_MASK;
+    pllmull = RCC->CFG & CFG_PLLMULFCT_MASK;
+    pllpre = RCC->CFG & CFG_PLLPRE_MASK;
     plloutdiv = RCC->CFG & CFG_PLLOUTDIV_MASK;
     pllsource = RCC->CFG & CFG_PLLSRC_MASK;
 
     pllmull = (pllmull >> 16) + 3;
 
     if ((pllsource >> 24) == 0x00)
-    { 
+    {
         /* HSI selected as PLL clock entry */
         pllclk = HSI_VALUE * pllmull;
     }
@@ -1052,7 +1050,7 @@ void RCC_GetClocksFreqValue(RCC_ClocksType* RCC_Clocks)
         /* HSE selected as PLL clock entry */
         pllclk = HSE_VALUE * pllmull;
     }
-    
+
     /* PLL Pre-Divider clock */
     pllpre = (pllpre >> 20) + 1;
     pllclk = pllclk / pllpre;
@@ -1066,32 +1064,32 @@ void RCC_GetClocksFreqValue(RCC_ClocksType* RCC_Clocks)
 
     switch (tmp)
     {
-        case RCC_CFG_SCLKSTS_HSI: /* HSI used as system clock */
-            RCC_Clocks->SysclkFreq = HSI_VALUE;
-            break;
-        case RCC_CFG_SCLKSTS_HSE: /* HSE used as system clock */
-            RCC_Clocks->SysclkFreq = HSE_VALUE;
-            break;
-        case RCC_CFG_SCLKSTS_PLL: /* PLL used as system clock */
-            RCC_Clocks->SysclkFreq = pllclk;
-            break;
-        case RCC_CFG_SCLKSTS_LSE: /* LSE used as system clock */
-            RCC_Clocks->SysclkFreq = LSE_VALUE;
-            break;
-        case RCC_CFG_SCLKSTS_LSI: /* LSI used as system clock */
-            RCC_Clocks->SysclkFreq = LSI_VALUE;
-            break;
+    case RCC_CFG_SCLKSTS_HSI: /* HSI used as system clock */
+        RCC_Clocks->SysclkFreq = HSI_VALUE;
+        break;
+    case RCC_CFG_SCLKSTS_HSE: /* HSE used as system clock */
+        RCC_Clocks->SysclkFreq = HSE_VALUE;
+        break;
+    case RCC_CFG_SCLKSTS_PLL: /* PLL used as system clock */
+        RCC_Clocks->SysclkFreq = pllclk;
+        break;
+    case RCC_CFG_SCLKSTS_LSE: /* LSE used as system clock */
+        RCC_Clocks->SysclkFreq = LSE_VALUE;
+        break;
+    case RCC_CFG_SCLKSTS_LSI: /* LSI used as system clock */
+        RCC_Clocks->SysclkFreq = LSI_VALUE;
+        break;
 
-        default:
-            RCC_Clocks->SysclkFreq = HSI_VALUE;
-            break;
+    default:
+        RCC_Clocks->SysclkFreq = HSI_VALUE;
+        break;
     }
 
     /* Compute HCLK, PCLK1, PCLK2 and ADCCLK clocks frequencies ----------------*/
     /* Get HCLK prescaler */
-    tmp   = RCC->CFG & CFG_AHBPRES_SET_MASK;
-    tmp   = tmp >> 4;
-    if(tmp < 0x8)
+    tmp = RCC->CFG & CFG_AHBPRES_SET_MASK;
+    tmp = tmp >> 4;
+    if (tmp < 0x8)
     {
         tmp = 0;
     }
@@ -1099,26 +1097,26 @@ void RCC_GetClocksFreqValue(RCC_ClocksType* RCC_Clocks)
     /* HCLK clock frequency */
     RCC_Clocks->HclkFreq = RCC_Clocks->SysclkFreq >> presc;
     /* Get PCLK1 prescaler */
-    tmp   = RCC->CFG & CFG_APB1PRES_SET_MASK;
-    tmp   = tmp >> 8;
+    tmp = RCC->CFG & CFG_APB1PRES_SET_MASK;
+    tmp = tmp >> 8;
     presc = s_ApbAhbPresTable[tmp];
     /* PCLK1 clock frequency */
     RCC_Clocks->Pclk1Freq = RCC_Clocks->HclkFreq >> presc;
     /* Get PCLK2 prescaler */
-    tmp   = RCC->CFG & CFG_APB2PRES_SET_MASK;
-    tmp   = tmp >> 11;
+    tmp = RCC->CFG & CFG_APB2PRES_SET_MASK;
+    tmp = tmp >> 11;
     presc = s_ApbAhbPresTable[tmp];
     /* PCLK2 clock frequency */
     RCC_Clocks->Pclk2Freq = RCC_Clocks->HclkFreq >> presc;
 
     /* Get ADCHCLK prescaler */
-    tmp   = RCC->CFG2 & CFG2_ADCHPRES_SET_MASK;
+    tmp = RCC->CFG2 & CFG2_ADCHPRES_SET_MASK;
     presc = s_AdcHclkPresTable[tmp];
     /* ADCHCLK clock frequency */
     RCC_Clocks->AdcHclkFreq = RCC_Clocks->HclkFreq / presc;
     /* Get ADCPLLCLK prescaler */
-    tmp   = RCC->CFG2 & CFG2_ADCPLLPRES_SET_MASK;
-    tmp   = tmp >> 4;
+    tmp = RCC->CFG2 & CFG2_ADCPLLPRES_SET_MASK;
+    tmp = tmp >> 4;
     presc = s_AdcPllClkPresTable[(tmp & 0xF)]; // ignore BIT5
     /* ADCPLLCLK clock frequency */
     RCC_Clocks->AdcPllClkFreq = pllclk / presc;
@@ -1389,8 +1387,8 @@ void RCC_ConfigMco(uint8_t RCC_MCO)
  */
 FlagStatus RCC_GetFlagStatus(uint8_t RCC_FLAG)
 {
-    uint32_t tmp         = 0;
-    uint32_t statusreg   = 0;
+    uint32_t tmp = 0;
+    uint32_t statusreg = 0;
     FlagStatus bitstatus = RESET;
     /* Check the parameters */
     assert_param(IS_RCC_FLAG(RCC_FLAG));
@@ -1493,10 +1491,9 @@ void RCC_ClrIntPendingBit(uint32_t RccClrInt)
 {
     /* Check the parameters */
     assert_param(IS_RCC_CLR_INTF(RccClrInt));
-   /* Software set this bit to clear INT flag. */
+    /* Software set this bit to clear INT flag. */
     RCC->CLKINT |= RccClrInt;
 }
-
 
 /**
  * @brief  Enables or disables Reset when RAMC detects a parity error.
@@ -1508,21 +1505,21 @@ void RCC_EnableRAMCParityErrorReset(FunctionalState Cmd)
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
 
-    if(Cmd == ENABLE)
-   {
-       /* Set RAMCERRRST bit */
-       RCC->CLKINT |= CLKINT_RAMCERRRST_SET_MASK;
-   }
-   else
-   {
-       /* Reset RAMCERRRST bit */
-       RCC->CLKINT &= CLKINT_RAMCERRRST_RESET_MASK;
-   }
+    if (Cmd == ENABLE)
+    {
+        /* Set RAMCERRRST bit */
+        RCC->CLKINT |= CLKINT_RAMCERRRST_SET_MASK;
+    }
+    else
+    {
+        /* Reset RAMCERRRST bit */
+        RCC->CLKINT &= CLKINT_RAMCERRRST_RESET_MASK;
+    }
 }
 
 /**
  * @}
- */ 
+ */
 
 /**
  * @}

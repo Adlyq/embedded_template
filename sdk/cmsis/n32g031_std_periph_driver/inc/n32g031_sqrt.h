@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,109 +27,110 @@
 
 /**
  * @file n32g031_sqrt.h
- * @author Nations 
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #ifndef __N32G031_SQRT_H__
 #define __N32G031_SQRT_H__
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include "n32g031.h"
 
-/** @addtogroup N32G031_StdPeriph_Driver
- * @{
- */
+     /** @addtogroup N32G031_StdPeriph_Driver
+      * @{
+      */
 
-/** @addtogroup SQRT
- * @{
- */
+     /** @addtogroup SQRT
+      * @{
+      */
 
-/** @addtogroup SQRT_Exported_Types
- * @{
- */
+     /** @addtogroup SQRT_Exported_Types
+      * @{
+      */
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/** @addtogroup SQRT_Exported_Constants
- * @{
- */
+     /** @addtogroup SQRT_Exported_Constants
+      * @{
+      */
 
-/** @addtogroup SQRTEN
- * @{
- */
+     /** @addtogroup SQRTEN
+      * @{
+      */
 
-#define SQRT_ENABLE  ((uint32_t)0x00000001)
+#define SQRT_ENABLE ((uint32_t)0x00000001)
 #define SQRT_DISABLE ((uint32_t)0x00000000)
 
-#define IS_SQRT_EN(CONFIG)                                                          \
+#define IS_SQRT_EN(CONFIG) \
      (((CONFIG) == SQRT_ENABLE) || ((CONFIG) == SQRT_DISABLE))
 
-/** @addtogroup SQRTSTART
- * @{
- */
+     /** @addtogroup SQRTSTART
+      * @{
+      */
 
-#define SQRT_START_ENABLE  ((uint32_t)0x00000002)
+#define SQRT_START_ENABLE ((uint32_t)0x00000002)
 #define SQRT_START_DISABLE ((uint32_t)0x00000000)
 
-#define IS_SQRT_START(CONFIG)                                                          \
+#define IS_SQRT_START(CONFIG) \
      (((CONFIG) == SQRT_START_ENABLE) || ((CONFIG) == SQRT_START_DISABLE))
 
-/** @addtogroup SQRT_Flag
- * @{
- */
+     /** @addtogroup SQRT_Flag
+      * @{
+      */
 
-#define SQRT_FLAG_INTF_MASK    ((uint32_t)0xFFFFFFEF) 
+#define SQRT_FLAG_INTF_MASK ((uint32_t)0xFFFFFFEF)
 
-#define SQRT_FLAG_BUSY    ((uint32_t)0x00000004)
-#define SQRT_FLAG_DF      ((uint32_t)0x00000008)
-#define SQRT_FLAG_INTF    ((uint32_t)0x00000010)
-#define IS_SQRT_FLAG(FLAG)                                                             \
-    (((FLAG) == SQRT_FLAG_BUSY) || ((FLAG) == SQRT_FLAG_DF) || ((FLAG) == SQRT_FLAG_INTF))
+#define SQRT_FLAG_BUSY ((uint32_t)0x00000004)
+#define SQRT_FLAG_DF ((uint32_t)0x00000008)
+#define SQRT_FLAG_INTF ((uint32_t)0x00000010)
+#define IS_SQRT_FLAG(FLAG) \
+     (((FLAG) == SQRT_FLAG_BUSY) || ((FLAG) == SQRT_FLAG_DF) || ((FLAG) == SQRT_FLAG_INTF))
 
-/** @addtogroup SQRTIEN
- * @{
- */
+     /** @addtogroup SQRTIEN
+      * @{
+      */
 
-#define SQRT_INT_ENABLE  ((uint32_t)0x00000020)
+#define SQRT_INT_ENABLE ((uint32_t)0x00000020)
 #define SQRT_INT_DISABLE ((uint32_t)0x00000000)
 
-#define IS_SQRT_INT(CONFIG)                                                            \
+#define IS_SQRT_INT(CONFIG) \
      (((CONFIG) == SQRT_INT_ENABLE) || ((CONFIG) == SQRT_INT_DISABLE))
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/**
- * @}
- */
+     /**
+      * @}
+      */
 
-/** @addtogroup SQRT_Exported_Macros
- * @{
- */
-/**
- * @}
- */
+     /** @addtogroup SQRT_Exported_Macros
+      * @{
+      */
+     /**
+      * @}
+      */
 
-/** @addtogroup SQRT_Exported_Functions
- * @{
- */
+     /** @addtogroup SQRT_Exported_Functions
+      * @{
+      */
 
-void SQRT_ConfigInt(FunctionalState Cmd);
-void SQRT_ClrIntPendingBit(void);
-INTStatus SQRT_GetIntStatus(void);
-FlagStatus SQRT_GetFlagStatus(uint32_t SQRT_FLAG);
-void SQRT_SetRADICANT_Data(uint32_t data);
-uint32_t SQRT_GetRADICANT_Data(void);
-uint32_t SQRT_GetROOT_Data(void);
-void SQRT_Start(FunctionalState Cmd);
+     void SQRT_ConfigInt(FunctionalState Cmd);
+     void SQRT_ClrIntPendingBit(void);
+     INTStatus SQRT_GetIntStatus(void);
+     FlagStatus SQRT_GetFlagStatus(uint32_t SQRT_FLAG);
+     void SQRT_SetRADICANT_Data(uint32_t data);
+     uint32_t SQRT_GetRADICANT_Data(void);
+     uint32_t SQRT_GetROOT_Data(void);
+     void SQRT_Start(FunctionalState Cmd);
 
 #ifdef __cplusplus
 }

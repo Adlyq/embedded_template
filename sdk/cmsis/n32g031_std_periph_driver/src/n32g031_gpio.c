@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_gpio.c
- * @author Nations 
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_gpio.h"
 
@@ -54,14 +54,14 @@
 /** @addtogroup GPIO_Private_Defines
  * @{
  */
-      
-#define GPIO_MODE                       ((uint32_t)0x00000003)
-#define EXTI_MODE                       ((uint32_t)0x10000000)
-#define GPIO_MODE_IT                    ((uint32_t)0x00010000)
-#define GPIO_MODE_EVT                   ((uint32_t)0x00020000)
-#define RISING_EDGE                     ((uint32_t)0x00100000) 
-#define FALLING_EDGE                    ((uint32_t)0x00200000)
-#define GPIO_OUTPUT_TYPE                ((uint32_t)0x00000010)
+
+#define GPIO_MODE ((uint32_t)0x00000003)
+#define EXTI_MODE ((uint32_t)0x10000000)
+#define GPIO_MODE_IT ((uint32_t)0x00010000)
+#define GPIO_MODE_EVT ((uint32_t)0x00020000)
+#define RISING_EDGE ((uint32_t)0x00100000)
+#define FALLING_EDGE ((uint32_t)0x00200000)
+#define GPIO_OUTPUT_TYPE ((uint32_t)0x00000010)
 
 /**
  * @}
@@ -99,11 +99,11 @@
  * @brief  Deinitializes the GPIOx peripheral registers to their default reset values.
  * @param GPIOx where x can be (A,B,C,D,F) to select the GPIO peripheral.
  */
-void GPIO_DeInit(GPIO_Module* GPIOx)
+void GPIO_DeInit(GPIO_Module *GPIOx)
 {
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-    
+
     if (GPIOx == GPIOA)
     {
         RCC_EnableAPB2PeriphReset(RCC_APB2_PERIPH_GPIOA, ENABLE);
@@ -134,31 +134,31 @@ void GPIO_DeInit(GPIO_Module* GPIOx)
  * @brief  Deinitializes the GPIOx peripheral registers to their default reset values.
  * @param GPIOx where x can be (A,B,C,D,F) to select the GPIO peripheral.
  * @param GPIO_Pin specifies the port bit to be written.
-  *                This parameter can be one of GPIO_PIN_x where x can be (0..15).
-  *                All port bits are not necessarily available on all GPIOs.
+ *                This parameter can be one of GPIO_PIN_x where x can be (0..15).
+ *                All port bits are not necessarily available on all GPIOs.
  */
-void GPIO_DeInitPin(GPIO_Module* GPIOx, uint32_t Pin)
+void GPIO_DeInitPin(GPIO_Module *GPIOx, uint32_t Pin)
 {
     uint32_t pos = 0x00U, currentpin = 0x00U;
-    uint32_t tmpregister = 0x00U; 
+    uint32_t tmpregister = 0x00U;
 
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
     assert_param(IS_GPIO_PIN_AVAILABLE(GPIOx, Pin));
 
-    while((Pin >> pos) != 0)
+    while ((Pin >> pos) != 0)
     {
         /* Get the IO position */
         currentpin = (Pin) & (1U << pos);
 
-        if(currentpin)
+        if (currentpin)
         {
             /*------------------------- GPIO Mode Configuration --------------------*/
             /* Configure IO Direction in Analog Mode */
             GPIOx->PMODE |= (GPIO_PMODE0 << (pos * 2U));
 
-            /* Configure the default Alternate Function in current IO */ 
-            if(pos & 0x08)
+            /* Configure the default Alternate Function in current IO */
+            if (pos & 0x08)
                 GPIOx->AFH |= ((0x0FUL) << ((pos & 0x07U) * 4U));
             else
                 GPIOx->AFL |= ((0x0FUL) << ((pos & 0x07U) * 4U));
@@ -179,7 +179,7 @@ void GPIO_DeInitPin(GPIO_Module* GPIOx, uint32_t Pin)
             /* Clear the External Interrupt or Event for the current IO */
             tmpregister = AFIO->EXTI_CFG[pos >> 2U];
             tmpregister &= ((0x0FUL) << ((pos & 0x03U) * 4U));
-            if(tmpregister == (GPIO_GET_INDEX(GPIOx) << ((pos & 0x03U) * 4U)))
+            if (tmpregister == (GPIO_GET_INDEX(GPIOx) << ((pos & 0x03U) * 4U)))
             {
                 AFIO->EXTI_CFG[pos >> 2U] &= ~((0x0FUL) << ((pos & 0x03U) * 4U));
 
@@ -191,10 +191,9 @@ void GPIO_DeInitPin(GPIO_Module* GPIOx, uint32_t Pin)
                 EXTI->RT_CFG &= ~((uint32_t)currentpin);
                 EXTI->FT_CFG &= ~((uint32_t)currentpin);
             }
-        } 
+        }
         pos++;
     }
-
 }
 
 /**
@@ -214,55 +213,54 @@ void GPIO_AFIOInitDefault(void)
  * @param GPIO_InitStruct pointer to a GPIO_InitType structure that
  *         contains the configuration information for the specified GPIO peripheral.
  */
- 
-void GPIO_InitPeripheral(GPIO_Module* GPIOx, GPIO_InitType * GPIO_InitStruct)
+
+void GPIO_InitPeripheral(GPIO_Module *GPIOx, GPIO_InitType *GPIO_InitStruct)
 {
     uint32_t pos = 0x00U, currentpin = 0x00U;
-    uint32_t tmpregister = 0x00U; 
+    uint32_t tmpregister = 0x00U;
 
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
     assert_param(IS_GPIO_PIN_AVAILABLE(GPIOx, GPIO_InitStruct->Pin));
-    // assert_param(IS_GPIO_AF(GPIO_InitStruct->GPIO_Alternate)); 
+    // assert_param(IS_GPIO_AF(GPIO_InitStruct->GPIO_Alternate));
     assert_param(IS_GPIO_MODE(GPIO_InitStruct->GPIO_Mode));
     assert_param(IS_GPIO_PULL(GPIO_InitStruct->GPIO_Pull));
     assert_param(IS_GPIO_SPEED(GPIO_InitStruct->GPIO_Speed));
     assert_param(IS_GPIO_CURRENT(GPIO_InitStruct->GPIO_Current));
 
-    while(((GPIO_InitStruct->Pin) >> pos) != 0)
+    while (((GPIO_InitStruct->Pin) >> pos) != 0)
     {
         /* Get the IO position */
         currentpin = (GPIO_InitStruct->Pin) & (1U << pos);
 
-        if(currentpin)
+        if (currentpin)
         {
             /*--------------------- GPIO Mode Configuration ------------------------*/
             /* In case of Alternate function mode selection */
-            if((GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_PP) || (GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_OD))
+            if ((GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_PP) || (GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_OD))
             {
                 /* Check the Alternate function parameters */
                 assert_param(IS_GPIO_AF(GPIO_InitStruct->GPIO_Alternate));
 
                 /* Configure Alternate function mapped with the current IO */
-                if(pos & 0x08)
+                if (pos & 0x08)
                 {
                     tmpregister = GPIOx->AFH;
                     tmpregister &= ~((uint32_t)0xF << ((uint32_t)(pos & (uint32_t)0x07) * 4U));
-                    tmpregister |= ((uint32_t)(GPIO_InitStruct->GPIO_Alternate) << ((uint32_t)(pos & (uint32_t)0x07) * 4U)) ;
+                    tmpregister |= ((uint32_t)(GPIO_InitStruct->GPIO_Alternate) << ((uint32_t)(pos & (uint32_t)0x07) * 4U));
                     GPIOx->AFH = tmpregister;
                 }
                 else
                 {
                     tmpregister = GPIOx->AFL;
-                    tmpregister &= ~((uint32_t)0xF << ((uint32_t)(pos & (uint32_t)0x07) * 4U)) ;
-                    tmpregister |= ((uint32_t)(GPIO_InitStruct->GPIO_Alternate) << ((uint32_t)(pos & (uint32_t)0x07) * 4U)) ;
+                    tmpregister &= ~((uint32_t)0xF << ((uint32_t)(pos & (uint32_t)0x07) * 4U));
+                    tmpregister |= ((uint32_t)(GPIO_InitStruct->GPIO_Alternate) << ((uint32_t)(pos & (uint32_t)0x07) * 4U));
                     GPIOx->AFL = tmpregister;
                 }
             }
 
             /* In case of Output or Alternate function mode selection */
-            if ((GPIO_InitStruct->GPIO_Mode == GPIO_MODE_OUTPUT_PP) || (GPIO_InitStruct->GPIO_Mode == GPIO_MODE_OUTPUT_OD)
-                 ||(GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_PP) || (GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_OD))
+            if ((GPIO_InitStruct->GPIO_Mode == GPIO_MODE_OUTPUT_PP) || (GPIO_InitStruct->GPIO_Mode == GPIO_MODE_OUTPUT_OD) || (GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_PP) || (GPIO_InitStruct->GPIO_Mode == GPIO_MODE_AF_OD))
             {
                 /* Configure the IO Output Type */
                 tmpregister = GPIOx->POTYPE;
@@ -298,7 +296,7 @@ void GPIO_InitPeripheral(GPIO_Module* GPIOx, GPIO_InitType * GPIO_InitStruct)
 
             /*--------------------- EXTI Mode Configuration ------------------------*/
             /* Configure the External Interrupt or event for the current IO */
-            if((GPIO_InitStruct->GPIO_Mode & EXTI_MODE) == EXTI_MODE) 
+            if ((GPIO_InitStruct->GPIO_Mode & EXTI_MODE) == EXTI_MODE)
             {
                 tmpregister = AFIO->EXTI_CFG[pos >> 2U];
                 tmpregister &= ~(0x0FUL << ((pos & 0x03U) * 4U));
@@ -308,7 +306,7 @@ void GPIO_InitPeripheral(GPIO_Module* GPIOx, GPIO_InitType * GPIO_InitStruct)
                 /* Clear EXTI line configuration */
                 tmpregister = EXTI->IMASK;
                 tmpregister &= ~((uint32_t)currentpin);
-                if((GPIO_InitStruct->GPIO_Mode & GPIO_MODE_IT) == GPIO_MODE_IT)
+                if ((GPIO_InitStruct->GPIO_Mode & GPIO_MODE_IT) == GPIO_MODE_IT)
                 {
                     tmpregister |= currentpin;
                 }
@@ -316,7 +314,7 @@ void GPIO_InitPeripheral(GPIO_Module* GPIOx, GPIO_InitType * GPIO_InitStruct)
 
                 tmpregister = EXTI->EMASK;
                 tmpregister &= ~((uint32_t)currentpin);
-                if((GPIO_InitStruct->GPIO_Mode & GPIO_MODE_EVT) == GPIO_MODE_EVT)
+                if ((GPIO_InitStruct->GPIO_Mode & GPIO_MODE_EVT) == GPIO_MODE_EVT)
                 {
                     tmpregister |= currentpin;
                 }
@@ -325,7 +323,7 @@ void GPIO_InitPeripheral(GPIO_Module* GPIOx, GPIO_InitType * GPIO_InitStruct)
                 /* Clear Rising Falling edge configuration */
                 tmpregister = EXTI->RT_CFG;
                 tmpregister &= ~((uint32_t)currentpin);
-                if((GPIO_InitStruct->GPIO_Mode & RISING_EDGE) == RISING_EDGE)
+                if ((GPIO_InitStruct->GPIO_Mode & RISING_EDGE) == RISING_EDGE)
                 {
                     tmpregister |= currentpin;
                 }
@@ -333,14 +331,14 @@ void GPIO_InitPeripheral(GPIO_Module* GPIOx, GPIO_InitType * GPIO_InitStruct)
 
                 tmpregister = EXTI->FT_CFG;
                 tmpregister &= ~((uint32_t)currentpin);
-                if((GPIO_InitStruct->GPIO_Mode & FALLING_EDGE) == FALLING_EDGE)
+                if ((GPIO_InitStruct->GPIO_Mode & FALLING_EDGE) == FALLING_EDGE)
                 {
                     tmpregister |= currentpin;
                 }
                 EXTI->FT_CFG = tmpregister;
             }
         }
-        pos++;      
+        pos++;
     }
 }
 
@@ -349,15 +347,15 @@ void GPIO_InitPeripheral(GPIO_Module* GPIOx, GPIO_InitType * GPIO_InitStruct)
  * @param GPIO_InitStruct pointer to a GPIO_InitType structure which will
  *         be initialized.
  */
-void GPIO_InitStruct(GPIO_InitType* GPIO_InitStruct)
+void GPIO_InitStruct(GPIO_InitType *GPIO_InitStruct)
 {
     /* Reset GPIO init structure parameters values */
-    GPIO_InitStruct->Pin            = GPIO_PIN_ALL;
+    GPIO_InitStruct->Pin = GPIO_PIN_ALL;
     GPIO_InitStruct->GPIO_Alternate = GPIO_NO_AF;
-    GPIO_InitStruct->GPIO_Mode      = GPIO_MODE_INPUT;
-    GPIO_InitStruct->GPIO_Pull      = GPIO_NO_PULL;
-    GPIO_InitStruct->GPIO_Speed     = GPIO_SPEED_LOW;
-    GPIO_InitStruct->GPIO_Current   = GPIO_DC_HIGH;
+    GPIO_InitStruct->GPIO_Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct->GPIO_Pull = GPIO_NO_PULL;
+    GPIO_InitStruct->GPIO_Speed = GPIO_SPEED_LOW;
+    GPIO_InitStruct->GPIO_Current = GPIO_DC_HIGH;
 }
 
 /**
@@ -367,7 +365,7 @@ void GPIO_InitStruct(GPIO_InitType* GPIO_InitStruct)
  *   This parameter can be GPIO_Pin_x where x can be (0..15).
  * @return The input port pin value.
  */
-uint8_t GPIO_ReadInputDataBit(GPIO_Module* GPIOx, uint16_t Pin)
+uint8_t GPIO_ReadInputDataBit(GPIO_Module *GPIOx, uint16_t Pin)
 {
     uint8_t bitstatus = 0x00;
 
@@ -391,7 +389,7 @@ uint8_t GPIO_ReadInputDataBit(GPIO_Module* GPIOx, uint16_t Pin)
  * @param GPIOx where x can be (A,B,C,D,F) to select the GPIO peripheral.
  * @return GPIO input data port value.
  */
-uint16_t GPIO_ReadInputData(GPIO_Module* GPIOx)
+uint16_t GPIO_ReadInputData(GPIO_Module *GPIOx)
 {
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
@@ -406,7 +404,7 @@ uint16_t GPIO_ReadInputData(GPIO_Module* GPIOx)
  *   This parameter can be GPIO_Pin_x where x can be (0..15).
  * @return The output port pin value.
  */
-uint8_t GPIO_ReadOutputDataBit(GPIO_Module* GPIOx, uint16_t Pin)
+uint8_t GPIO_ReadOutputDataBit(GPIO_Module *GPIOx, uint16_t Pin)
 {
     uint8_t bitstatus = 0x00;
 
@@ -430,7 +428,7 @@ uint8_t GPIO_ReadOutputDataBit(GPIO_Module* GPIOx, uint16_t Pin)
  * @param GPIOx where x can be (A,B,C,D,F) to select the GPIO peripheral.
  * @return GPIO output data port value.
  */
-uint16_t GPIO_ReadOutputData(GPIO_Module* GPIOx)
+uint16_t GPIO_ReadOutputData(GPIO_Module *GPIOx)
 {
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
@@ -444,7 +442,7 @@ uint16_t GPIO_ReadOutputData(GPIO_Module* GPIOx)
  * @param Pin specifies the port bits to be written.
  *   This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
  */
-void GPIO_SetBits(GPIO_Module* GPIOx, uint16_t Pin)
+void GPIO_SetBits(GPIO_Module *GPIOx, uint16_t Pin)
 {
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
@@ -459,7 +457,7 @@ void GPIO_SetBits(GPIO_Module* GPIOx, uint16_t Pin)
  * @param Pin specifies the port bits to be written.
  *   This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
  */
-void GPIO_ResetBits(GPIO_Module* GPIOx, uint16_t Pin)
+void GPIO_ResetBits(GPIO_Module *GPIOx, uint16_t Pin)
 {
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
@@ -478,7 +476,7 @@ void GPIO_ResetBits(GPIO_Module* GPIOx, uint16_t Pin)
  *     @arg Bit_RESET to clear the port pin
  *     @arg Bit_SET to set the port pin
  */
-void GPIO_WriteBit(GPIO_Module* GPIOx, uint16_t Pin, Bit_OperateType BitCmd)
+void GPIO_WriteBit(GPIO_Module *GPIOx, uint16_t Pin, Bit_OperateType BitCmd)
 {
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
@@ -500,7 +498,7 @@ void GPIO_WriteBit(GPIO_Module* GPIOx, uint16_t Pin, Bit_OperateType BitCmd)
  * @param GPIOx where x can be (A,B,C,D,F) to select the GPIO peripheral.
  * @param PortVal specifies the value to be written to the port output data register.
  */
-void GPIO_Write(GPIO_Module* GPIOx, uint16_t PortVal)
+void GPIO_Write(GPIO_Module *GPIOx, uint16_t PortVal)
 {
     /* Check the parameters */
     assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
@@ -509,12 +507,12 @@ void GPIO_Write(GPIO_Module* GPIOx, uint16_t PortVal)
 }
 
 /**
-  * @brief  Toggles the specified GPIO pins.
-  * @param GPIOx Where x can be (A,B,C,D,F) to select the GPIO peripheral.
-  *              All port bits are not necessarily available on all GPIOs.
-  * @param GPIO_Pin Specifies the pins to be toggled.
-  * @retval None
-  */
+ * @brief  Toggles the specified GPIO pins.
+ * @param GPIOx Where x can be (A,B,C,D,F) to select the GPIO peripheral.
+ *              All port bits are not necessarily available on all GPIOs.
+ * @param GPIO_Pin Specifies the pins to be toggled.
+ * @retval None
+ */
 void GPIO_TogglePin(GPIO_Module *GPIOx, uint16_t Pin)
 {
     /* Check the parameters */
@@ -529,7 +527,7 @@ void GPIO_TogglePin(GPIO_Module *GPIOx, uint16_t Pin)
  * @param Pin specifies the port bit to be written.
  *   This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
  */
-void GPIO_ConfigPinLock(GPIO_Module* GPIOx, uint16_t Pin)
+void GPIO_ConfigPinLock(GPIO_Module *GPIOx, uint16_t Pin)
 {
     uint32_t tmp = 0x00010000;
 
@@ -587,13 +585,13 @@ void GPIO_ConfigPinRemap(uint8_t PortSource, uint8_t PinSource, uint32_t Alterna
     /*Get Peripheral point*/
     GPIOx = GPIO_GET_PERIPH(PortSource);
     /**/
-     if(PinSource & (uint8_t)0x08)
+    if (PinSource & (uint8_t)0x08)
     {
         tmp = (uint32_t)(PinSource & (uint8_t)0x07);
         /*Read GPIO_AFH register*/
-        tmpregister  = GPIOx->AFH;
+        tmpregister = GPIOx->AFH;
         /*Reset corresponding bits*/
-        tmpregister &=~((uint32_t)0x0F <<(tmp*4U));
+        tmpregister &= ~((uint32_t)0x0F << (tmp * 4U));
         /*Set corresponding bits*/
         tmpregister |= ((uint32_t)(AlternateFunction) << (tmp * 4U));
         /*Write to the GPIO_AFH register*/
@@ -603,16 +601,15 @@ void GPIO_ConfigPinRemap(uint8_t PortSource, uint8_t PinSource, uint32_t Alterna
     {
         tmp = (uint32_t)(PinSource & (uint8_t)0x07);
         /*Read GPIO_AFL register*/
-        tmpregister  = GPIOx->AFL;
+        tmpregister = GPIOx->AFL;
         /*Reset corresponding bits*/
-        tmpregister &=~((uint32_t)0x0F <<(tmp*4U));
+        tmpregister &= ~((uint32_t)0x0F << (tmp * 4U));
         /*Set corresponding bits*/
         tmpregister |= ((uint32_t)(AlternateFunction) << (tmp * 4U));
         /*Write to the GPIO_AFL register*/
         GPIOx->AFL = tmpregister;
     }
 }
-
 
 /**
  * @brief  Selects the alternate function SPIx NSS mode.
@@ -630,11 +627,11 @@ void AFIO_ConfigSPINSSMode(uint32_t AFIO_SPIx_NSS, uint32_t SpiNssMode)
     assert_param(IS_AFIO_SPI_NSS(SpiNssMode));
 
     tmpregister = AFIO->CFG;
-    if(SpiNssMode != AFIO_SPI_NSS_High_IMPEDANCE)
+    if (SpiNssMode != AFIO_SPI_NSS_High_IMPEDANCE)
     {
         tmpregister |= AFIO_SPIx_NSS;
     }
-    else 
+    else
     {
         tmpregister &= ~AFIO_SPIx_NSS;
     }
@@ -655,7 +652,7 @@ void AFIO_ConfigADCExternalTrigRemap(AFIO_ADC_ETRType ADCETRType, AFIO_ADC_Trig_
     /* Check the parameters */
     assert_param(IS_AFIO_ADC_ETR(ADCETRType));
 
-    if(ADCETRType == AFIO_ADC_ETRI)
+    if (ADCETRType == AFIO_ADC_ETRI)
     {
         /* Check the parameters */
         assert_param(IS_AFIO_ADC_ETRI(ADCTrigRemap));
@@ -665,7 +662,7 @@ void AFIO_ConfigADCExternalTrigRemap(AFIO_ADC_ETRType ADCETRType, AFIO_ADC_Trig_
         /* clear AFIO_CFG register ETRI bit*/
         tmpregister &= ~AFIO_CFG_ADC_ETRI;
         /* if ADCETRType is AFIO_ADC_ETRI then ADCTrigRemap cannot be AFIO_ADC_TRIG_TIM8_CH3*/
-        if(ADCTrigRemap == AFIO_ADC_TRIG_TIM8_CH4)
+        if (ADCTrigRemap == AFIO_ADC_TRIG_TIM8_CH4)
         {
             /* select TIM8_CH4 line to connect*/
             tmpregister |= AFIO_CFG_ADC_ETRI;
@@ -681,7 +678,7 @@ void AFIO_ConfigADCExternalTrigRemap(AFIO_ADC_ETRType ADCETRType, AFIO_ADC_Trig_
     }
     else
     {
-        if(ADCETRType == AFIO_ADC_ETRR)
+        if (ADCETRType == AFIO_ADC_ETRR)
         {
             /* Check the parameters */
             assert_param(IS_AFIO_ADC_ETRR(ADCTrigRemap));
@@ -690,7 +687,7 @@ void AFIO_ConfigADCExternalTrigRemap(AFIO_ADC_ETRType ADCETRType, AFIO_ADC_Trig_
             /* clear AFIO_CFG register ETRR bit*/
             tmpregister &= ~AFIO_CFG_ADC_ETRR;
             /* if ADCETRType is AFIO_ADC_ETRR then ADCTrigRemap cannot be AFIO_ADC_TRIG_TIM8_CH4*/
-            if(ADCTrigRemap == AFIO_ADC_TRIG_TIM8_TRGO)
+            if (ADCTrigRemap == AFIO_ADC_TRIG_TIM8_TRGO)
             {
                 /* select TIM8_CH3 line to connect*/
                 tmpregister |= AFIO_CFG_ADC_ETRR;

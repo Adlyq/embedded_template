@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_hdiv.c
- * @author Nations 
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_hdiv.h"
 
@@ -127,7 +127,7 @@ void HDIV_ClrIntPendingBit(void)
 INTStatus HDIV_GetIntStatus(void)
 {
     INTStatus bitstatus = RESET;
-    
+
     if ((HDIV->CTRLSTS & HDIV_CTRLSTS_HDIVIF) != (uint32_t)RESET)
     {
         bitstatus = SET;
@@ -156,17 +156,19 @@ FlagStatus HDIV_GetFlagStatus(uint32_t HDIV_FLAG)
     /* Check the parameters */
     assert_param(IS_HDIV_FLAG(HDIV_FLAG));
 
-    if(HDIV_FLAG==HDIV_FLAG_DIVBY0)
+    if (HDIV_FLAG == HDIV_FLAG_DIVBY0)
     {
         if ((HDIV->DIVBY0 & HDIV_FLAG) != (uint32_t)RESET)
         {
-                bitstatus = SET;
+            bitstatus = SET;
         }
         else
         {
-                bitstatus = RESET;
+            bitstatus = RESET;
         }
-    }else{
+    }
+    else
+    {
         if ((HDIV->CTRLSTS & HDIV_FLAG) != (uint32_t)RESET)
         {
             bitstatus = SET;
@@ -251,7 +253,7 @@ uint32_t HDIV_GetREMAINDER_Data(void)
 void HDIV_Start(FunctionalState Cmd)
 {
     uint32_t tmpreg = 0x00;
-    
+
     tmpreg = HDIV->CTRLSTS;
     if (Cmd != DISABLE)
     {

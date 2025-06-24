@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_dbg.c
- * @author Nations
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_dbg.h"
 
@@ -86,7 +86,6 @@
  * @{
  */
 
-
 /**
  * @brief  Returns the UCID.
  * @return UCID
@@ -94,14 +93,13 @@
 
 void GetUCID(uint8_t *UCIDbuf)
 {
-	uint8_t num=0;
-	
-	for (num = 0; num < UCID_LENGTH; num ++)
+    uint8_t num = 0;
+
+    for (num = 0; num < UCID_LENGTH; num++)
     {
-         UCIDbuf[num] = *(__IO uint8_t*)(UCID_BASE + num); 
+        UCIDbuf[num] = *(__IO uint8_t *)(UCID_BASE + num);
     }
 }
-
 
 /**
  * @brief  Returns the UID.
@@ -110,14 +108,13 @@ void GetUCID(uint8_t *UCIDbuf)
 
 void GetUID(uint8_t *UIDbuf)
 {
-	uint8_t num=0;
-	
-	for (num = 0; num < UID_LENGTH; num ++)
+    uint8_t num = 0;
+
+    for (num = 0; num < UID_LENGTH; num++)
     {
-         UIDbuf[num] = *(__IO uint8_t*)(UID_BASE + num); 
+        UIDbuf[num] = *(__IO uint8_t *)(UID_BASE + num);
     }
 }
-
 
 /**
  * @brief  Returns the DBGMCU_ID.
@@ -126,11 +123,11 @@ void GetUID(uint8_t *UIDbuf)
 
 void GetDBGMCU_ID(uint8_t *DBGMCU_IDbuf)
 {
-    uint8_t num=0;
-	
-    for (num = 0; num < DBGMCU_ID_LENGTH; num ++)
+    uint8_t num = 0;
+
+    for (num = 0; num < DBGMCU_ID_LENGTH; num++)
     {
-         DBGMCU_IDbuf[num] = *(__IO uint8_t*)(DBGMCU_ID_BASE + num); 
+        DBGMCU_IDbuf[num] = *(__IO uint8_t *)(DBGMCU_ID_BASE + num);
     }
 }
 

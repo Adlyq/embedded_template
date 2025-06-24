@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_exti.c
- * @author Nations 
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_exti.h"
 
@@ -94,11 +94,11 @@
  */
 void EXTI_DeInit(void)
 {
-    EXTI->IMASK  = 0x00000000;
-    EXTI->EMASK  = 0x00000000;
+    EXTI->IMASK = 0x00000000;
+    EXTI->EMASK = 0x00000000;
     EXTI->RT_CFG = 0x00000000;
     EXTI->FT_CFG = 0x00000000;
-    EXTI->PEND   = 0x00FFFFFF;
+    EXTI->PEND = 0x00FFFFFF;
 }
 
 /**
@@ -107,7 +107,7 @@ void EXTI_DeInit(void)
  * @param EXTI_InitStruct pointer to a EXTI_InitType structure
  *         that contains the configuration information for the EXTI peripheral.
  */
-void EXTI_InitPeripheral(EXTI_InitType* EXTI_InitStruct)
+void EXTI_InitPeripheral(EXTI_InitType *EXTI_InitStruct)
 {
     uint32_t tmp = 0;
 
@@ -127,7 +127,7 @@ void EXTI_InitPeripheral(EXTI_InitType* EXTI_InitStruct)
 
         tmp += EXTI_InitStruct->EXTI_Mode;
 
-        *(__IO uint32_t*)tmp |= EXTI_InitStruct->EXTI_Line;
+        *(__IO uint32_t *)tmp |= EXTI_InitStruct->EXTI_Line;
 
         /* Clear Rising Falling edge configuration */
         EXTI->RT_CFG &= ~EXTI_InitStruct->EXTI_Line;
@@ -145,7 +145,7 @@ void EXTI_InitPeripheral(EXTI_InitType* EXTI_InitStruct)
             tmp = (uint32_t)EXTI_BASE;
             tmp += EXTI_InitStruct->EXTI_Trigger;
 
-            *(__IO uint32_t*)tmp |= EXTI_InitStruct->EXTI_Line;
+            *(__IO uint32_t *)tmp |= EXTI_InitStruct->EXTI_Line;
         }
     }
     else
@@ -153,7 +153,7 @@ void EXTI_InitPeripheral(EXTI_InitType* EXTI_InitStruct)
         tmp += EXTI_InitStruct->EXTI_Mode;
 
         /* Disable the selected external lines */
-        *(__IO uint32_t*)tmp &= ~EXTI_InitStruct->EXTI_Line;
+        *(__IO uint32_t *)tmp &= ~EXTI_InitStruct->EXTI_Line;
     }
 }
 
@@ -162,10 +162,10 @@ void EXTI_InitPeripheral(EXTI_InitType* EXTI_InitStruct)
  * @param EXTI_InitStruct pointer to a EXTI_InitType structure which will
  *         be initialized.
  */
-void EXTI_InitStruct(EXTI_InitType* EXTI_InitStruct)
+void EXTI_InitStruct(EXTI_InitType *EXTI_InitStruct)
 {
-    EXTI_InitStruct->EXTI_Line    = EXTI_LINENONE;
-    EXTI_InitStruct->EXTI_Mode    = EXTI_Mode_Interrupt;
+    EXTI_InitStruct->EXTI_Line = EXTI_LINENONE;
+    EXTI_InitStruct->EXTI_Mode = EXTI_Mode_Interrupt;
     EXTI_InitStruct->EXTI_Trigger = EXTI_Trigger_Falling;
     EXTI_InitStruct->EXTI_LineCmd = DISABLE;
 }
@@ -229,7 +229,7 @@ void EXTI_ClrStatusFlag(uint32_t EXTI_Line)
  */
 INTStatus EXTI_GetITStatus(uint32_t EXTI_Line)
 {
-    INTStatus bitstatus   = RESET;
+    INTStatus bitstatus = RESET;
     uint32_t enablestatus = 0;
     /* Check the parameters */
     assert_param(IS_GET_EXTI_LINE(EXTI_Line));

@@ -1,7 +1,7 @@
 /** ----------------------------------------------------------------------------
- *         Nationz Technology Software Support  -  NATIONZ  -
+ *         Nsing Technology Software Support  -  Nsing  -
  * -----------------------------------------------------------------------------
- * Copyright (c) 2019, Nationz Corporation  All rights reserved.
+ * Copyright (c) 2019, Nsing Corporation  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -13,10 +13,10 @@
  * this list of conditions and the disclaimer below in the documentation and/or
  * other materials provided with the distribution. 
  * 
- * Nationz's name may not be used to endorse or promote products derived from
+ * Nsing's name may not be used to endorse or promote products derived from
  * this software without specific prior written permission. 
  * 
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONZ "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------------------
  */
 /** ****************************************************************************
- * @copyright      Nationz Co.,Ltd 
+ * @copyright      Nsing Co.,Ltd 
  *                 Copyright (c) 2019 All Rights Reserved 
  *******************************************************************************
  * @file     n32g031_lptim.h
@@ -208,7 +208,6 @@ typedef struct
 #define LPTIM_TRIG_SOURCE_RTCTAMP2         LPTIM_CFG_TRGSEL_2                          /*!<External input trigger is connected to RTC Tamper 2*/
 #define LPTIM_TRIG_SOURCE_RTCTAMP3         (LPTIM_CFG_TRGSEL_2 | LPTIM_CFG_TRGSEL_0)     /*!<External input trigger is connected to RTC Tamper 3*/
 #define LPTIM_TRIG_SOURCE_COMP1            (LPTIM_CFG_TRGSEL_2 | LPTIM_CFG_TRGSEL_1)     /*!<External input trigger is connected to COMP1 output*/
-#define LPTIM_TRIG_SOURCE_COMP2            LPTIM_CFG_TRGSEL                            /*!<External input trigger is connected to COMP2 output*/
 /**
   * @}
   */
@@ -425,4 +424,4 @@ void LPTIM_DisableNoEncoderMode(LPTIM_Module *LPTIMx);
 
 #endif /* __N32G031_LPTIM_H */
 
-/******************* (C) COPYRIGHT 2019 NATIONZ *****END OF FILE****/
+/******************* (C) COPYRIGHT 2019 Nsing *****END OF FILE****/

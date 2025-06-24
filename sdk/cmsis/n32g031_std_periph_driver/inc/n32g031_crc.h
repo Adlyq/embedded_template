@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,65 +27,66 @@
 
 /**
  * @file n32g031_crc.h
- * @author Nations
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #ifndef __N32G031_CRC_H__
 #define __N32G031_CRC_H__
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include "n32g031.h"
 
-/** @addtogroup N32G031_StdPeriph_Driver
- * @{
- */
+    /** @addtogroup N32G031_StdPeriph_Driver
+     * @{
+     */
 
-/** @addtogroup CRC
- * @{
- */
+    /** @addtogroup CRC
+     * @{
+     */
 
-/** @addtogroup CRC_Exported_Types
- * @{
- */
+    /** @addtogroup CRC_Exported_Types
+     * @{
+     */
 
-/**
- * @}
- */
+    /**
+     * @}
+     */
 
-/** @addtogroup CRC_Exported_Constants
- * @{
- */
+    /** @addtogroup CRC_Exported_Constants
+     * @{
+     */
 
-/**
- * @}
- */
+    /**
+     * @}
+     */
 
-/** @addtogroup CRC_Exported_Macros
- * @{
- */
+    /** @addtogroup CRC_Exported_Macros
+     * @{
+     */
 
-/**
- * @}
- */
+    /**
+     * @}
+     */
 
-/** @addtogroup CRC_Exported_Functions
- * @{
- */
+    /** @addtogroup CRC_Exported_Functions
+     * @{
+     */
 
-void CRC32_ResetCrc(void);
-uint32_t CRC32_CalcCrc(uint32_t Data);
-uint32_t CRC32_CalcBufCrc(uint32_t pBuffer[], uint32_t BufferLength);
-uint32_t CRC32_GetCrc(void);
-void CRC32_SetIDat(uint8_t IDValue);
-uint8_t CRC32_GetIDat(void);
+    void CRC32_ResetCrc(void);
+    uint32_t CRC32_CalcCrc(uint32_t Data);
+    uint32_t CRC32_CalcBufCrc(uint32_t pBuffer[], uint32_t BufferLength);
+    uint32_t CRC32_GetCrc(void);
+    void CRC32_SetIDat(uint8_t IDValue);
+    uint8_t CRC32_GetIDat(void);
 
-uint16_t CRC16_CalcBufCrc(uint8_t pBuffer[], uint32_t BufferLength);
-uint16_t CRC16_CalcCRC(uint8_t Data);
+    uint16_t CRC16_CalcBufCrc(uint8_t pBuffer[], uint32_t BufferLength);
+    uint16_t CRC16_CalcCRC(uint8_t Data);
 
 #ifdef __cplusplus
 }

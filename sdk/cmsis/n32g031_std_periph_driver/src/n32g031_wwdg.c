@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_wwdg.c
- * @author Nations
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_wwdg.h"
 #include "n32g031_rcc.h"
@@ -56,8 +56,6 @@
  * @{
  */
 
-
-
 /* --------------------- WWDG registers bit mask ------------------------ */
 
 /* CTRL register bit mask */
@@ -65,8 +63,8 @@
 
 /* CFG register bit mask */
 #define CFG_TIMERB_MASK ((uint32_t)0xFFFFFE7F)
-#define CFG_W_MASK      ((uint32_t)0xFFFFFF80)
-#define BIT_MASK        ((uint8_t)0x7F)
+#define CFG_W_MASK ((uint32_t)0xFFFFFF80)
+#define BIT_MASK ((uint8_t)0x7F)
 
 /**
  * @}
@@ -158,7 +156,7 @@ void WWDG_SetWValue(uint8_t WindowValue)
  */
 void WWDG_EnableInt(void)
 {
-    WWDG->CFG |= (uint32_t)( ENABLE << 9);
+    WWDG->CFG |= (uint32_t)(ENABLE << 9);
 }
 
 /**

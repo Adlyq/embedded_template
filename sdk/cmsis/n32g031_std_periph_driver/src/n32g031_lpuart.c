@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_lpuart.c
- * @author Nations
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_lpuart.h"
 #include "n32g031_rcc.h"
@@ -59,7 +59,7 @@
 #define STS_CLR_MASK ((uint16_t)0x01BF) /*!< LPUART STS Mask */
 
 #define INTEN_CLR_MASK ((uint16_t)0x0000) /*!< LPUART INTEN Mask */
-#define INT_MASK ((uint16_t)0x007F) /*!< LPUART Interrupt Mask */
+#define INT_MASK ((uint16_t)0x007F)       /*!< LPUART Interrupt Mask */
 
 #define CTRL_CLR_MASK ((uint16_t)0x70F4)       /*!< LPUART CTRL Mask */
 #define CTRL_SMPCNT_MASK ((uint16_t)0x3FFF)    /*!< LPUART Sampling Method Mask */
@@ -104,13 +104,13 @@
  */
 
 /**
- * @brief  Deinitializes the LPUART peripheral registers to their default reset values. 
- * 
+ * @brief  Deinitializes the LPUART peripheral registers to their default reset values.
+ *
  */
 void LPUART_DeInit(void)
 {
     RCC_EnableAPB1PeriphReset(RCC_APB1_PERIPH_LPUART, ENABLE);
-    RCC_EnableAPB1PeriphReset(RCC_APB1_PERIPH_LPUART, DISABLE);    
+    RCC_EnableAPB1PeriphReset(RCC_APB1_PERIPH_LPUART, DISABLE);
 }
 
 /**
@@ -120,10 +120,10 @@ void LPUART_DeInit(void)
  *         that contains the configuration information for the specified LPUART
  *         peripheral.
  */
-void LPUART_Init(LPUART_InitType* LPUART_InitStruct)
+void LPUART_Init(LPUART_InitType *LPUART_InitStruct)
 {
     uint32_t tmpregister = 0x00, clocksrc = 0x00, apbclock = 0x00;
-    uint32_t integerdivider    = 0x00;
+    uint32_t integerdivider = 0x00;
     uint32_t fractionaldivider = 0x00;
     uint32_t tmpdivider = 0x00, lastdivider = 0x00, i = 0x00;
     RCC_ClocksType RCC_ClocksStatus;
@@ -131,9 +131,9 @@ void LPUART_Init(LPUART_InitType* LPUART_InitStruct)
     assert_param(IS_LPUART_PARITY(LPUART_InitStruct->Parity));
     assert_param(IS_LPUART_MODE(LPUART_InitStruct->Mode));
     assert_param(IS_LPUART_RTSTHRESHOLD(LPUART_InitStruct->RtsThreshold));
-    assert_param(IS_LPUART_HARDWARE_FLOW_CONTROL(LPUART_InitStruct->HardwareFlowControl));  
+    assert_param(IS_LPUART_HARDWARE_FLOW_CONTROL(LPUART_InitStruct->HardwareFlowControl));
 
-    // 时钟源判断，波特率范围    
+    // 时钟源判断，波特率范围
 
     /*---------------------------- LPUART CTRL Configuration -----------------------*/
     tmpregister = LPUART->CTRL;
@@ -147,11 +147,11 @@ void LPUART_Init(LPUART_InitType* LPUART_InitStruct)
     tmpregister |= (uint32_t)LPUART_InitStruct->Parity | LPUART_InitStruct->Mode | LPUART_InitStruct->RtsThreshold | LPUART_InitStruct->HardwareFlowControl;
     /* Write to LPUART CTRL */
     LPUART->CTRL = (uint16_t)tmpregister;
-    
+
     /*---------------------------- LPUART BRCFG1 & 2 Configuration -----------------------*/
     /* Configure the LPUART Baud Rate -------------------------------------------*/
     clocksrc = RCC_GetLPUARTClkSrc();
-    
+
     if ((clocksrc == RCC_LPUARTCLK_SRC_HSI) || (clocksrc == RCC_LPUARTCLK_SRC_HSE))
     {
         apbclock = 0x7A1200; // 8MHz
@@ -176,40 +176,40 @@ void LPUART_Init(LPUART_InitType* LPUART_InitStruct)
     }
 
     /* Determine the integer part */
-    integerdivider = apbclock / (LPUART_InitStruct->BaudRate);  
+    integerdivider = apbclock / (LPUART_InitStruct->BaudRate);
 
     /* Configure sampling method */
-    if(integerdivider <= 10)
+    if (integerdivider <= 10)
     {
         LPUART_ConfigSamplingMethod(LPUART_SMPCNT_1B);
-    } 
+    }
     else
     {
         LPUART_ConfigSamplingMethod(LPUART_SMPCNT_3B);
-    } 
+    }
 
-    /* Check baudrate */ 
+    /* Check baudrate */
     assert_param(IS_LPUART_BAUDRATE(integerdivider));
     /* Write to LPUART BRCFG1 */
-    LPUART->BRCFG1 = (uint16_t)integerdivider; 
+    LPUART->BRCFG1 = (uint16_t)integerdivider;
 
     /* Determine the fractional part */
     fractionaldivider = ((apbclock % (LPUART_InitStruct->BaudRate)) * 10000) / (LPUART_InitStruct->BaudRate);
-    
+
     tmpregister = 0x00;
     tmpdivider = fractionaldivider;
     /* Implement the fractional part in the register */
-    for( i = 0; i < 8; i++)
-    {   
-        lastdivider = tmpdivider;     
+    for (i = 0; i < 8; i++)
+    {
+        lastdivider = tmpdivider;
         tmpdivider = lastdivider + fractionaldivider;
-        if((tmpdivider / 10000) ^ (lastdivider / 10000))
+        if ((tmpdivider / 10000) ^ (lastdivider / 10000))
         {
             tmpregister |= (0x01 << i);
-        }        
-    } 
+        }
+    }
     /* Write to LPUART BRCFG2 */
-    LPUART->BRCFG2 = (uint8_t)tmpregister; 
+    LPUART->BRCFG2 = (uint8_t)tmpregister;
 }
 
 /**
@@ -217,26 +217,26 @@ void LPUART_Init(LPUART_InitType* LPUART_InitStruct)
  * @param LPUART_InitStruct pointer to a LPUART_InitType structure
  *         which will be initialized.
  */
-void LPUART_StructInit(LPUART_InitType* LPUART_InitStruct)
+void LPUART_StructInit(LPUART_InitType *LPUART_InitStruct)
 {
     /* LPUART_InitStruct members default value */
-    LPUART_InitStruct->BaudRate            = 9600;
-    LPUART_InitStruct->Parity              = LPUART_PE_NO;
-    LPUART_InitStruct->Mode                = LPUART_MODE_RX | LPUART_MODE_TX;
-    LPUART_InitStruct->RtsThreshold        = LPUART_RTSTH_FIFOFU;
+    LPUART_InitStruct->BaudRate = 9600;
+    LPUART_InitStruct->Parity = LPUART_PE_NO;
+    LPUART_InitStruct->Mode = LPUART_MODE_RX | LPUART_MODE_TX;
+    LPUART_InitStruct->RtsThreshold = LPUART_RTSTH_FIFOFU;
     LPUART_InitStruct->HardwareFlowControl = LPUART_HFCTRL_NONE;
 }
 
 /**
  * @brief  Flushes Receiver FIFO.
- * 
+ *
  */
 void LPUART_FlushRxFifo(void)
 {
     /* Clear LPUART Flush Receiver FIFO */
     LPUART->CTRL |= CTRL_FLUSH_SET;
-    while(LPUART_GetFlagStatus(LPUART_FLAG_FIFO_NE) != RESET)
-    {        
+    while (LPUART_GetFlagStatus(LPUART_FLAG_FIFO_NE) != RESET)
+    {
     }
     LPUART->CTRL &= CTRL_FLUSH_RESET;
 }
@@ -256,14 +256,14 @@ void LPUART_FlushRxFifo(void)
  *   This parameter can be: ENABLE or DISABLE.
  */
 void LPUART_ConfigInt(uint16_t LPUART_INT, FunctionalState Cmd)
-{    
-    /* Check the parameters */   
+{
+    /* Check the parameters */
     assert_param(IS_LPUART_CFG_INT(LPUART_INT));
-    assert_param(IS_FUNCTIONAL_STATE(Cmd));    
-    
+    assert_param(IS_FUNCTIONAL_STATE(Cmd));
+
     if (Cmd != DISABLE)
     {
-       LPUART->INTEN |= (uint8_t)LPUART_INT;
+        LPUART->INTEN |= (uint8_t)LPUART_INT;
     }
     else
     {
@@ -282,7 +282,7 @@ void LPUART_ConfigInt(uint16_t LPUART_INT, FunctionalState Cmd)
  */
 void LPUART_EnableDMA(uint16_t LPUART_DMAReq, FunctionalState Cmd)
 {
-    /* Check the parameters */   
+    /* Check the parameters */
     assert_param(IS_LPUART_DMAREQ(LPUART_DMAReq));
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
 
@@ -309,7 +309,7 @@ void LPUART_EnableDMA(uint16_t LPUART_DMAReq, FunctionalState Cmd)
  */
 void LPUART_ConfigWakeUpMethod(uint16_t LPUART_WakeUpMethod)
 {
-    /* Check the parameters */ 
+    /* Check the parameters */
     assert_param(IS_LPUART_WAKEUP(LPUART_WakeUpMethod));
 
     LPUART->CTRL &= CTRL_WUSTP_MASK;
@@ -328,7 +328,7 @@ void LPUART_EnableWakeUpStop(FunctionalState Cmd)
 
     if (Cmd != DISABLE)
     {
-        /* Enable Wakeup in STOP mode by setting the WUSTP bit in the CTRL register */        
+        /* Enable Wakeup in STOP mode by setting the WUSTP bit in the CTRL register */
         LPUART->CTRL |= CTRL_WUSTP_SET;
     }
     else
@@ -361,12 +361,12 @@ void LPUART_ConfigSamplingMethod(uint16_t LPUART_SamplingMethod)
  */
 void LPUART_EnableLoopBack(FunctionalState Cmd)
 {
-    /* Check the parameters */ 
+    /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(Cmd));
 
     if (Cmd != DISABLE)
     {
-        /* Enable LPUART Loop Back Self-Test by setting the LOOKBACK bit in the CTRL register */        
+        /* Enable LPUART Loop Back Self-Test by setting the LOOKBACK bit in the CTRL register */
         LPUART->CTRL |= CTRL_LOOPBACK_SET;
     }
     else
@@ -382,7 +382,7 @@ void LPUART_EnableLoopBack(FunctionalState Cmd)
  */
 void LPUART_SendData(uint8_t Data)
 {
-    /* Check the parameters */    
+    /* Check the parameters */
     assert_param(IS_LPUART_DATA(Data));
 
     /* Transmit Data */
@@ -404,7 +404,7 @@ uint8_t LPUART_ReceiveData(void)
  * @param LPUART_WakeUpData specifies the LPUART detected byte or frame match for wakeup CPU from STOP mode.
  */
 void LPUART_ConfigWakeUpData(uint32_t LPUART_WakeUpData)
-{  
+{
     LPUART->WUDAT = LPUART_WakeUpData;
 }
 
@@ -426,8 +426,8 @@ void LPUART_ConfigWakeUpData(uint32_t LPUART_WakeUpData)
 FlagStatus LPUART_GetFlagStatus(uint16_t LPUART_FLAG)
 {
     FlagStatus bitstatus = RESET;
-    
-    /* Check the parameters */  
+
+    /* Check the parameters */
     assert_param(IS_LPUART_FLAG(LPUART_FLAG));
 
     if ((LPUART->STS & LPUART_FLAG) != (uint16_t)RESET)
@@ -457,7 +457,7 @@ FlagStatus LPUART_GetFlagStatus(uint16_t LPUART_FLAG)
  */
 void LPUART_ClrFlag(uint16_t LPUART_FLAG)
 {
-    /* Check the parameters */  
+    /* Check the parameters */
     assert_param(IS_LPUART_CLEAR_FLAG(LPUART_FLAG));
 
     LPUART->STS = (uint16_t)LPUART_FLAG;
@@ -480,23 +480,23 @@ INTStatus LPUART_GetIntStatus(uint16_t LPUART_INT)
 {
     uint32_t bitpos = 0x00, itmask = 0x00;
     INTStatus bitstatus = RESET;
-    
-    /* Check the parameters */  
+
+    /* Check the parameters */
     assert_param(IS_LPUART_GET_INT(LPUART_INT));
-    
+
     /* Get the interrupt position */
     itmask = (uint8_t)(LPUART_INT >> 0x08) & INT_MASK;
     itmask = (uint32_t)0x01 << itmask;
     itmask &= LPUART->INTEN;
 
-    if(LPUART_INT == LPUART_INT_WUF)
+    if (LPUART_INT == LPUART_INT_WUF)
     {
         bitpos = ((uint8_t)LPUART_FLAG_WUF) & 0xFF;
     }
     else
     {
         bitpos = ((uint8_t)LPUART_INT) & 0xFF;
-    }    
+    }
     bitpos &= LPUART->STS;
     if ((itmask != (uint16_t)RESET) && (bitpos != (uint16_t)RESET))
     {
@@ -520,16 +520,16 @@ INTStatus LPUART_GetIntStatus(uint16_t LPUART_INT)
  *     @arg LPUART_INT_FIFO_FU FIFO Full Interrupt Enable
  *     @arg LPUART_INT_FIFO_OV FIFO Overflow Interrupt
  *     @arg LPUART_INT_TXC TX Complete Interrupt
- *     @arg LPUART_INT_PE Parity Check Error Interrupt 
+ *     @arg LPUART_INT_PE Parity Check Error Interrupt
  */
 void LPUART_ClrIntPendingBit(uint16_t LPUART_INT)
 {
     uint16_t itmask = 0x00;
-    
-    /* Check the parameters */ 
+
+    /* Check the parameters */
     assert_param(IS_LPUART_CLR_INT(LPUART_INT));
-    
-    if(LPUART_INT == LPUART_INT_WUF)
+
+    if (LPUART_INT == LPUART_INT_WUF)
     {
         itmask = ((uint8_t)LPUART_FLAG_WUF) & 0xFF;
     }

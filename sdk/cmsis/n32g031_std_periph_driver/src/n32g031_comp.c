@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2019, Nations Technologies Inc.
+ * Copyright (c) 2019, Nsing Technologies Pte. Ltd
  *
  * All rights reserved.
  * ****************************************************************************
@@ -10,13 +10,13 @@
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaimer below.
  *
- * Nations' name may not be used to endorse or promote products derived from
+ * Nsing' name may not be used to endorse or promote products derived from
  * this software without specific prior written permission.
  *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY NATIONS "AS IS" AND ANY EXPRESS OR
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY Nsing "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL NATIONS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * DISCLAIMED. IN NO EVENT SHALL Nsing BE LIABLE FOR ANY DIRECT, INDIRECT,
  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -27,10 +27,10 @@
 
 /**
  * @file n32g031_comp.c
- * @author Nations 
+ * @author Nsing
  * @version v1.0.0
  *
- * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
+ * @copyright Copyright (c) 2019, Nsing Technologies Pte. Ltd All rights reserved.
  */
 #include "n32g031_comp.h"
 #include "n32g031_rcc.h"
@@ -88,15 +88,14 @@
  * @{
  */
 #define SetBitMsk(reg, bit, msk) ((reg) = ((reg) & ~(msk) | (bit)))
-#define ClrBit(reg, bit)         ((reg) &= ~(bit))
-#define SetBit(reg, bit)         ((reg) |= (bit))
-#define GetBit(reg, bit)         ((reg) & (bit))
+#define ClrBit(reg, bit) ((reg) &= ~(bit))
+#define SetBit(reg, bit) ((reg) |= (bit))
+#define GetBit(reg, bit) ((reg) & (bit))
 /**
  * @brief  Deinitializes the COMP peripheral registers to their default reset values.
  */
 void COMP_DeInit(void)
 {
-
 }
 
 /**
@@ -105,24 +104,24 @@ void COMP_DeInit(void)
  * @param  COMP_InitStruct
  * @return none.
  */
-void COMP_StructInit(COMP_InitType* COMP_InitStruct)
+void COMP_StructInit(COMP_InitType *COMP_InitStruct)
 {
     // COMP_CTRL
-    COMP_InitStruct->ClockSelect   = COMP_CTRL_CLKSEL_SYSTEMCLK; // only COMP have this bit
-    COMP_InitStruct->LowPoweMode   = COMP_CTRL_PWRMD_NORMAL;     // only COMP have this bit
+    COMP_InitStruct->ClockSelect = COMP_CTRL_CLKSEL_SYSTEMCLK; // only COMP have this bit
+    COMP_InitStruct->LowPoweMode = COMP_CTRL_PWRMD_NORMAL;     // only COMP have this bit
 
-    COMP_InitStruct->Blking        = COMP_CTRL_BLKING_NO;        /*see @ref COMP_CTRL_BLKING */
-    COMP_InitStruct->Hyst          = COMP_CTRL_HYST_NO;          // see @COMPx_CTRL_HYST_MASK
-    COMP_InitStruct->PolRev        = COMP_CTRL_POL_NONINVERTED;  // out polarity reverse
-    COMP_InitStruct->OutTrg        = COMPx_CTRL_OUTTRG_NC;
-    COMP_InitStruct->InpSel        = COMPx_CTRL_INPSEL_VREF;    //Float as same with comp
-    COMP_InitStruct->InmSel        = COMPx_CTRL_INMSEL_VREF;    //NC as same with comp 
+    COMP_InitStruct->Blking = COMP_CTRL_BLKING_NO;       /*see @ref COMP_CTRL_BLKING */
+    COMP_InitStruct->Hyst = COMP_CTRL_HYST_NO;           // see @COMPx_CTRL_HYST_MASK
+    COMP_InitStruct->PolRev = COMP_CTRL_POL_NONINVERTED; // out polarity reverse
+    COMP_InitStruct->OutTrg = COMPx_CTRL_OUTTRG_NC;
+    COMP_InitStruct->InpSel = COMPx_CTRL_INPSEL_VREF; // Float as same with comp
+    COMP_InitStruct->InmSel = COMPx_CTRL_INMSEL_VREF; // NC as same with comp
     // filter
-    COMP_InitStruct->SampWindow    = COMPX_FILC_SAMPW_0;
-    COMP_InitStruct->Thresh        = COMPX_FILC_THRESH_1;
-    COMP_InitStruct->FilterEn      = COMPX_FILC_FILEN_DISABLE;
+    COMP_InitStruct->SampWindow = COMPX_FILC_SAMPW_0;
+    COMP_InitStruct->Thresh = COMPX_FILC_THRESH_1;
+    COMP_InitStruct->FilterEn = COMPX_FILC_FILEN_DISABLE;
     // filter psc
-    COMP_InitStruct->ClkPsc        = COMP_FILP_CLKPSC_MASK;
+    COMP_InitStruct->ClkPsc = COMP_FILP_CLKPSC_MASK;
 }
 
 /**
@@ -132,18 +131,17 @@ void COMP_StructInit(COMP_InitType* COMP_InitStruct)
  * @param  COMP_InitStruct
  * @return none.
  */
-void COMP_Init( COMP_InitType* COMP_InitStruct)
+void COMP_Init(COMP_InitType *COMP_InitStruct)
 {
-    COMP_SingleType* pCS;
+    COMP_SingleType *pCS;
     __IO uint32_t tmp;
 
     pCS = &COMP->Cmp;
 
-    
     // filter
     tmp = pCS->FILC;
     tmp &= (~(uint32_t)(COMP_FILC_SAMPW_MASK | COMP_FILC_THRESH_MASK | COMP_FILC_FILEN_MASK));
-    //for remove IAR warning[Pa089]
+    // for remove IAR warning[Pa089]
     tmp |= ((uint32_t)(COMP_InitStruct->SampWindow) | (uint32_t)(COMP_InitStruct->Thresh) | (uint32_t)(COMP_InitStruct->FilterEn));
     pCS->FILC = tmp;
 
@@ -154,11 +152,9 @@ void COMP_Init( COMP_InitType* COMP_InitStruct)
     tmp = pCS->CTRL;
     tmp &= (~(uint32_t)(COMP_CTRL_CLKSEL_MASK | COMP_CTRL_PWRMODE_MASK));
     tmp |= ((uint32_t)(COMP_InitStruct->ClockSelect) | (uint32_t)(COMP_InitStruct->LowPoweMode));
-    
-    tmp &= (~(uint32_t)(COMP_CTRL_BLKING_MASK | COMP_CTRL_HYST_MASK | COMP_CTRL_POL_MASK | COMP_CTRL_OUTTRG_MASK
-                      | COMP_CTRL_INPSEL_MASK | COMP_CTRL_INMSEL_MASK | COMP_CTRL_EN_MASK));
-    tmp |= ((uint32_t)(COMP_InitStruct->Blking) | (uint32_t)(COMP_InitStruct->Hyst) | (uint32_t)(COMP_InitStruct->PolRev)
-             | (uint32_t)(COMP_InitStruct->OutTrg) | (uint32_t)(COMP_InitStruct->InpSel) | (uint32_t)(COMP_InitStruct->InmSel));
+
+    tmp &= (~(uint32_t)(COMP_CTRL_BLKING_MASK | COMP_CTRL_HYST_MASK | COMP_CTRL_POL_MASK | COMP_CTRL_OUTTRG_MASK | COMP_CTRL_INPSEL_MASK | COMP_CTRL_INMSEL_MASK | COMP_CTRL_EN_MASK));
+    tmp |= ((uint32_t)(COMP_InitStruct->Blking) | (uint32_t)(COMP_InitStruct->Hyst) | (uint32_t)(COMP_InitStruct->PolRev) | (uint32_t)(COMP_InitStruct->OutTrg) | (uint32_t)(COMP_InitStruct->InpSel) | (uint32_t)(COMP_InitStruct->InmSel));
 
     pCS->CTRL = tmp;
 }
@@ -183,7 +179,7 @@ void COMP_Enable(COMP_CTRL_EN_ENUM Cmd)
  * @param  Inpsel : COMP_CTRL_INPSEL.
  * @return none.
  */
-void COMP_SetInpSel( COMP_CTRL_INPSEL_ENUM Inpsel)
+void COMP_SetInpSel(COMP_CTRL_INPSEL_ENUM Inpsel)
 {
     __IO uint32_t tmp;
 
@@ -191,9 +187,8 @@ void COMP_SetInpSel( COMP_CTRL_INPSEL_ENUM Inpsel)
 
     tmp &= (~(uint32_t)COMP_CTRL_INPSEL_MASK);
     tmp |= Inpsel;
-    
-    COMP->Cmp.CTRL = tmp;
 
+    COMP->Cmp.CTRL = tmp;
 }
 
 /**
@@ -203,20 +198,16 @@ void COMP_SetInpSel( COMP_CTRL_INPSEL_ENUM Inpsel)
  * @param  Inmsel : COMP_CTRL_INMSEL.
  * @return none.
  */
-void COMP_SetInmSel( COMP_CTRL_INMSEL_ENUM Inmsel)
+void COMP_SetInmSel(COMP_CTRL_INMSEL_ENUM Inmsel)
 {
     __IO uint32_t tmp;
 
-
     tmp = COMP->Cmp.CTRL;
 
-    
     tmp &= (~COMP_CTRL_INMSEL_MASK);
     tmp |= Inmsel;
-    
 
     COMP->Cmp.CTRL = tmp;
-
 }
 
 /**
@@ -226,16 +217,15 @@ void COMP_SetInmSel( COMP_CTRL_INMSEL_ENUM Inmsel)
  * @param  OutTrig : COMP_CTRL_OUTTRG.
  * @return none.
  */
-void COMP_SetOutTrig( COMP_CTRL_OUTTRG_ENUM OutTrig)
+void COMP_SetOutTrig(COMP_CTRL_OUTTRG_ENUM OutTrig)
 {
     __IO uint32_t tmp;
 
-
     tmp = COMP->Cmp.CTRL;
-    
+
     tmp &= (~(uint32_t)COMP_CTRL_OUTTRG_MASK);
     tmp |= OutTrig;
-    
+
     COMP->Cmp.CTRL = tmp;
 }
 
@@ -248,7 +238,7 @@ void COMP_SetOutTrig( COMP_CTRL_OUTTRG_ENUM OutTrig)
  */
 void COMP_ConfigInt(COMP_INTEN_CMPXIEN_ENUM COMPx_INT, FunctionalState Cmd)
 {
-    if(Cmd != DISABLE)
+    if (Cmd != DISABLE)
     {
         COMP->INTEN |= (uint32_t)COMPx_INT;
     }
@@ -279,7 +269,24 @@ INTStatus COMP_GetIntStatus(COMP_INTSTS_STATUS_ENUM status)
 
     return bitstatus;
 }
+/**
+ * @brief  Checks whether the specified COMPx(x = 1) interrupt has occurred or not
+ * @note   This function can be used for N32G031 devices.
+ * @param  status : COMP_INTSTS_CMP1IS_STATUS
+ * @return none.
+ */
+void COMP_ClrIntStatus(COMP_INTSTS_STATUS_ENUM status)
+{
 
+    __IO uint32_t DelayCounter = 0xF;
+
+    /* Wait */
+    do
+    {
+        DelayCounter--;
+    } while (DelayCounter);
+    COMP->INTSTS &= (~(uint32_t)status);
+}
 /**
  * @brief  Checks COMPx(x = 1) out status.
  * @note   This function can be used for N32G031 devices.
@@ -289,7 +296,7 @@ INTStatus COMP_GetIntStatus(COMP_INTSTS_STATUS_ENUM status)
 FlagStatus COMP_GetCompOutStatus(void)
 {
     FlagStatus bitstatus = RESET;
-  
+
     __IO uint32_t tmp;
 
     if ((COMP->Cmp.CTRL & COMP_CTRL_OUT_MASK) != (uint32_t)RESET)
@@ -313,7 +320,7 @@ FlagStatus COMP_GetCompOutStatus(void)
  */
 void COMP_ConfigCTRLLock(COMP_LOCK_CMPXLK_ENUM COMPx_LOCK, FunctionalState Cmd)
 {
-    if(Cmd != DISABLE)
+    if (Cmd != DISABLE)
     {
         COMP->LOCK |= (uint32_t)COMPx_LOCK;
     }
@@ -333,11 +340,11 @@ void COMP_ConfigCTRLLock(COMP_LOCK_CMPXLK_ENUM COMPx_LOCK, FunctionalState Cmd)
  */
 void COMP_ConfigVREFx(VREFX_ENUM Vrefx, COMP_INVREF_VREFXSEL_ENUM COMP_VREFx, FunctionalState Cmd)
 {
-    if(Vrefx == VREF)
+    if (Vrefx == VREF)
     {
         COMP->INVREF &= (~COMP_INVREF_VREFSEL_MSK);
         COMP->INVREF |= COMP_VREFx;
-        if(Cmd != DISABLE)
+        if (Cmd != DISABLE)
         {
             COMP->INVREF |= COMP_INVREF_VREFEN_ENABLE;
         }
