@@ -10,10 +10,11 @@
  */
 void SoftDelay(volatile uint32_t nCount) {
     while (nCount--) {
+        IWDG_ReloadKey();
     }
 }
 
-void TIM_InitOc(TIM_Module* TIMx, const uint8_t oc,OCInitType* TIM_OCInitStruct) {
+void TIM_InitOc(TIM_Module* TIMx, const uint8_t oc, OCInitType* TIM_OCInitStruct) {
     switch (oc) {
     case 1:
         TIM_InitOc1(TIMx, TIM_OCInitStruct);

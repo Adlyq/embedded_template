@@ -9,6 +9,12 @@ __NO_RETURN int main(void) {
     shortCircuitProtectionInit();
     outputInit();
     while (true) {
+        if (isShortCircuit()) {
+            outputFlash();
+            goto END;
+        }
+
+    END:
         IWDG_ReloadKey();
     }
 }
