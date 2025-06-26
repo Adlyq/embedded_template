@@ -22,7 +22,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
 
 target_link_sdk_libraries(${PROJECT_NAME})
 
-target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
+set_source_files_properties(cmake/syscall.c PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
+target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wextra)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_options(${PROJECT_NAME} PRIVATE -Wno-unused-variable)
 endif ()
