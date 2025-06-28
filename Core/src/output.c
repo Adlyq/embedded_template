@@ -17,17 +17,8 @@
 #define OUTPUT_DO_PORT       GPIOB // 白
 #define OUTPUT_DO_PIN        GPIO_PIN_6
 
-#ifdef OUTPUT_DEST_L
-#defind LED_OUTPUT() GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN)
-#define LED_NO_OUTPUT() GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN)
-#else
-#define LED_OUTPUT() GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN)
-#define LED_NO_OUTPUT() GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN)
-#endif
-
 static u8   shortCircuit = 0;
 static bool flag         = false;
-static bool ld           = false;
 static bool outputting   = false;
 
 void outputInit(void) {
@@ -55,27 +46,61 @@ void outputInit(void) {
 #endif
 }
 
+#ifdef OUTPUT_DEST_SUPPORT
+static bool ld = false;
+
 void outputLDSet(const bool state) {
-    ld = state;
+    ld = !state;
 }
 
 void outputSet(const bool state) {
     if (shortCircuit != 0) return;
     outputting = state;
     if (state ^ ld) {
-        LED_OUTPUT();
+#ifndef OUTPUT_DEST_KEEP
+        GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
+#endif
         GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
 #ifdef OUTPUT_DO_PORT
         GPIO_SetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
 #endif
     } else {
-        LED_NO_OUTPUT();
+#ifndef OUTPUT_DEST_KEEP
+        GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
+#endif
+        GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
+#ifdef OUTPUT_DO_PORT
+        GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+#endif
+    }
+
+#ifdef OUTPUT_DEST_KEEP
+    if (state) {
+        GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
+    } else {
+        GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
+    }
+#endif
+}
+#else
+void outputSet(const bool state) {
+    if (shortCircuit != 0) return;
+    outputting = state;
+    if (state) {
+        GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
+        GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
+#ifdef OUTPUT_DO_PORT
+        GPIO_SetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+#endif
+    } else {
+        GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
         GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
 #ifdef OUTPUT_DO_PORT
         GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
 #endif
     }
 }
+#endif
 
 bool outputGet(void) {
     return outputting;

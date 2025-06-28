@@ -6,11 +6,14 @@
 #define OUTPUT_H
 #include <stdbool.h>
 
-// #define OUTPUT_DEST_L
+// #define OUTPUT_DEST_SUPPORT
+// #define OUTPUT_DEST_KEEP
 
 void outputInit(void);
 
+#ifdef OUTPUT_DEST_SUPPORT
 void outputLDSet(bool);
+#endif
 
 void outputSet(bool);
 

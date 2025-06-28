@@ -2,7 +2,7 @@
 // Created by adlyq on 25-6-20.
 //
 
-#include "iwdgInit.h"
+#include "iwdg.h"
 
 #include "n32g031.h"
 
