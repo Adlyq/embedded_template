@@ -4,6 +4,11 @@
 
 #ifndef SHORT_CIRCUIT_PROTECTION_H
 #define SHORT_CIRCUIT_PROTECTION_H
+#include <stdbool.h>
+
+extern bool checkFlag;
+
+void checkShort(void);
 
 void shortCircuitProtectionInit(void);
 

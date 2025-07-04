@@ -18,7 +18,11 @@
 
 #define NUMBER_OF_CONTINUOUS_DETECTIONS 10
 
-static void check(void) {
+bool checkFlag = true;
+
+void checkShort(void) {
+    checkFlag = false;
+
     const bool isNoShortCircuit = GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN);
     for (int i = 0; i < NUMBER_OF_CONTINUOUS_DETECTIONS; ++i) {
         if (GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN) != isNoShortCircuit) return;
@@ -57,14 +61,12 @@ void shortCircuitProtectionInit(void) {
     nvicInit.NVIC_IRQChannelPriority = 0;
     nvicInit.NVIC_IRQChannelCmd      = ENABLE;
     NVIC_Init(&nvicInit);
-
-    check();
 }
 
 void SCP_IRQHandler() {
     if (EXTI_GetITStatus(SCP_EXTI_LINE)) {
-        EXTI_ClrITPendBit(SCP_EXTI_LINE);
+        checkFlag = true;
 
-        check();
+        EXTI_ClrITPendBit(SCP_EXTI_LINE);
     }
 }
