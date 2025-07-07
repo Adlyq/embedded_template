@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 include(cmake/toolchain.cmake)
 
 project(n32g031_template)
-set(VERSION 1.0)
+set(VERSION 1.00)
 
 enable_language(C)
 enable_language(CXX)
