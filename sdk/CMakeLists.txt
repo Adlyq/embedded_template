@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-option(CMSIS_DSP "CMSIS DSP" ON)
+option(CMSIS_DSP "CMSIS DSP" OFF)
 
 add_subdirectory(cmsis)
 target_compile_options(N32G031_SDK PRIVATE -w)
