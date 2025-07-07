@@ -39,5 +39,10 @@ with open('./CMakeLists.txt', 'r', encoding='utf-8') as f:
 with open('./CMakeLists.txt', 'w', encoding='utf-8') as f:
     f.write(content)
 
+with open('.github/workflows/build.yml', 'r', encoding='utf-8') as f:
+    content = f.read().replace('n32g031_template', sys.argv[1]).replace('embedded-template', sys.argv[1]).replace("embedded_template", sys.argv[1])
+with open('.github/workflows/build.yml', 'w', encoding='utf-8') as f:
+    f.write(content)
+
 os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
 os.remove('proj_rename.py')
