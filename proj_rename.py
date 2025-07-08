@@ -11,7 +11,7 @@ for char in sys.argv[1]:
         print("Invalid project name. Only alphanumeric characters and underscores are allowed.")
         sys.exit(1)
 
-if os.path.exists('./../' + sys.argv[1]):
+if os.path.exists('./../' + sys.argv[1]) and (os.path.basename(os.getcwd()) != sys.argv[1]):
     print(f"Directory '{sys.argv[1]}' already exists. Please choose a different project name.")
     sys.exit(1)
 
@@ -44,7 +44,9 @@ with open('.github/workflows/build.yml', 'r', encoding='utf-8') as f:
 with open('.github/workflows/build.yml', 'w', encoding='utf-8') as f:
     f.write(content)
 
-os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
-os.remove('proj_rename.py')
+if os.path.basename(os.getcwd()) != sys.argv[1]:
+    os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
 
 os.system('rm -rf sdk/cmsis && git init && git submodule add -f --depth 1 https://github.com/Adlyq/n32g031-cmsis.git sdk/cmsis')
+
+os.remove('proj_rename.py')
