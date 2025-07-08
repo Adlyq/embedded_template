@@ -46,3 +46,5 @@ with open('.github/workflows/build.yml', 'w', encoding='utf-8') as f:
 
 os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
 os.remove('proj_rename.py')
+
+os.system('rm -rf sdk/cmsis && git init && git submodule add -f --depth 1 https://github.com/Adlyq/n32g031-cmsis.git sdk/cmsis')
