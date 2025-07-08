@@ -7,7 +7,7 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 for char in sys.argv[1]:
-    if char not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_':
+    if char not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-':
         print("Invalid project name. Only alphanumeric characters and underscores are allowed.")
         sys.exit(1)
 
