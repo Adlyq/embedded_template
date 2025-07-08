@@ -15,7 +15,6 @@ __NO_RETURN int main(void) {
             checkShort();
         }
 
-
         if (isShortCircuit()) {
             outputFlash();
         }
