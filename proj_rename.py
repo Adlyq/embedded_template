@@ -15,8 +15,6 @@ if os.path.exists('./../' + sys.argv[1]) and (os.path.basename(os.getcwd()) != s
     print(f"Directory '{sys.argv[1]}' already exists. Please choose a different project name.")
     sys.exit(1)
 
-shutil.rmtree('.git')
-
 ctx_list = []
 for path, dirs, files in os.walk('./.idea'):
     for file in files:
@@ -47,6 +45,13 @@ with open('.github/workflows/build.yml', 'w', encoding='utf-8') as f:
 if os.path.basename(os.getcwd()) != sys.argv[1]:
     os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
 
-os.system('rm -rf sdk/cmsis && git init && git submodule add -f --depth 1 https://github.com/Adlyq/n32g031-cmsis.git sdk/cmsis')
+if os.path.exists('sdk/cmsis'):
+    shutil.rmtree('sdk/cmsis')
+if os.path.exists('sdk/cmsis-dsp'):
+    shutil.rmtree('sdk/cmsis-dsp')
+if os.path.exists('.git'):
+    shutil.rmtree('.git')
+
+os.system('git init && git submodule add -f --depth 1 https://github.com/Adlyq/n32g031-cmsis.git sdk/cmsis')
 
 os.remove('proj_rename.py')
