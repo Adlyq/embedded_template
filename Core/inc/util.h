@@ -6,18 +6,20 @@
 #define UTIL_H
 #include <stdint.h>
 #include <n32g031_tim.h>
+#include <stdlib.h>
 
 #define __NORETURN __attribute__((noreturn))
 
 #define LOOP_UNTIL(condition) while (!(condition)) { }
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define APPROX_EQUAL(a, b, EPSILON) (abs((int32_t)(a) - (int32_t)(b)) <= (EPSILON))
 
 typedef uint64_t u64;
-typedef int64_t i64;
-typedef int32_t i32;
-typedef int16_t i16;
-typedef int8_t  i8;
+typedef int64_t  i64;
+typedef int32_t  i32;
+typedef int16_t  i16;
+typedef int8_t   i8;
 
 void SoftDelay(uint32_t nCount);
 
