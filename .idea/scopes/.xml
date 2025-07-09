@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="嵌入式" pattern="file:Core//*||file:CMakeLists.txt||file:README.md||file:cmake/*" />
+</component>
