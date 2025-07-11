@@ -1,6 +1,3 @@
 [submodule "sdk/cmsis"]
 	path = sdk/cmsis
 	url = https://github.com/Adlyq/n32g031-cmsis.git
-[submodule "sdk/cmsis-dsp"]
-	path = sdk/cmsis-dsp
-	url = https://github.com/Adlyq/n32g031-cmsis-dsp.git
