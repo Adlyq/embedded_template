@@ -2,6 +2,8 @@
 
 import os, sys, shutil
 
+from mercurial.wireprotov1server import known
+
 if len(sys.argv) < 2:
     print("Usage: python proj_rename.py <new_project_name>")
     sys.exit(1)
@@ -32,16 +34,18 @@ for path, dirs, files in os.walk('./.idea'):
 for path, file in ctx_list:
     os.renames(os.path.join(path, file), os.path.join(path, file.replace('embedded-template', sys.argv[1])))
 
-with open('./CMakeLists.txt', 'r', encoding='utf-8') as f:
-    content = f.read().replace('n32g031_template', sys.argv[1])
-with open('./CMakeLists.txt', 'w', encoding='utf-8') as f:
-    f.write(content)
+knownFiles = [
+    './CMakeLists.txt',
+    '.github/workflows/build.yml',
+    '.run/n32g031_template.run.xml',
+]
+for kf in knownFiles:
+    with open('.github/workflows/build.yml', 'r', encoding='utf-8') as f:
+        content = f.read().replace('n32g031_template', sys.argv[1]).replace('embedded-template', sys.argv[1]).replace("embedded_template", sys.argv[1])
+    with open('.github/workflows/build.yml', 'w', encoding='utf-8') as f:
+        f.write(content)
 
-with open('.github/workflows/build.yml', 'r', encoding='utf-8') as f:
-    content = f.read().replace('n32g031_template', sys.argv[1]).replace('embedded-template', sys.argv[1]).replace("embedded_template", sys.argv[1])
-with open('.github/workflows/build.yml', 'w', encoding='utf-8') as f:
-    f.write(content)
-
+os.renames('.run/n32g031_template.run.xml', '.run/' + sys.argv[1] + '.run.xml')
 if os.path.basename(os.getcwd()) != sys.argv[1]:
     os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
 
