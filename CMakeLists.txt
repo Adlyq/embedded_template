@@ -18,6 +18,14 @@ add_executable(${PROJECT_NAME}
         ${SRC_LIST}
 )
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Building in Debug mode")
+    add_compile_definitions(DEBUG)
+else ()
+    message(STATUS "Building in Release mode")
+    add_compile_definitions(RELEASE)
+endif ()
+
 target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
 
 target_link_sdk_libraries(${PROJECT_NAME})
