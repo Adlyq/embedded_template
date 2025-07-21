@@ -129,8 +129,8 @@ void outputFlash(void) {
 
     if (shortCircuit == 0) return;
     GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN); // LED
-    SoftDelay(400000);
+    SoftDelay(100000);
     if (shortCircuit == 0) return;
     GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN); // LED
-    SoftDelay(400000);
+    SoftDelay(100000);
 }
