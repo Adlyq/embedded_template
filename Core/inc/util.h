@@ -2,8 +2,12 @@
 // Created by 28331 on 25-2-12.
 //
 
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
+
+#include "common_defs.h"
+
+EXTERN_C_BEGIN
+
 #include <stdint.h>
 #include <n32g031_tim.h>
 #include <stdlib.h>
@@ -25,4 +29,4 @@ void SoftDelay(uint32_t nCount);
 
 void TIM_InitOc(TIM_Module* TIMx, uint8_t oc,OCInitType* TIM_OCInitStruct);
 
-#endif //UTIL_H
+EXTERN_C_END

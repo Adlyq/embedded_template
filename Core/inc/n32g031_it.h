@@ -32,12 +32,11 @@
  *
  * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
  */
-#ifndef __N32G031_IT_H__
-#define __N32G031_IT_H__
+#pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "common_defs.h"
+
+EXTERN_C_BEGIN
 
 #include "n32g031.h"
 
@@ -48,11 +47,8 @@ void PendSV_Handler(void);
 void SysTick_Handler(void);
 void DMA_IRQ_HANDLER(void);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_C_END
 
-#endif /* __N32G031_IT_H__ */
 /**
  * @}
  */

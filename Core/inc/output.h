@@ -2,8 +2,11 @@
 // Created by adlyq on 25-3-25.
 //
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
+#pragma once
+
+#include "common_defs.h"
+
+EXTERN_C_BEGIN
 #include <stdbool.h>
 
 // #define OUTPUT_DEST_SUPPORT
@@ -27,4 +30,4 @@ bool isShortCircuit();
 
 void outputFlash(void);
 
-#endif //OUTPUT_H
+EXTERN_C_END

@@ -1,9 +1,12 @@
 //
 // Created by adlyq on 25-3-26.
 //
+#pragma once
 
-#ifndef SHORT_CIRCUIT_PROTECTION_H
-#define SHORT_CIRCUIT_PROTECTION_H
+#include "common_defs.h"
+
+EXTERN_C_BEGIN
+
 #include <stdbool.h>
 
 extern bool checkFlag;
@@ -12,4 +15,4 @@ void checkShort(void);
 
 void shortCircuitProtectionInit(void);
 
-#endif //SHORT_CIRCUIT_PROTECTION_H
+EXTERN_C_END
