@@ -25,8 +25,12 @@ typedef int32_t  i32;
 typedef int16_t  i16;
 typedef int8_t   i8;
 
-void SoftDelay(uint32_t nCount);
+extern volatile u32 timestamp;
 
-void TIM_InitOc(TIM_Module* TIMx, uint8_t oc,OCInitType* TIM_OCInitStruct);
+void delayMs(uint32_t ms);
+
+void delayUs(u32 us);
+
+void TIM_InitOc(TIM_Module* TIMx, uint8_t oc, OCInitType* TIM_OCInitStruct);
 
 EXTERN_C_END

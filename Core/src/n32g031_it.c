@@ -75,13 +75,6 @@ void PendSV_Handler(void)
 }
 
 /**
- * @brief  This function handles SysTick Handler.
- */
-void SysTick_Handler(void)
-{
-}
-
-/**
  * @brief  This function handles DMA interrupt request defined in main.h .
  */
 void DMA_IRQ_HANDLER(void)

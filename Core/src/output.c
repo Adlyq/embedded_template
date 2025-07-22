@@ -17,9 +17,9 @@
 #define OUTPUT_DO_PORT       GPIOB // 白
 #define OUTPUT_DO_PIN        GPIO_PIN_6
 
-static u8   shortCircuit = 0;
-static bool flag         = false;
-static bool outputting   = false;
+static u8     shortCircuit = 0;
+static bool   flag         = false;
+volatile bool outputting   = false;
 
 void outputInit(void) {
     RCC_EnableAPB2PeriphClk(RCC_NEED_APB2, ENABLE);
@@ -102,10 +102,6 @@ void outputSet(const bool state) {
 }
 #endif
 
-bool outputGet(void) {
-    return outputting;
-}
-
 void onShortCircuit() {
     shortCircuit = 5;
     flag         = true;
@@ -127,10 +123,8 @@ bool isShortCircuit() {
 void outputFlash(void) {
     if (shortCircuit > flag) shortCircuit--;
 
-    if (shortCircuit == 0) return;
     GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN); // LED
-    SoftDelay(100000);
-    if (shortCircuit == 0) return;
+    delayMs(200);
     GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN); // LED
-    SoftDelay(100000);
+    delayMs(200);
 }

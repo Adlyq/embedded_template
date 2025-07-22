@@ -9,11 +9,6 @@
 void iwdgInit(void) {
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_PWR, ENABLE);
     DBG_ConfigPeriph(DBG_IWDG_STOP, ENABLE);
-    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
-    if (SysTick_Config(SystemCoreClock / 1000)) {
-        /* Capture error */
-        while (1);
-    }
 
     if (RCC_GetFlagStatus(RCC_CTRLSTS_FLAG_IWDGRSTF)) {
         RCC_ClrFlag();

@@ -12,6 +12,8 @@ EXTERN_C_BEGIN
 // #define OUTPUT_DEST_SUPPORT
 // #define OUTPUT_DEST_KEEP
 
+extern volatile bool outputting;
+
 void outputInit(void);
 
 #ifdef OUTPUT_DEST_SUPPORT

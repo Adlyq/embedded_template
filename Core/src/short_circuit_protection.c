@@ -27,7 +27,7 @@ void checkShort(void) {
     for (int i = 0; i < NUMBER_OF_CONTINUOUS_DETECTIONS; ++i) {
         if (GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN) != isNoShortCircuit) return;
 
-        SoftDelay(250);
+        delayUs(15);
     }
     if (isNoShortCircuit) {
         onNotShortCircuit();
