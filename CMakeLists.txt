@@ -3,6 +3,7 @@ include(cmake/toolchain.cmake)
 
 project(n32g031_template)
 set(VERSION 1.0)
+set(Output NPN NORMAL_CLOSE)
 
 enable_language(C)
 enable_language(CXX)
@@ -17,6 +18,11 @@ add_executable(${PROJECT_NAME}
         cmake/syscall.c
         ${SRC_LIST}
 )
+
+foreach (def IN LISTS Output)
+    message("Using ${def} output")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE Output_${def})
+endforeach ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Building in Debug mode")

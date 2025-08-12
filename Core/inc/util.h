@@ -12,12 +12,16 @@ EXTERN_C_BEGIN
 #include <n32g031_tim.h>
 #include <stdlib.h>
 
-#define __NORETURN __attribute__((noreturn))
-
 #define LOOP_UNTIL(condition) while (!(condition)) { }
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define APPROX_EQUAL(a, b, EPSILON) (abs((int32_t)(a) - (int32_t)(b)) <= (EPSILON))
+
+#if __has_attribute(optimize)
+#define OPTIMIZE_O3 __attribute__((optimize("O3", "unroll-loops")))
+#else
+#define OPTIMIZE_O3
+#endif
 
 typedef uint64_t u64;
 typedef int64_t  i64;

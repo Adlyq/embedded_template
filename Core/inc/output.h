@@ -9,7 +9,7 @@
 EXTERN_C_BEGIN
 #include <stdbool.h>
 
-// #define OUTPUT_DEST_SUPPORT
+#define OUTPUT_DEST_SUPPORT
 // #define OUTPUT_DEST_KEEP
 
 extern volatile bool outputting;

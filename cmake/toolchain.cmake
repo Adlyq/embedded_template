@@ -28,8 +28,17 @@ add_link_options(-mcpu=cortex-m0 -mthumb -mthumb-interwork)
 add_link_options(-T ${TARGET_LD_SCRIPT})
 
 if (NOT Python_EXECUTABLE)
-    message(FATAL_ERROR "Python executable not found")
+    find_package(Python REQUIRED COMPONENTS Interpreter)
+    if (NOT Python_EXECUTABLE)
+        message(FATAL_ERROR "Python executable not found")
+    endif ()
 endif ()
+
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif(CCACHE_FOUND)
 
 function(gen_keil_proj)
     execute_process(
