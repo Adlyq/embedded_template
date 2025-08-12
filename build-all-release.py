@@ -34,7 +34,7 @@ for combo in combinations:
     )
     
     # STM32 特定的构建命令
-    cmake_build_cmd = f'cmake --build {build_dir} --target SPM-100 -j 14'
+    cmake_build_cmd = f'cmake --build {build_dir} -j 14'
     
     # 执行配置
     subprocess.run(cmake_config_cmd, shell=True, check=True)
