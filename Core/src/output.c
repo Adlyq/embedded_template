@@ -62,7 +62,7 @@ void outputSet(const bool state) {
 #endif
         GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
 #ifdef OUTPUT_DO_PORT
-        GPIO_SetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+        GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
 #endif
     } else {
 #ifndef OUTPUT_DEST_KEEP
@@ -70,7 +70,7 @@ void outputSet(const bool state) {
 #endif
         GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
 #ifdef OUTPUT_DO_PORT
-        GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+        GPIO_SetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
 #endif
     }
 
