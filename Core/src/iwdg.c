@@ -6,32 +6,36 @@
 
 #include "n32g031.h"
 
+/**
+ * @brief 初始化独立看门狗
+ * @note 配置看门狗超时时间约为260ms
+ */
 void iwdgInit(void) {
+    // 使能PWR时钟，允许在调试模式下暂停IWDG
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_PWR, ENABLE);
     DBG_ConfigPeriph(DBG_IWDG_STOP, ENABLE);
 
+    // 检查并清除IWDG复位标志
     if (RCC_GetFlagStatus(RCC_CTRLSTS_FLAG_IWDGRSTF)) {
         RCC_ClrFlag();
     }
 
-    /* IWDG timeout equal to 250 ms (the timeout may varies due to LSI frequency
-       dispersion) */
-    /* Enable write access to IWDG_PR and IWDG_RLR registers */
+    /* 配置IWDG超时时间约为260ms */
+    // 使能对IWDG_PR和IWDG_RLR寄存器的写访问
     IWDG_WriteConfig(IWDG_WRITE_ENABLE);
 
-    /* IWDG counter clock: LSI/128 */
+    // 设置IWDG预分频为128
     IWDG_SetPrescalerDiv(IWDG_PRESCALER_DIV128);
 
-    /* Set counter reload value to obtain 250ms IWDG TimeOut.
-       Counter Reload Value = 250ms/IWDG counter clock period
-                            = 250ms / (LSI/128)
-                            = 4.27ms / (LsiFreq/128)
+    /* 设置重载值，计算方法：
+       超时时间 = 重载值 * (LSI周期 * 预分频)
+       260ms = 61 * (1/40000 * 128)
      */
-    /* 260ms */
     IWDG_CntReload(61);
-    /* Reload IWDG counter */
+
+    // 重载IWDG计数器
     IWDG_ReloadKey();
 
-    /* Enable IWDG (the LSI oscillator will be enabled by hardware) */
+    // 使能IWDG(LSI振荡器会由硬件自动使能)
     IWDG_Enable();
 }
