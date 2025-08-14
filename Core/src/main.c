@@ -5,7 +5,7 @@
 #include "output.h"
 #include "util.h"
 
-__attribute__((constructor)) void init(void) {
+__STATIC_FORCEINLINE void init(void) {
     shortCircuitProtectionInit();
     iwdgInit();
     outputInit();
@@ -17,16 +17,22 @@ __attribute__((constructor)) void init(void) {
 #endif
 }
 
+__STATIC_FORCEINLINE void loop(void) {
+    IWDG_ReloadKey();
+
+    if (checkFlag) {
+        checkShort();
+    }
+
+    if (isShortCircuit()) {
+        outputFlash();
+    }
+}
+
 __NO_RETURN int main(void) {
+    init();
+
     while (true) {
-        IWDG_ReloadKey();
-
-        if (checkFlag) {
-            checkShort();
-        }
-
-        if (isShortCircuit()) {
-            outputFlash();
-        }
+        loop();
     }
 }
