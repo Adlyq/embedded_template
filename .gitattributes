@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Mark the following files/directories as auto-generated
+.idea/** linguist-generated=true
+.run/** linguist-generated=true
+keil/** linguist-generated=true
