@@ -30,16 +30,13 @@ bool checkFlag = true;
 void checkShort(void) {
     checkFlag = false;
 
-    // 读取当前短路检测引脚状态
     const bool isNoShortCircuit = GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN);
-    // 连续多次检测确认状态稳定
     for (int i = 0; i < NUMBER_OF_CONTINUOUS_DETECTIONS; ++i) {
         if (GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN) != isNoShortCircuit) return;
 
-        delayUs(15); // 短暂延时
+        delayUs(15);
     }
 
-    // 根据检测结果调用相应处理函数
     if (isNoShortCircuit) {
         onNotShortCircuit();
     } else {
@@ -89,8 +86,7 @@ void shortCircuitProtectionInit(void) {
  */
 void SCP_IRQHandler() {
     if (EXTI_GetITStatus(SCP_EXTI_LINE)) {
-        checkFlag = true; // 设置检测标志，主循环将执行检测
-
-        EXTI_ClrITPendBit(SCP_EXTI_LINE); // 清除中断标志位
+        EXTI_ClrITPendBit(SCP_EXTI_LINE);
+        checkFlag = true;
     }
 }

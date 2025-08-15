@@ -171,10 +171,8 @@ bool isShortCircuit() {
  * @note 同时递减短路计数器
  */
 void outputFlash(void) {
-    // 递减短路计数器
     if (shortCircuit > flag) shortCircuit--;
 
-    // LED闪烁提示短路
     GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
     delayMs(200);
     GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN);

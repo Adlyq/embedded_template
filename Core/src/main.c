@@ -10,14 +10,10 @@
  * @note 初始化各个模块
  */
 __STATIC_FORCEINLINE void init(void) {
-    // 初始化短路保护功能
     shortCircuitProtectionInit();
-    // 初始化独立看门狗
     iwdgInit();
-    // 初始化输出控制
     outputInit();
 
-    // 根据编译选项设置输出逻辑方向
 #ifdef Output_NORMAL_CLOSE
     outputLDSet(true); // 常闭逻辑
 #elif defined(Output_NORMAL_OPEN)
@@ -30,7 +26,6 @@ __STATIC_FORCEINLINE void init(void) {
  * @note 处理周期性任务
  */
 __STATIC_FORCEINLINE void loop(void) {
-    // 喂狗，防止系统复位
     IWDG_ReloadKey();
 
     // 检查短路状态
@@ -49,10 +44,8 @@ __STATIC_FORCEINLINE void loop(void) {
  * @return 不会返回
  */
 __NO_RETURN int main(void) {
-    // 系统初始化
     init();
 
-    // 主循环
     while (true) {
         loop();
     }
