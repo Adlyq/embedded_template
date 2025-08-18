@@ -49,13 +49,13 @@ os.renames('.run/n32g031_template.run.xml', '.run/' + sys.argv[1] + '.run.xml')
 if os.path.basename(os.getcwd()) != sys.argv[1]:
     os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
 
-if os.path.exists('sdk/cmsis'):
-    shutil.rmtree('sdk/cmsis')
-if os.path.exists('sdk/cmsis-dsp'):
-    shutil.rmtree('sdk/cmsis-dsp')
+if os.path.exists('sdk/cmsis-n32g031'):
+    shutil.rmtree('sdk/cmsis-n32g031')
+if os.path.exists('sdk/cmsis-n32g031-dsp'):
+    shutil.rmtree('sdk/cmsis-n32g031-dsp')
 if os.path.exists('.git'):
     shutil.rmtree('.git')
 
-os.system('git init && git submodule add -f --depth 1 https://github.com/Adlyq/n32g031-cmsis.git sdk/cmsis')
+os.system('git init && git submodule add -f --depth 1 https://github.com/Adlyq/n32g031-cmsis.git sdk/cmsis-n32g031')
 
 os.remove('proj_rename.py')
