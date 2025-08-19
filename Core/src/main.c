@@ -4,6 +4,7 @@
 
 #include "gd32f30x_fwdgt.h"
 #include "iwdg.h"
+#include "util.h"
 
 /**
  * @brief 系统初始化函数

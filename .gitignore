@@ -10,10 +10,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 cmake-build-*
-build/
-.cache
 keil/*
 !keil/*.uvprojx
 sdk/*/
-!sdk/cmsis-n32g031/
-/.idea/copilot.*
+!sdk/cmsis-gd32f30x/

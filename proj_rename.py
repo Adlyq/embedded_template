@@ -58,6 +58,8 @@ os.renames('.run/n32g031_template.run.xml', '.run/' + sys.argv[1] + '.run.xml')
 if os.path.basename(os.getcwd()) != sys.argv[1]:
     os.renames(os.getcwd(), os.path.abspath('../' + sys.argv[1]))
 
+if os.path.exists('sdk/cmsis-n32g031'):
+    shutil.rmtree('sdk/cmsis-n32g031')
 if os.path.exists('sdk/cmsis-gd32f30x'):
     shutil.rmtree('sdk/cmsis-gd32f30x')
 if os.path.exists('sdk/cmsis-dsp'):
