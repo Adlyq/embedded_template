@@ -51,6 +51,8 @@ if os.path.basename(os.getcwd()) != sys.argv[1]:
 
 if os.path.exists('sdk/cmsis-n32g031'):
     shutil.rmtree('sdk/cmsis-n32g031')
+if os.path.exists('sdk/cmsis-gd32f30x'):
+    shutil.rmtree('sdk/cmsis-gd32f30x')
 if os.path.exists('sdk/cmsis-n32g031-dsp'):
     shutil.rmtree('sdk/cmsis-n32g031-dsp')
 if os.path.exists('.git'):

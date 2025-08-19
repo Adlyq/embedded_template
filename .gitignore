@@ -12,3 +12,5 @@ _deps
 cmake-build-*
 keil/*
 !keil/*.uvprojx
+sdk/*/
+!sdk/cmsis-n32g031/
