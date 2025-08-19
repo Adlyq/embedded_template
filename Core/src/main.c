@@ -9,7 +9,7 @@
  * @brief 系统初始化函数
  * @note 初始化各个模块
  */
-__STATIC_INLINE void init(void) {
+__STATIC_FORCEINLINE void init(void) {
     fwdgInit();
 }
 
@@ -17,9 +17,8 @@ __STATIC_INLINE void init(void) {
  * @brief 主循环函数
  * @note 处理周期性任务
  */
-__STATIC_INLINE void loop(void) {
+__STATIC_FORCEINLINE void loop(void) {
     fwdgt_counter_reload();
-
 }
 
 /**
