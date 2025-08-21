@@ -3,7 +3,6 @@ include(cmake/toolchain.cmake)
 
 project(n32g031_template)
 set(VERSION 1.0)
-set(Output NPN NORMAL_CLOSE)
 
 enable_language(C)
 enable_language(CXX)
@@ -45,9 +44,27 @@ endif ()
 get_target_property(INC_DIRS ${PROJECT_NAME} INCLUDE_DIRECTORIES)
 gen_keil_proj(-i ${INC_DIRS} -s ${SRC_LIST})
 
-set(FILE_NAME ${PROJECT_BINARY_DIR}/${PROJECT_NAME}_V${VERSION})
-set(HEX_FILE ${FILE_NAME}.hex)
-set(BIN_FILE ${FILE_NAME}.bin)
+# Set the file name based on the output type ->
+set(FILE_NAME ${PROJECT_NAME})
+if ("PNP" IN_LIST Output)
+    set(FILE_NAME ${FILE_NAME}P)
+elseif ("NPN" IN_LIST Output)
+    set(FILE_NAME ${FILE_NAME}N)
+endif ()
+
+if ("NORMAL_CLOSE" IN_LIST Output)
+    set(FILE_NAME ${FILE_NAME}C)
+elseif ("NORMAL_OPEN" IN_LIST Output)
+    set(FILE_NAME ${FILE_NAME}O)
+endif ()
+
+if (DEFINED VERSION)
+    set(FILE_NAME ${FILE_NAME}_${VERSION})
+endif ()
+# Set the file name based on the output type <-
+
+set(HEX_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.hex)
+set(BIN_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.bin)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}> ${HEX_FILE}
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}> ${BIN_FILE}
