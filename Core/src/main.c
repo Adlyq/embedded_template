@@ -14,10 +14,10 @@ __STATIC_FORCEINLINE void init(void) {
     iwdgInit();
     outputInit();
 
-#ifdef Output_NORMAL_CLOSE
-    outputLDSet(true); // 常闭逻辑
-#elif defined(Output_NORMAL_OPEN)
-    outputLDSet(false); // 常开逻辑
+#ifdef Output_LIGHT_CLOSE
+    outputLDSet(false); // 遮光ON
+#elif defined(Output_LIGHT_OPEN)
+    outputLDSet(true); // 入光ON
 #endif
 }
 

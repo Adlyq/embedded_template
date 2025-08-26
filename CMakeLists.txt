@@ -52,9 +52,9 @@ elseif ("NPN" IN_LIST Output)
     set(FILE_NAME ${FILE_NAME}N)
 endif ()
 
-if ("NORMAL_CLOSE" IN_LIST Output)
+if ("LIGHT_CLOSE" IN_LIST Output)
     set(FILE_NAME ${FILE_NAME}C)
-elseif ("NORMAL_OPEN" IN_LIST Output)
+elseif ("LIGHT_OPEN" IN_LIST Output)
     set(FILE_NAME ${FILE_NAME}O)
 endif ()
 

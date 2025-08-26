@@ -6,7 +6,7 @@ import subprocess
 # 可扩展参数字典
 params = {
     "type": ["PNP", "NPN"],
-    "mode": ["NORMAL_CLOSE", "NORMAL_OPEN"],
+    "mode": ["LIGHT_CLOSE", "LIGHT_OPEN"],
     # 以后可继续添加参数，如 "feature": ["A", "B"]
 }
 
