@@ -68,6 +68,5 @@ set(BIN_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.bin)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}> ${HEX_FILE}
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}> ${BIN_FILE}
-        COMMENT "Building ${HEX_FILE}
-Building ${BIN_FILE}"
+        COMMENT "Building ${HEX_FILE} ${BIN_FILE}"
 )
