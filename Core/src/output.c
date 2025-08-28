@@ -59,7 +59,6 @@ void outputInit(void) {
 #endif
 }
 
-#ifdef OUTPUT_DEST_SUPPORT
 /**
  * @brief 逻辑反转状态
  */
@@ -79,62 +78,34 @@ void outputLDSet(const bool state) {
  * @note 考虑逻辑方向和短路保护
  */
 void outputSet(const bool state) {
-    // 短路状态下不允许输出
+    // 短路状态下不执行输出
     if (shortCircuit != 0) return;
-    outputting = state;
+    outputting = state; // 记录当前输出状态
 
-    // 根据逻辑方向设置输出状态
+    // 根据逻辑方向决定实际输出状态
+#ifdef OUTPUT_DO_PORT
+    if (state) {
+#else
     if (state ^ ld) {
-#ifndef OUTPUT_DEST_KEEP
-        GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
 #endif
         GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
-#ifdef OUTPUT_DO_PORT
-        GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
-#endif
-    } else {
-#ifndef OUTPUT_DEST_KEEP
-        GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
-#endif
-        GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
 #ifdef OUTPUT_DO_PORT
         GPIO_SetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
 #endif
+    } else {
+        GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
+#ifdef OUTPUT_DO_PORT
+        GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+#endif
     }
 
-#ifdef OUTPUT_DEST_KEEP
-    // 保持LED状态与输入一致
-    if (state) {
+    // 始终根据实际状态控制LED(如果定义了保持状态)
+    if (state ^ ld) {
         GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
     } else {
         GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
     }
-#endif
 }
-#else
-/**
- * @brief 设置输出状态
- * @param state 输出状态(true:开启, false:关闭)
- * @note 短路状态下不允许输出
- */
-void outputSet(const bool state) {
-    if (shortCircuit != 0) return;
-    outputting = state;
-    if (state) {
-        GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
-        GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
-#ifdef OUTPUT_DO_PORT
-GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
-#endif
-} else {
-        GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
-        GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
-#ifdef OUTPUT_DO_PORT
-GPIO_SetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
-#endif
-}
-}
-#endif
 
 /**
  * @brief 短路事件处理函数

@@ -9,10 +9,6 @@
 EXTERN_C_BEGIN
 #include <stdbool.h>
 
-// 启用逻辑方向控制支持
-#define OUTPUT_DEST_SUPPORT
-// #define OUTPUT_DEST_KEEP
-
 // 当前输出状态
 extern volatile bool outputting;
 
@@ -21,13 +17,11 @@ extern volatile bool outputting;
  */
 void outputInit(void);
 
-#ifdef OUTPUT_DEST_SUPPORT
 /**
  * @brief 设置输出逻辑方向
  * @param state 逻辑方向状态(true:正向, false:反向)
  */
 void outputLDSet(bool);
-#endif
 
 /**
  * @brief 设置输出状态
