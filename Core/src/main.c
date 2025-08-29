@@ -29,9 +29,7 @@ __STATIC_FORCEINLINE void loop(void) {
     IWDG_ReloadKey();
 
     // 检查短路状态
-    if (checkFlag) {
-        checkShort();
-    }
+    checkShort();
 
     // 短路状态下执行LED闪烁提示
     if (isShortCircuit()) {

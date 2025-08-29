@@ -142,10 +142,19 @@ bool isShortCircuit() {
  * @note 同时递减短路计数器
  */
 void outputFlash(void) {
+    static u32 nextToggle = 0;
+
+    if (nextToggle == 0) {
+        nextToggle = timestamp + 200;
+    }
+
+    if ((i32)(nextToggle - timestamp) > 0) return;
+
+    // 如果短路计数器大于短路标志，则递减
     if (shortCircuit > flag) shortCircuit--;
 
-    GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
-    delayMs(200);
-    GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
-    delayMs(200);
+    // LED闪烁，200ms亮，200ms灭
+    GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN); // LED翻转
+    nextToggle = timestamp + 200;
 }
+
