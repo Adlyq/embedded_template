@@ -30,6 +30,8 @@ for combo in combinations:
         f'-DCMAKE_CXX_COMPILER=arm-none-eabi-g++ '
         f'-G Ninja '
         f'-DOutput="{output_val}" '
+        f'-DCMAKE_C_FLAGS="-DLOCK_MCU" '
+        f'-DCMAKE_CXX_FLAGS="-DLOCK_MCU" '
         f'-S . -B {build_dir}'
     )
     

@@ -10,6 +10,13 @@
  * @note 初始化各个模块
  */
 __STATIC_FORCEINLINE void init(void) {
+#ifdef LOCK_MCU
+    FLASH_Unlock();
+    FLASH_ReadOutProtectionL1(ENABLE);
+    FLASH_GetReadOutProtectionSTS();
+    FLASH_Lock();
+#endif
+
     shortCircuitProtectionInit();
     iwdgInit();
     outputInit();
