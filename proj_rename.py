@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import os, sys, shutil
-
-from mercurial.wireprotov1server import known
+import os
+import shutil
+import sys
 
 if len(sys.argv) < 2:
     print("Usage: python proj_rename.py <new_project_name>")
@@ -17,19 +17,26 @@ if os.path.exists('./../' + sys.argv[1]) and (os.path.basename(os.getcwd()) != s
     print(f"Directory '{sys.argv[1]}' already exists. Please choose a different project name.")
     sys.exit(1)
 
+oldStr = [
+    'n32g031_template',
+    'n32g031-template',
+    'embedded-template',
+    'embedded_template',
+]
 ctx_list = []
 for path, dirs, files in os.walk('./.idea'):
     for file in files:
         if file.find('embedded-template') != -1:
             ctx_list.append((path, file))
         with open(os.path.join(path, file), 'r', encoding='utf-8') as f:
-            content = f.read().replace('n32g031_template', sys.argv[1]).replace('embedded-template', sys.argv[1]).replace("embedded_template", sys.argv[1])
+            content = f.read()
+            for osr in oldStr:
+                content = content.replace(osr, sys.argv[1])
         with open(os.path.join(path, file), 'w', encoding='utf-8') as f:
             f.write(content)
     for _dir in dirs:
         if _dir.find('embedded-template') != -1:
             ctx_list.append((path, _dir))
-
 
 for path, file in ctx_list:
     os.renames(os.path.join(path, file), os.path.join(path, file.replace('embedded-template', sys.argv[1])))
@@ -40,8 +47,10 @@ knownFiles = [
     '.run/n32g031_template.run.xml',
 ]
 for kf in knownFiles:
-    with open('.github/workflows/build.yml', 'r', encoding='utf-8') as f:
-        content = f.read().replace('n32g031_template', sys.argv[1]).replace('embedded-template', sys.argv[1]).replace("embedded_template", sys.argv[1])
+    with (open('.github/workflows/build.yml', 'r', encoding='utf-8') as f):
+        content = f.read()
+        for osr in oldStr:
+            content = content.replace(osr, sys.argv[1])
     with open('.github/workflows/build.yml', 'w', encoding='utf-8') as f:
         f.write(content)
 
