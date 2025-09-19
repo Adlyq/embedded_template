@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 include(cmake/toolchain.cmake)
 
 project(n32g031_template)
-set(VERSION 1.0)
+set(VERSION 2.0)
 
 enable_language(C)
 enable_language(CXX)
@@ -59,7 +59,7 @@ elseif ("LIGHT_OPEN" IN_LIST Output)
 endif ()
 
 if (DEFINED VERSION)
-    set(FILE_NAME ${FILE_NAME}_${VERSION})
+    set(FILE_NAME ${FILE_NAME}_V${VERSION})
 endif ()
 # Set the file name based on the output type <-
 
