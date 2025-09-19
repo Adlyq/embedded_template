@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 import itertools
 import os
+import shutil
 import subprocess
+
+script_dir = os.path.dirname(__file__)
+
+build_dir = os.path.join(script_dir, 'cmake-build-release-all')
 
 # 可扩展参数字典
 params = {
@@ -14,14 +19,16 @@ params = {
 keys = list(params.keys())
 combinations = list(itertools.product(*params.values()))
 
+if os.path.exists(build_dir):
+    shutil.rmtree(build_dir)
+
+os.makedirs(build_dir, exist_ok=True)
+
 for combo in combinations:
     combo_dict = dict(zip(keys, combo))
-    # 构建 build 目录名
-    build_dir = "cmake-build-release-all"
-    os.makedirs(build_dir, exist_ok=True)
     # 构建 Output 变量，分号分隔
     output_val = ";".join(combo)
-    
+
     # STM32 特定的 CMake 配置命令
     cmake_config_cmd = (
         f'cmake -DCMAKE_BUILD_TYPE=Release '
@@ -34,17 +41,17 @@ for combo in combinations:
         f'-DCMAKE_CXX_FLAGS="-DLOCK_MCU" '
         f'-S . -B {build_dir}'
     )
-    
+
     # STM32 特定的构建命令
     cmake_build_cmd = f'cmake --build {build_dir} -j 14'
-    
+
     # 执行配置
     subprocess.run(cmake_config_cmd, shell=True, check=True)
-    
+
     # 执行构建
     subprocess.run(cmake_build_cmd, shell=True, check=True)
 
-for root, dirs, files in os.walk("cmake-build-release-all", topdown=False):
+for root, dirs, files in os.walk(build_dir, topdown=False):
     for name in files:
         if not name.endswith(".hex"):
             os.remove(os.path.join(root, name))
