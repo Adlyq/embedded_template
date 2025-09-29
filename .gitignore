@@ -14,3 +14,4 @@ keil/*
 !keil/*.uvprojx
 sdk/*/
 !sdk/cmsis-n32g031/
+/.idea/copilot.*
