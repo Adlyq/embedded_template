@@ -6,7 +6,7 @@ import subprocess
 
 script_dir = os.path.dirname(__file__)
 
-build_dir = os.path.join(script_dir, 'cmake-build-release-all')
+build_dir = os.path.join(script_dir, 'build/cmake-build-release-all')
 
 # 可扩展参数字典
 params = {

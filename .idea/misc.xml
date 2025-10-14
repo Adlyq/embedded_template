@@ -7,4 +7,15 @@
     <option name="pythonIntegrationState" value="NO" />
   </component>
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <sourceRoots>
+      <file path="$PROJECT_DIR$/Core" />
+    </sourceRoots>
+    <libraryRoots>
+      <file path="$PROJECT_DIR$/sdk" />
+    </libraryRoots>
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/build" />
+    </excludeRoots>
+  </component>
 </project>

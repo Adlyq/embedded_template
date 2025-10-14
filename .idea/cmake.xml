@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug-stm32-NO" ENABLED="true" GENERATION_DIR="build/cmake-build-debug-stm32-no" CONFIG_NAME="Debug" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=NPN;LIGHT_OPEN" />
+      <configuration PROFILE_NAME="Debug-stm32-NC" ENABLED="true" GENERATION_DIR="build/cmake-build-debug-stm32-nc" CONFIG_NAME="Debug" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=NPN;LIGHT_CLOSE" />
+      <configuration PROFILE_NAME="Debug-stm32-PO" ENABLED="true" GENERATION_DIR="build/cmake-build-debug-stm32-po" CONFIG_NAME="Debug" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=PO;LIGHT_CLOSE" />
+      <configuration PROFILE_NAME="Debug-stm32-PC" ENABLED="true" GENERATION_DIR="build/cmake-build-debug-stm32-pc" CONFIG_NAME="Debug" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=PC;LIGHT_CLOSE" />
+      <configuration PROFILE_NAME="Release-stm32-NO" ENABLED="true" GENERATION_DIR="build/cmake-build-release-stm32-no" CONFIG_NAME="Release" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=NPN;LIGHT_OPEN" />
+      <configuration PROFILE_NAME="Release-stm32-NC" ENABLED="true" GENERATION_DIR="build/cmake-build-release-stm32-nc" CONFIG_NAME="Release" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=NPN;LIGHT_CLOSE" />
+      <configuration PROFILE_NAME="Release-stm32-PO" ENABLED="true" GENERATION_DIR="build/cmake-build-release-stm32-po" CONFIG_NAME="Release" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=PO;LIGHT_CLOSE" />
+      <configuration PROFILE_NAME="Release-stm32-PC" ENABLED="true" GENERATION_DIR="build/cmake-build-release-stm32-pc" CONFIG_NAME="Release" TOOLCHAIN_NAME="stm32" GENERATION_OPTIONS="-G Ninja -DOutput=PC;LIGHT_CLOSE" />
+    </configurations>
+  </component>
+</project>
