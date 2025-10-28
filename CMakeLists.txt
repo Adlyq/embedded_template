@@ -45,7 +45,9 @@ get_target_property(INC_DIRS ${PROJECT_NAME} INCLUDE_DIRECTORIES)
 gen_keil_proj(-i ${INC_DIRS} -s ${SRC_LIST})
 
 # Set the file name based on the output type ->
-set(FILE_NAME ${PROJECT_NAME})
+if (NOT FILE_NAME)
+    set(FILE_NAME ${PROJECT_NAME})
+endif ()
 if ("PNP" IN_LIST Output)
     set(FILE_NAME ${FILE_NAME}P)
 elseif ("NPN" IN_LIST Output)
