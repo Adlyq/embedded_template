@@ -65,18 +65,6 @@ if (DEFINED VERSION)
 endif ()
 # Set the file name based on the output type <-
 
-if(NOT CMAKE_OBJCOPY)
-    # 首先获取编译器的路径
-    get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} DIRECTORY)
-    # 在编译器的同级目录中查找 arm-none-eabi-objcopy
-    find_program(
-            CMAKE_OBJCOPY arm-none-eabi-objcopy
-            HINTS ${COMPILER_PATH}
-            REQUIRED
-    )
-    message(STATUS "Found objcopy: ${CMAKE_OBJCOPY}")
-endif()
-
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.bin)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

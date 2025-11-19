@@ -35,6 +35,18 @@ add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR
 add_link_options(-mcpu=cortex-m0 -mthumb -mthumb-interwork)
 add_link_options(-T ${TARGET_LD_SCRIPT})
 
+if(NOT CMAKE_OBJCOPY)
+    # 首先获取编译器的路径
+    get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} DIRECTORY)
+    # 在编译器的同级目录中查找 arm-none-eabi-objcopy
+    find_program(
+            CMAKE_OBJCOPY arm-none-eabi-objcopy
+            HINTS ${COMPILER_PATH}
+            REQUIRED
+    )
+    message(STATUS "Found objcopy: ${CMAKE_OBJCOPY}")
+endif()
+
 # 查找Python解释器
 if (NOT Python_EXECUTABLE)
     find_package(Python REQUIRED COMPONENTS Interpreter)
