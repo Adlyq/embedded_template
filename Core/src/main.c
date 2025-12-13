@@ -55,3 +55,16 @@ __NO_RETURN int main(void) {
         loop();
     }
 }
+
+#ifdef USE_FULL_ASSERT
+void assert_failed(const uint8_t* expr, const uint8_t* file, const uint32_t line) {
+    (void)expr;
+    (void)file;
+    (void)line;
+
+    /* 无限循环以便调试 */
+    // ReSharper disable once CppDFAEndlessLoop
+    while (true) {
+    }
+}
+#endif
