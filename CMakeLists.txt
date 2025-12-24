@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 include(cmake/toolchain.cmake)
 
 project(gd32f30x_template)
@@ -8,9 +8,6 @@ enable_language(C)
 enable_language(CXX)
 enable_language(ASM)
 
-# Add GD32F30x SDK
-add_compile_definitions(GD32F30X_HD)
-add_subdirectory(sdk)
 
 # Add project sources
 aux_source_directory(Core/src SRC_LIST)
@@ -18,6 +15,12 @@ add_executable(${PROJECT_NAME}
         cmake/syscall.c
         ${SRC_LIST}
 )
+add_library(BSP_LIB INTERFACE)
+target_link_libraries(${PROJECT_NAME} PRIVATE BSP_LIB)
+
+# Add GD32F30x SDK
+add_compile_definitions(GD32F30X_HD)
+add_subdirectory(sdk)
 
 foreach (def IN LISTS Output)
     message("Using ${def} output")
@@ -33,8 +36,6 @@ else ()
 endif ()
 
 target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
-
-target_link_sdk_libraries(${PROJECT_NAME})
 
 set_source_files_properties(cmake/syscall.c PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wextra -Wsign-conversion)
