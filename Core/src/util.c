@@ -5,6 +5,7 @@
 
 // 系统时间戳，由SysTick中断更新，单位为毫秒
 volatile u32 timestamp = 0;
+static u32   g_random_seed = 0x12345678;
 
 /**
  * @brief 产生毫秒级延时
@@ -59,6 +60,16 @@ void sysTimebaseInit(void) {
 
     // 设置SysTick中断优先级
     // NVIC_SetPriority(SysTick_IRQn, 0);
+
+    g_random_seed = *(uint32_t*)UID_BASE;
+    g_random_seed ^= *(uint32_t*)(UID_BASE + 4);
+    g_random_seed ^= *(uint32_t*)(UID_BASE + 8);
+    g_random_seed ^= SysTick->VAL;
+}
+
+u32 fast_rand(void) {
+    g_random_seed = g_random_seed * 1664525 + 1013904223;
+    return g_random_seed;
 }
 
 /**
