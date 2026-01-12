@@ -16,7 +16,7 @@ __STATIC_FORCEINLINE void init(void) {
     FLASH_GetReadOutProtectionSTS();
     FLASH_Lock();
 #endif
-
+    LOG("System Init");
     shortCircuitProtectionInit();
     iwdgInit();
     outputInit();
@@ -51,7 +51,7 @@ __STATIC_FORCEINLINE void loop(void) {
 __NO_RETURN int main(void) {
     init();
     delayMs(50);
-
+    LOG("System Start");
     while (true) {
         loop();
     }

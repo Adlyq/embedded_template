@@ -385,6 +385,16 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/SEGGER_RTT.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/SEGGER_RTT_printf.c</FilePath>
+            </File>
+            <File>
               <FileName>iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/iwdg.c</FilePath>

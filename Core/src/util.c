@@ -65,6 +65,10 @@ void sysTimebaseInit(void) {
     g_random_seed ^= *(uint32_t*)(UID_BASE + 4);
     g_random_seed ^= *(uint32_t*)(UID_BASE + 8);
     g_random_seed ^= SysTick->VAL;
+
+#ifdef SEG_RTT
+    SEGGER_RTT_Init();
+#endif
 }
 
 u32 fast_rand(void) {

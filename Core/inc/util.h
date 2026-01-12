@@ -21,6 +21,21 @@ EXTERN_C_BEGIN
 #define OPTIMIZE_O3
 #endif
 
+#ifdef SEG_RTT
+// ReSharper disable once CppUnusedIncludeDirective
+#include "SEGGER_RTT.h"
+    #define LOG(fmt, ...)      SEGGER_RTT_printf(0, fmt "\n", ##__VA_ARGS__)
+
+    #define LOG_RAW(fmt, ...)  SEGGER_RTT_printf(0, fmt, ##__VA_ARGS__)
+
+#else
+
+    // 如果未定义 SEG_RTT，全部优化为空，不占用 Flash
+    #define LOG(fmt, ...)      ((void)0)
+    #define LOG_RAW(fmt, ...)  ((void)0)
+
+#endif
+
 typedef uint64_t u64;
 typedef int64_t  i64;
 typedef int32_t  i32;
