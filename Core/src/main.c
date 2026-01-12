@@ -50,6 +50,7 @@ __STATIC_FORCEINLINE void loop(void) {
  */
 __NO_RETURN int main(void) {
     init();
+    delayMs(50);
 
     while (true) {
         loop();
