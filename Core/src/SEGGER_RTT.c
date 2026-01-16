@@ -74,7 +74,6 @@ Additional information:
 ----------------------------------------------------------------------
 */
 
-// ReSharper disable All
 #include "SEGGER_RTT.h"
 
 #include <string.h>                 // for memcpy

@@ -390,6 +390,11 @@
               <FilePath>../Core/src/SEGGER_RTT.c</FilePath>
             </File>
             <File>
+              <FileName>SEGGER_RTT_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/SEGGER_RTT_printf.c</FilePath>
+            </File>
+            <File>
               <FileName>gd32f30x_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/gd32f30x_it.c</FilePath>
@@ -398,11 +403,6 @@
               <FileName>iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/iwdg.c</FilePath>
-            </File>
-            <File>
-              <FileName>kalman.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/src/kalman.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
