@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-vscode.cmake-tools",
+    "ms-vscode.cpptools",
+    "probe-rs.probe-rs-debugger",
+    "marus25.cortex-debug",
+    "llvm-vs-code-extensions.vscode-clangd"
+  ]
+}

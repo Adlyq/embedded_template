@@ -1,0 +1,40 @@
+CompileFlags:
+  Add:
+    [
+      "-Wno-unused-variable",
+      "-Wno-infinite-recursion",
+      "-Wno-array-bounds",
+      "-Wno-return-stack-address",
+      "-Werror=implicit-function-declaration",
+      "-Wshadow",
+      "-Wno-shadow-field-in-constructor-modified",
+      "-Wno-shadow-ivar",
+      "-Wuninitialized",
+      "-Wunused-label",
+      "-Wunused-lambda-capture",
+      "--target=arm-none-eabi",
+      "-mcpu=cortex-m0",
+      "-mthumb",
+    ]
+  Remove:
+    [
+      "-mthumb-interwork",
+      "-fno-common",
+      "-fmessage-length=0",
+      "-fno-exceptions",
+    ]
+
+Diagnostics:
+  ClangTidy:
+    Add: ["bugprone-*", "performance-*", "readability-*", "portability-*"]
+    Remove:
+      [
+        "readability-magic-numbers",
+        "readability-function-cognitive-complexity",
+        "readability-uppercase-literal-suffix",
+        "readability-isolate-declaration",
+        "readability-braces-around-statements",
+        "readability-identifier-length",
+        "readability-avoid-nested-conditional-operator",
+        "bugprone-easily-swappable-parameters",
+      ]

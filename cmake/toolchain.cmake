@@ -1,3 +1,10 @@
+# Set system name to Generic for bare-metal embedded system
+set(CMAKE_SYSTEM_NAME Generic CACHE STRING "System Name")
+set(CMAKE_SYSTEM_PROCESSOR arm CACHE STRING "System Processor")
+
+# Enable export of compile commands for tools like clang-tidy
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # 设置语言标准
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -42,17 +49,28 @@ set(TARGET_STARTUP_ASM ${CMAKE_CURRENT_LIST_DIR}/startup_n32g031_gcc.s)
 add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map)
 add_link_options(-mcpu=cortex-m0 -mthumb -mthumb-interwork)
 add_link_options(-T ${TARGET_LD_SCRIPT})
+add_link_options(-Wl,--no-warn-execstack)
 
 if(NOT CMAKE_OBJCOPY)
-    # 首先获取编译器的路径
-    get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} DIRECTORY)
-    # 在编译器的同级目录中查找 arm-none-eabi-objcopy
-    find_program(
-            CMAKE_OBJCOPY arm-none-eabi-objcopy
-            HINTS ${COMPILER_PATH}
-            REQUIRED
-    )
-    message(STATUS "Found objcopy: ${CMAKE_OBJCOPY}")
+    if(CMAKE_C_COMPILER)
+        # 首先获取编译器的路径
+        get_filename_component(COMPILER_PATH ${CMAKE_C_COMPILER} DIRECTORY)
+        # 在编译器的同级目录中查找 arm-none-eabi-objcopy
+        find_program(
+                CMAKE_OBJCOPY arm-none-eabi-objcopy
+                HINTS ${COMPILER_PATH}
+                REQUIRED
+        )
+    else()
+        # Fallback if compiler path is not known yet
+        find_program(CMAKE_OBJCOPY arm-none-eabi-objcopy)
+    endif()
+    
+    if(CMAKE_OBJCOPY)
+        message(STATUS "Found objcopy: ${CMAKE_OBJCOPY}")
+    else()
+        message(WARNING "objcopy not found!")
+    endif()
 endif()
 
 # 查找Python解释器

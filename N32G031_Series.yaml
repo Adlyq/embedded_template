@@ -1,0 +1,130 @@
+name: N32G031 Series
+generated_from_pack: true
+pack_file_release: 1.0.5
+variants:
+- name: N32G031C8
+  cores:
+  - name: main
+    type: armv6m
+    core_access_options: !Arm
+      ap: !v1 0
+  memory_map:
+  - !Nvm
+    name: IROM1
+    range:
+      start: 0x8000000
+      end: 0x8010000
+    cores:
+    - main
+    access:
+      write: false
+      boot: true
+  - !Ram
+    name: IRAM1
+    range:
+      start: 0x20000000
+      end: 0x20002000
+    cores:
+    - main
+  flash_algorithms:
+  - n32g031x
+- name: N32G031F6
+  cores:
+  - name: main
+    type: armv6m
+    core_access_options: !Arm
+      ap: !v1 0
+  memory_map:
+  - !Nvm
+    name: IROM1
+    range:
+      start: 0x8000000
+      end: 0x8001000
+    cores:
+    - main
+    access:
+      write: false
+      boot: true
+  - !Ram
+    name: IRAM1
+    range:
+      start: 0x20000000
+      end: 0x20002000
+    cores:
+    - main
+  flash_algorithms:
+  - n32g031x
+- name: N32G031K6
+  cores:
+  - name: main
+    type: armv6m
+    core_access_options: !Arm
+      ap: !v1 0
+  memory_map:
+  - !Nvm
+    name: IROM1
+    range:
+      start: 0x8000000
+      end: 0x8008000
+    cores:
+    - main
+    access:
+      write: false
+      boot: true
+  - !Ram
+    name: IRAM1
+    range:
+      start: 0x20000000
+      end: 0x20002000
+    cores:
+    - main
+  flash_algorithms:
+  - n32g031x
+- name: N32G031K8
+  cores:
+  - name: main
+    type: armv6m
+    core_access_options: !Arm
+      ap: !v1 0
+  memory_map:
+  - !Nvm
+    name: IROM1
+    range:
+      start: 0x8000000
+      end: 0x8010000
+    cores:
+    - main
+    access:
+      write: false
+      boot: true
+  - !Ram
+    name: IRAM1
+    range:
+      start: 0x20000000
+      end: 0x20002000
+    cores:
+    - main
+  flash_algorithms:
+  - n32g031x
+flash_algorithms:
+- name: n32g031x
+  description: N32G031x 64KB Flash
+  default: true
+  instructions: ELUDRhgMAAT7TExEIGAAIPpMIGAgRgBpgCQgQAAoBND3SPZMYGD3SGBg9EjAaQQkIEAAKAbR9Ej0TCBgBiBgYPNIoGDtSEBr8kygQgPRASDxTExEIGAAIBC9AUbnSABpgCIQQ+VKEGEAIHBH40gAacAHwA8AKAXQ4EgAaUAIQADeSQhh3UjAaLQhCEPbSchgCEYAaQQhCEPYSQhhCEYAaUAhCEPVSQhhAuDcSNdJCGDSSMBowAfADwAo9tHPSABpBCGIQ81JCGEIRsBoICEIQAAoAdEBIHBHACD854WwAUYAIASQA5ACkAGQAJDKSEhEAGgBKE/RwAaBQgHQAClK0cdIAGgCkMZIAGgHIhICkEMBkAKYEEAEkAMiEgIEmJBCAtIAIASQBOAEmP84/zgCOASQBJoBmBBDuUoQYBBGAmgEmwGYGEOCQgXQtUoCmBBgASAFsHBHskhAaACQsUgDkAOaAJgQQ65KUGAQRkJoA5sAmBhDgkIG0KlKApgQYACYUGABIOXnDyABkAC/AZhCHgGSACj60ZlIAGnAB8APACgF0JZIAGlACEAAlEoQYZNIwGi0IhBDkUrQYBBGAGkCIhBDjkoQYRBGQWEAaUAiEEOKShBhAuCRSIxKEGCHSMBowAfADwAo9tGESABpAiKQQ4JKEGEQRsBoICIQQAAoIdGFSEhEAGgBKBrRwAaBQgHQACkV0YJKApgQYACYUGAQRgBoApqQQgTRfUhAaACakEIG0HtKApgQYACYUGABIIjnASCG53RISEQAaAEoGtHABoFCAdAAKRXRcUoCmBBgAJhQYBBGAGgCmpBCBNFsSEBoAJqQQgbQakoCmBBgAJhQYAEgZucAIGTnMLWFsANGACAEkAOQApABkACQX0hIRABoAShW0cAGg0IC019Ig0ID0wEgQAKDQkzSWUgAaAKQWEgAaAckJAKgQwGQApggQASQASSkAgSYoEID2QcgAAIEkATgBJj/MP8wAjAEkAScAZggQ0tMIGAgRgRoBJ0BmChDhEIF0EZMApggYAEgBbAwvUNIQGgAkENIwEMDkAOcAJggQD9MYGAgRkRoA50AmChAhEIG0DpMApggYACYYGABIOTnDyABkAC/AZhEHgGUACj60TJILUwgYEgcQQhJAGrgJkjAaLQkIEMkTOBgIEYAaQEkIEMhTCBhEGgYYAC/H0jAaMAHwA8AKPnRHEgAaUAIQAAaTCBhIEbAaBQkIEAAKEbQFkjAaCBDFEzgYBpISEQAaAEoOtHABoNCAtMaSINCA9MBIEACg0Iw0hVMApggYACYYGAgRgBoApygQgTREEhAaACcoEIh0A1MApggYACYYGABIIrnAAAEAAAAACACQCMBZ0Wrie/NVVUAAAAwAED/DwAA//f/9wgAAACqqgAAABgAQMD/AAAAAgAIASBt5xsdEh0JHwApktETSEhEAGgBKB/RwAaDQgLTEEiDQgPZASBAAoNCFdgNTAKYIGAAmGBgIEYAaAKcoEIE0QhIQGgAnKBCBtAGTAKYIGAAmGBgASBD5wAgQecIAAAAAAIACAAYAEAAAAAAAAAAAAAAAAA=
+  pc_init: 0x1
+  pc_uninit: 0x5b
+  pc_program_page: 0x289
+  pc_erase_sector: 0xdd
+  pc_erase_all: 0x6d
+  data_section_offset: 0x494
+  flash_properties:
+    address_range:
+      start: 0x8000000
+      end: 0x8010000
+    page_size: 0x200
+    erased_byte_value: 0xff
+    program_page_timeout: 100
+    erase_sector_timeout: 500
+    sectors:
+    - size: 0x200
+      address: 0x0

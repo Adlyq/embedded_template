@@ -1,0 +1,69 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "probe-rs-debug",
+      "request": "launch",
+      "name": "🪲 Flash & Debug",
+      "cwd": "${workspaceFolder}",
+      "speed": 10000,
+      "chip": "N32G031K8",
+      "chipDescriptionPath": "${workspaceFolder}/N32G031_Series.yaml",
+      "flashingConfig": {
+        "flashingEnabled": true,
+        "haltAfterReset": true,
+        "formatOptions": {
+          "binaryFormat": "elf"
+        }
+      },
+      "coreConfigs": [
+        {
+          "coreIndex": 0,
+          "programBinary": "${command:cmake.launchTargetPath}",
+          "svdFile": "${workspaceFolder}/N32G031.svd",
+          "rttEnabled": true,
+          "rttChannelFormats": [
+            {
+              "channelNumber": 0,
+              "dataFormat": "String", // 按照字符串输出
+              "showTimestamps": true
+            }
+          ]
+        }
+      ],
+      "env": {},
+      "consoleLogLevel": "Console"
+    },
+    {
+      "type": "probe-rs-debug",
+      "request": "launch",
+      "name": "🚀 Flash & Run",
+      "cwd": "${workspaceFolder}",
+      "speed": 10000,
+      "chip": "N32G031K8",
+      "chipDescriptionPath": "${workspaceFolder}/N32G031_Series.yaml",
+      "flashingConfig": {
+        "flashingEnabled": true,
+        "haltAfterReset": false, // 重要：运行后不暂停
+        "formatOptions": {
+          "binaryFormat": "elf"
+        }
+      },
+      "coreConfigs": [
+        {
+          "coreIndex": 0,
+          "programBinary": "${command:cmake.launchTargetPath}",
+          "rttEnabled": true,
+          "rttChannelFormats": [
+            {
+              "channelNumber": 0,
+              "dataFormat": "String", // 按照字符串输出
+              "showTimestamps": true
+            }
+          ]
+        }
+      ],
+      "consoleLogLevel": "Console"
+    }
+  ]
+}

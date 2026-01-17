@@ -1,0 +1,50 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain.cmake",
+        "CMAKE_C_COMPILER": "arm-none-eabi-gcc",
+        "CMAKE_CXX_COMPILER": "arm-none-eabi-g++",
+        "CMAKE_ASM_COMPILER": "arm-none-eabi-gcc",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "Debug-stm32-NO",
+      "displayName": "Debug NPN Normal Open",
+      "inherits": "base",
+      "cacheVariables": {
+        "Output": "NPN;LIGHT_OPEN"
+      }
+    },
+    {
+      "name": "Debug-stm32-NC",
+      "displayName": "Debug NPN Normal Close",
+      "inherits": "base",
+      "cacheVariables": {
+        "Output": "NPN;LIGHT_CLOSE"
+      }
+    },
+    {
+      "name": "Debug-stm32-PO",
+      "displayName": "Debug PNP Normal Open",
+      "inherits": "base",
+      "cacheVariables": {
+        "Output": "PO;LIGHT_CLOSE"
+      }
+    },
+    {
+      "name": "Debug-stm32-PC",
+      "displayName": "Debug PNP Normal Close",
+      "inherits": "base",
+      "cacheVariables": {
+        "Output": "PC;LIGHT_CLOSE"
+      }
+    }
+  ]
+}

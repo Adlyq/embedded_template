@@ -16,6 +16,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+#include "cmsis_gcc.h"
+
 #undef errno
 extern int errno;
 
@@ -27,6 +29,15 @@ extern int __io_getchar(void) __attribute__((weak));
 #ifndef FreeRTOS
 register char* stack_ptr asm("sp");
 #endif
+
+unsigned int __atomic_fetch_add_4(volatile void* ptr, unsigned int val, int memmodel) {
+  (void)memmodel;
+  const unsigned int tmp      = *(volatile unsigned int*)ptr;
+  __disable_irq();
+  *(volatile unsigned int*)ptr = tmp + val;
+  __enable_irq();
+  return tmp;
+}
 
 caddr_t _sbrk(int incr) {
   extern char end asm("end");

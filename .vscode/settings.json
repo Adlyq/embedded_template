@@ -1,0 +1,18 @@
+{
+  "cmake.configureOnOpen": true,
+  "cmake.useCMakePresets": "always",
+  "cmake.copyCompileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.arguments": [
+    "--log=verbose",
+    "--pretty",
+    "--background-index",
+    "--clang-tidy",
+    "--compile-commands-dir=${workspaceFolder}/build",
+    "--query-driver=/usr/bin/arm-none-eabi-*"
+  ],
+  "files.associations": {
+    "*.h": "c",
+    "*.c": "c"
+  }
+}
