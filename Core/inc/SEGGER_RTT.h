@@ -440,8 +440,26 @@ int     SEGGER_RTT_TerminalOut        (unsigned char TerminalId, const char* s);
 *
 **********************************************************************
 */
-int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...);
-int SEGGER_RTT_vprintf(unsigned BufferIndex, const char * sFormat, va_list * pParamList);
+
+#ifdef SEGGER_PRINT
+
+#ifdef _HAVE_FORMAT_ATTRIBUTE
+#ifdef PICOLIBC_FLOAT_PRINTF_SCANF
+#pragma GCC diagnostic ignored "-Wformat"
+#define __FORMAT_ATTRIBUTE__(__a, __s, __f) __attribute__((__format__ (__a, __s, 0)))
+#else
+#define __FORMAT_ATTRIBUTE__(__a, __s, __f) __attribute__((__format__ (__a, __s, __f)))
+#endif
+#else
+#define __FORMAT_ATTRIBUTE__(__a, __s, __f)
+#endif
+
+#define __PRINTF_ATTRIBUTE__(__s, __f) __FORMAT_ATTRIBUTE__(printf, __s, __f)
+
+int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...) __FORMAT_ATTRIBUTE__(printf, 2, 3);
+int SEGGER_RTT_vprintf(unsigned BufferIndex, const char * sFormat, va_list * pParamList) __FORMAT_ATTRIBUTE__(printf, 2, 0);
+
+#endif
 
 #ifdef __cplusplus
   }

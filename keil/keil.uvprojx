@@ -400,6 +400,11 @@
               <FilePath>../Core/src/iwdg.c</FilePath>
             </File>
             <File>
+              <FileName>kalman.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/kalman.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/main.c</FilePath>
@@ -413,6 +418,11 @@
               <FileName>output.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/output.c</FilePath>
+            </File>
+            <File>
+              <FileName>printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/printf.c</FilePath>
             </File>
             <File>
               <FileName>short_circuit_protection.c</FileName>

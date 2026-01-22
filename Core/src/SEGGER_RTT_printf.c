@@ -62,6 +62,8 @@ Revision: $Rev: 17697 $
 **********************************************************************
 */
 
+#if defined(SEGGER_PRINT)
+
 #ifndef SEGGER_RTT_PRINTF_BUFFER_SIZE
   #define SEGGER_RTT_PRINTF_BUFFER_SIZE (64)
 #endif
@@ -520,3 +522,5 @@ int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...) {
   return r;
 }
 /*************************** End of file ****************************/
+
+#endif

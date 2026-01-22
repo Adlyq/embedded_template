@@ -42,6 +42,8 @@ __STATIC_FORCEINLINE void loop(void) {
     if (isShortCircuit()) {
         outputFlash();
     }
+
+    delayMs(1000);
 }
 
 /**
@@ -63,6 +65,7 @@ void assert_failed(const uint8_t* expr, const uint8_t* file, const uint32_t line
     (void)file;
     (void)line;
 
+    __BKPT();
     /* 无限循环以便调试 */
     // ReSharper disable once CppDFAEndlessLoop
     while (true) {
