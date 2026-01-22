@@ -18,8 +18,8 @@
 
 #include "cmsis_gcc.h"
 
-#undef errno
-extern int errno;
+//#undef errno
+//extern int errno;
 
 #define MAX_STACK_SIZE 0x2000
 
@@ -171,3 +171,5 @@ int _execve(char* name, char** argv, char** env) {
   errno = ENOMEM;
   return -1;
 }
+
+void _init(void) {}
