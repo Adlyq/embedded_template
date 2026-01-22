@@ -3,8 +3,12 @@
 //
 #include "util.h"
 
+#include <stdio.h>
+
+#include "SEGGER_RTT.h"
+
 // 系统时间戳，由SysTick中断更新，单位为毫秒
-volatile u32 timestamp = 0;
+volatile u32 timestamp     = 0;
 static u32   g_random_seed = 0x12345678;
 
 /**
@@ -35,7 +39,7 @@ void delayUs(u32 us) {
 
     // 基于SysTick计数器实现微秒延时
     const u32 start = SysTick->VAL;
-    us *= SystemCoreClock / 1000000; // 将微秒转换为系统时钟周期数
+    us              *= SystemCoreClock / 1000000; // 将微秒转换为系统时钟周期数
     u32 now;
 
     // 等待直到经过了指定的时钟周期数
@@ -55,6 +59,7 @@ void sysTimebaseInit(void) {
     // 配置SysTick中断周期为1ms
     if (SysTick_Config(SystemCoreClock / 1000)) {
         /* 配置失败，进入死循环 */
+        // ReSharper disable once CppDFAEndlessLoop
         while (1);
     }
 
@@ -66,8 +71,13 @@ void sysTimebaseInit(void) {
     g_random_seed ^= *(uint32_t*)(UID_BASE + 8);
     g_random_seed ^= SysTick->VAL;
 
-#ifdef SEG_RTT
+#ifdef SEGGER_RTT
     SEGGER_RTT_Init();
+
+#ifdef STDIO_PRINT
+    setvbuf(stdout, NULL, _IOLBF, 128);
+#endif
+
 #endif
 }
 
@@ -110,3 +120,11 @@ void TIM_InitOc(TIM_Module* TIMx, const uint8_t oc, OCInitType* TIM_OCInitStruct
         break;
     }
 }
+
+#ifdef PALAND_PRINT
+
+void _putchar(const char character) {
+    SEGGER_RTT_PutCharSkip(0, character);
+}
+
+#endif

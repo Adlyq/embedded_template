@@ -3,6 +3,7 @@
    underscore) go in .c.  */
 
 //#include <_ansi.h>
+// ReSharper disable CppParameterMayBeConstPtrOrRef
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/fcntl.h>
@@ -17,6 +18,7 @@
 #include <sys/wait.h>
 
 #include "cmsis_gcc.h"
+#include "SEGGER_RTT.h"
 
 //#undef errno
 //extern int errno;
@@ -27,149 +29,118 @@ extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
 
 #ifndef FreeRTOS
-register char* stack_ptr asm("sp");
+char* stack_ptr asm("sp");
 #endif
 
 unsigned int __atomic_fetch_add_4(volatile void* ptr, unsigned int val, int memmodel) {
-  (void)memmodel;
-  const unsigned int tmp      = *(volatile unsigned int*)ptr;
-  __disable_irq();
-  *(volatile unsigned int*)ptr = tmp + val;
-  __enable_irq();
-  return tmp;
+    (void)memmodel;
+    const unsigned int tmp = *(volatile unsigned int*)ptr;
+    __disable_irq();
+    *(volatile unsigned int*)ptr = tmp + val;
+    __enable_irq();
+    return tmp;
 }
 
-caddr_t _sbrk(int incr) {
-  extern char end asm("end");
-  static char* heap_end;
+caddr_t _sbrk(const int incr) {
+    extern char  end asm("end");
+    static char* heap_end;
 
-  if (heap_end == 0) {
-    heap_end = &end;
-  }
+    if (heap_end == 0) {
+        heap_end = &end;
+    }
 
-  char* prev_heap_end = heap_end;
+    char* prev_heap_end = heap_end;
 
 #ifdef FreeRTOS
-  char* min_stack_ptr;
-  /* Use the NVIC offset register to locate the main stack pointer. */
-  min_stack_ptr = (char*)(*(unsigned int*) * (unsigned int*)0xE000ED08);
-  /* Locate the STACK bottom address */
-  min_stack_ptr -= MAX_STACK_SIZE;
+    char* min_stack_ptr;
+    /* Use the NVIC offset register to locate the main stack pointer. */
+    min_stack_ptr = (char*)(*(unsigned int*)*(unsigned int*)0xE000ED08);
+    /* Locate the STACK bottom address */
+    min_stack_ptr -= MAX_STACK_SIZE;
 
-  if (heap_end + incr > min_stack_ptr)
+    if (heap_end + incr > min_stack_ptr)
 #else
-  if (heap_end + incr > stack_ptr)
+    if (heap_end + incr > stack_ptr)
 #endif
-  {
-//		write(1, "Heap and stack collision\n", 25);
-//		abort();
-    errno = ENOMEM;
-    return (caddr_t) - 1;
-  }
+    {
+        //		write(1, "Heap and stack collision\n", 25);
+        //		abort();
+        errno = ENOMEM;
+        return (caddr_t)-1;
+    }
 
-  heap_end += incr;
+    heap_end += incr;
 
-  return (caddr_t) prev_heap_end;
+    return (caddr_t)prev_heap_end;
 }
 
-/*
- * _gettimeofday primitive (Stub function)
- * */
-int _gettimeofday (struct timeval* tp, struct timezone* tzp) {
-  /* Return fixed data for the timezone.  */
-  if (tzp) {
-    tzp->tz_minuteswest = 0;
-    tzp->tz_dsttime = 0;
-  }
+// 检查是否使用了 FDEV_SETUP_STREAM (Picolibc 特有宏)
+#if defined(FDEV_SETUP_STREAM) && defined(SEGGER_RTT) && defined(STDIO_PRINT)
 
-  return 0;
-}
-void initialise_monitor_handles() {
+static int picolibc_rtt_put(const char c, FILE* file) {
+    (void)file;
+    SEGGER_RTT_PutCharSkip(0, c);
+    return c;
 }
 
-int _getpid(void) {
-  return 1;
+static int picolibc_rtt_get(FILE* file) {
+    (void)file;
+    return SEGGER_RTT_WaitKey();
 }
 
-int _kill(int pid, int sig) {
-  errno = EINVAL;
-  return -1;
+static FILE __stdio = FDEV_SETUP_STREAM(picolibc_rtt_put, picolibc_rtt_get, NULL, _FDEV_SETUP_RW); // NOLINT(*-non-copyable-objects, *-reserved-identifier)
+
+// 4. 覆盖标准流指针
+FILE* const stdout = &__stdio;
+FILE* const stderr = &__stdio;
+FILE* const stdin  = &__stdio;
+
+#endif
+
+// ----------------------------------------------------------------------------
+// Newlib Stdout 重定向 (适用于标准 GCC + Newlib/Nano)
+// ----------------------------------------------------------------------------
+// 如果不是 Picolibc，通常是 Newlib，需要实现 _write 等函数
+#ifndef FDEV_SETUP_STREAM
+
+#include <sys/stat.h>
+
+__attribute__((weak)) int _write(int file, char* ptr, int len) {
+    (void)file;
+    return SEGGER_RTT_Write(0, ptr, len);
 }
 
-void _exit (int status) {
-  _kill(status, -1);
-  while (1) {}
+__attribute__((weak)) int _close(int file) {
+    (void)file;
+    return -1;
 }
 
-int _write(int file, const char* ptr, const int len) {
-  for (int DataIdx = 0; DataIdx < len; DataIdx++) {
-    __io_putchar( *ptr++ );
-  }
-  return len;
+__attribute__((weak)) int _fstat(int file, struct stat* st) {
+    (void)file;
+    st->st_mode = S_IFCHR;
+    return 0;
 }
 
-int _close(int file) {
-  return -1;
+__attribute__((weak)) int _isatty(int file) {
+    (void)file;
+    return 1;
 }
 
-int _fstat(int file, struct stat* st) {
-  st->st_mode = S_IFCHR;
-  return 0;
+__attribute__((weak)) int _lseek(int file, int ptr, int dir) {
+    (void)file;
+    (void)ptr;
+    (void)dir;
+    return 0;
 }
 
-int _isatty(int file) {
-  return 1;
+__attribute__((weak)) int _read(int file, char* ptr, int len) {
+    (void)file;
+    (void)ptr;
+    (void)len;
+    return 0;
 }
 
-int _lseek(int file, int ptr, int dir) {
-  return 0;
+#endif
+
+void _init(void) {
 }
-
-int _read(int file, char* ptr, int len) {
-  for (int DataIdx = 0; DataIdx < len; DataIdx++) {
-    *ptr++ = __io_getchar();
-  }
-
-  return len;
-}
-
-int _open(char* path, int flags, ...) {
-  /* Pretend like we always fail */
-  return -1;
-}
-
-int _wait(int* status) {
-  errno = ECHILD;
-  return -1;
-}
-
-int _unlink(char* name) {
-  errno = ENOENT;
-  return -1;
-}
-
-int _times(struct tms* buf) {
-  return -1;
-}
-
-int _stat(char* file, struct stat* st) {
-  st->st_mode = S_IFCHR;
-  return 0;
-}
-
-int _link(char* old, char* new) {
-  errno = EMLINK;
-  return -1;
-}
-
-int _fork(void) {
-  errno = EAGAIN;
-  return -1;
-}
-
-int _execve(char* name, char** argv, char** env) {
-  errno = ENOMEM;
-  return -1;
-}
-
-void _init(void) {}
