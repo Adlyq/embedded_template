@@ -1,7 +1,5 @@
 #include "main.h"
 
-#include <stdio.h>
-
 #include "short_circuit_protection.h"
 #include "iwdg.h"
 #include "output.h"
