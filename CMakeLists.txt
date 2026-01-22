@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-# include(cmake/toolchain.cmake) # Removed to avoid double loading with CMAKE_TOOLCHAIN_FILE
+include(cmake/toolchain.cmake) # Removed to avoid double loading with CMAKE_TOOLCHAIN_FILE
 
 project(n32g031_template)
 set(VERSION 2.0)
