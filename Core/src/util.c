@@ -128,3 +128,92 @@ void _putchar(const char character) {
 }
 
 #endif
+
+#include "cmsis_compiler.h" // 包含 __get_PRIMASK 等定义
+
+// 辅助宏：进入临界区并保存状态
+// primask_save 是输出变量，保存当前中断状态
+#define ATOMIC_ENTER(primask_save) \
+    do { \
+    primask_save = __get_PRIMASK(); \
+    __disable_irq(); \
+    } while(0)
+
+// 辅助宏：退出临界区并恢复状态
+#define ATOMIC_EXIT(primask_save) \
+    do { \
+    __set_PRIMASK(primask_save); \
+    } while(0)
+
+unsigned int __atomic_fetch_add_4(volatile void* ptr, const unsigned int val, const int memmodel) {
+    (void)memmodel;
+    // 旧值
+    uint32_t primask_bit;
+
+    ATOMIC_ENTER(primask_bit);
+
+    const unsigned int tmp       = *(volatile unsigned int*)ptr;
+    *(volatile unsigned int*)ptr = tmp + val;
+
+    ATOMIC_EXIT(primask_bit);
+    return tmp; // 返回旧值
+}
+
+unsigned int __atomic_fetch_sub_4(volatile void* ptr, const unsigned int val, const int memmodel) {
+    (void)memmodel;
+    uint32_t primask_bit;
+
+    ATOMIC_ENTER(primask_bit);
+
+    const unsigned int tmp       = *(volatile unsigned int*)ptr;
+    *(volatile unsigned int*)ptr = tmp - val;
+
+    ATOMIC_EXIT(primask_bit);
+    return tmp;
+}
+
+unsigned int __atomic_load_4(const volatile void* ptr, const int memmodel) {
+    (void)memmodel;
+    // Cortex-M 上对齐的32位读取天然原子，但为了绝对安全保留锁
+    // 如果追求极致速度，且确定 ptr 4字节对齐，可以直接 return *(volatile unsigned int*)ptr;
+    uint32_t primask_bit;
+
+    ATOMIC_ENTER(primask_bit);
+    const unsigned int tmp = *(volatile unsigned int*)ptr;
+    ATOMIC_EXIT(primask_bit);
+
+    return tmp;
+}
+
+void __atomic_store_4(volatile void* ptr, const unsigned int val, const int memmodel) {
+    (void)memmodel;
+    uint32_t primask_bit;
+
+    ATOMIC_ENTER(primask_bit);
+    *(volatile unsigned int*)ptr = val;
+    ATOMIC_EXIT(primask_bit);
+}
+
+_Bool __atomic_compare_exchange_4(volatile void* ptr, void* expected, const unsigned int desired, const _Bool weak,
+                                  const int      success_memmodel, const int failure_memmodel) {
+    (void)weak;
+    (void)success_memmodel;
+    (void)failure_memmodel;
+    uint32_t primask_bit;
+    _Bool    success = 0;
+
+    ATOMIC_ENTER(primask_bit);
+
+    const unsigned int current = *(volatile unsigned int*)ptr;
+    if (current == *(unsigned int*)expected) {
+        *(volatile unsigned int*)ptr = desired;
+        success                      = 1;
+    } else {
+        // CAS 失败时，必须将当前值写回 expected 指针
+        *(unsigned int*)expected = current;
+        success                  = 0;
+    }
+
+    ATOMIC_EXIT(primask_bit);
+    return success;
+}
