@@ -26,36 +26,68 @@
  * ****************************************************************************/
 
 /**
- * @file n32g031_it.h
- * @author Nations
+ * @file n32g031_it.c
+ * @author Nations 
  * @version v1.0.0
  *
  * @copyright Copyright (c) 2019, Nations Technologies Inc. All rights reserved.
  */
-#pragma once
+#include "gd32f30x.h"
 
-#include "common_defs.h"
-
-EXTERN_C_BEGIN
-
-#include "n32g031.h"
-
-void NMI_Handler(void);
-void HardFault_Handler(void);
-void SVC_Handler(void);
-void PendSV_Handler(void);
-void SysTick_Handler(void);
-void DMA_IRQ_HANDLER(void);
-
-EXTERN_C_END
-
-/**
- * @}
+/** @addtogroup N32G031_StdPeriph_Template
+ * @{
  */
 
+/******************************************************************************/
+/*            Cortex-M0 Processor Exceptions Handlers                         */
+/******************************************************************************/
+
 /**
- * @}
+ * @brief  This function handles NMI exception.
  */
+void NMI_Handler(void) {
+}
+
+/**
+ * @brief  This function handles Hard Fault exception.
+ */
+void HardFault_Handler(void) {
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
+}
+
+/**
+ * @brief  This function handles SVCall exception.
+ */
+void SVC_Handler(void) {
+}
+
+/**
+ * @brief  This function handles PendSV_Handler exception.
+ */
+void PendSV_Handler(void) {
+}
+
+/**
+ * @brief  This function handles DMA interrupt request defined in main.h .
+ */
+void DMA_IRQ_HANDLER(void) {
+}
+
+/******************************************************************************/
+/*                 N32G031 Peripherals Interrupt Handlers                     */
+/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
+/*  available peripheral interrupt handler's name please refer to the startup */
+/*  file (startup_n32g031.s).                                                 */
+/******************************************************************************/
+
+/**
+ * @brief  This function handles PPP interrupt request.
+ */
+/*void PPP_IRQHandler(void)
+{
+}*/
 
 /**
  * @}

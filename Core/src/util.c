@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 
+#include "gd32f30x_fwdgt.h"
 #include "SEGGER_RTT.h"
 
 // 系统时间戳，由SysTick中断更新，单位为毫秒
@@ -19,8 +20,8 @@ static u32   g_random_seed = 0x12345678;
 void delayMs(u32 ms) {
     ms = timestamp + ms;
     // 等待直到时间戳达到目标值，同时喂狗防止超时复位
-    while ((s32)(ms - timestamp) > 0) {
-        IWDG_ReloadKey();
+    while ((i32)(ms - timestamp) > 0) {
+        fwdgt_counter_reload();
     }
 }
 
@@ -55,7 +56,7 @@ void delayUs(u32 us) {
 __attribute__((constructor(101)))
 void sysTimebaseInit(void) {
     // 配置SysTick使用HCLK作为时钟源
-    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
+    systick_clksource_set(SYSTICK_CLKSOURCE_HCLK);
     // 配置SysTick中断周期为1ms
     if (SysTick_Config(SystemCoreClock / 1000)) {
         /* 配置失败，进入死循环 */
@@ -66,9 +67,9 @@ void sysTimebaseInit(void) {
     // 设置SysTick中断优先级
     // NVIC_SetPriority(SysTick_IRQn, 0);
 
-    g_random_seed = *(uint32_t*)UID_BASE;
-    g_random_seed ^= *(uint32_t*)(UID_BASE + 4);
-    g_random_seed ^= *(uint32_t*)(UID_BASE + 8);
+    g_random_seed = *(uint32_t*)0x1FFFF7E8;
+    g_random_seed ^= *(uint32_t*)(0x1FFFF7E8 + 4);
+    g_random_seed ^= *(uint32_t*)(0x1FFFF7E8 + 8);
     g_random_seed ^= SysTick->VAL;
 
 #ifdef SEGGER_RTT
@@ -94,32 +95,6 @@ void SysTick_Handler(void) {
     timestamp++;
 }
 
-/**
- * @brief 初始化定时器输出比较通道
- * @param TIMx 定时器实例
- * @param oc 输出比较通道号(1-4)
- * @param TIM_OCInitStruct 输出比较初始化结构体
- * @retval None
- */
-void TIM_InitOc(TIM_Module* TIMx, const uint8_t oc, OCInitType* TIM_OCInitStruct) {
-    // 根据通道号调用对应的初始化函数
-    switch (oc) {
-    case 1:
-        TIM_InitOc1(TIMx, TIM_OCInitStruct);
-        break;
-    case 2:
-        TIM_InitOc2(TIMx, TIM_OCInitStruct);
-        break;
-    case 3:
-        TIM_InitOc3(TIMx, TIM_OCInitStruct);
-        break;
-    case 4:
-        TIM_InitOc4(TIMx, TIM_OCInitStruct);
-        break;
-    default:
-        break;
-    }
-}
 
 #ifdef PALAND_PRINT
 
@@ -128,8 +103,6 @@ void _putchar(const char character) {
 }
 
 #endif
-
-#include "cmsis_compiler.h" // 包含 __get_PRIMASK 等定义
 
 // 辅助宏：进入临界区并保存状态
 // primask_save 是输出变量，保存当前中断状态

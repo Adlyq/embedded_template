@@ -3,11 +3,13 @@
 //
 
 #pragma once
+
 #include "common_defs.h"
+
 EXTERN_C_BEGIN
 
 #include <stdint.h>
-#include <n32g031_tim.h>
+#include <stdlib.h>
 
 #define STR_HELPER(s) #s
 #define STR(s) STR_HELPER(s)
@@ -54,6 +56,9 @@ EXTERN_C_BEGIN
 #endif
 
 typedef uint64_t u64;
+typedef uint32_t u32;
+typedef uint16_t u16;
+typedef uint8_t  u8;
 typedef int64_t  i64;
 typedef int32_t  i32;
 typedef int16_t  i16;
@@ -66,8 +71,5 @@ void delayMs(uint32_t ms);
 void delayUs(u32 us);
 
 u32 fast_rand(void);
-
-void TIM_InitOc(TIM_Module* TIMx, uint8_t oc, OCInitType* TIM_OCInitStruct);
-
 
 EXTERN_C_END

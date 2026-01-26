@@ -390,6 +390,11 @@
               <FilePath>../Core/src/SEGGER_RTT.c</FilePath>
             </File>
             <File>
+              <FileName>gd32f30x_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/src/gd32f30x_it.c</FilePath>
+            </File>
+            <File>
               <FileName>iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/iwdg.c</FilePath>
@@ -403,21 +408,6 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/main.c</FilePath>
-            </File>
-            <File>
-              <FileName>n32g031_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/src/n32g031_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>output.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/src/output.c</FilePath>
-            </File>
-            <File>
-              <FileName>short_circuit_protection.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/src/short_circuit_protection.c</FilePath>
             </File>
             <File>
               <FileName>util.c</FileName>

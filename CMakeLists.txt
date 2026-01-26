@@ -7,6 +7,7 @@ enable_language(C)
 enable_language(CXX)
 enable_language(ASM)
 
+
 # Add project sources
 aux_source_directory(Core/src SRC_LIST)
 add_executable(${PROJECT_NAME}
@@ -16,7 +17,8 @@ add_executable(${PROJECT_NAME}
 add_library(BSP_LIB INTERFACE)
 target_link_libraries(${PROJECT_NAME} PRIVATE BSP_LIB)
 
-# Add N32G031 SDK
+# Add GD32F30x SDK
+add_compile_definitions(GD32F30X_HD)
 add_subdirectory(sdk)
 
 foreach (def IN LISTS Output)

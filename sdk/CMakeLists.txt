@@ -1,1 +1,1 @@
-add_subdirectory(cmsis-n32g031)
+add_subdirectory(cmsis-gd32f30x)
