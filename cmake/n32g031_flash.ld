@@ -30,8 +30,6 @@
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-/* Highest address of the user mode stack */
-_estack = 0x20002000;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -42,6 +40,7 @@ MEMORY
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 0x2000       /* 8K */
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 0x10000      /* 64K */
 }
+_estack = ORIGIN(RAM) + LENGTH(RAM);
 
 /* Define output sections */
 SECTIONS
@@ -146,6 +145,12 @@ SECTIONS
     . = ALIGN(8);
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
+    /* Picolibc 堆开始 */
+    PROVIDE ( __heap_start = . );
+    /* 计算 Picolibc 的堆结束位置：物理栈顶 - 最小栈预留 */
+    /* Picolibc 将可以使用从 __heap_start 到 __heap_end 的所有空间 */
+    PROVIDE ( __heap_end = _estack - _Min_Stack_Size );
+
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);

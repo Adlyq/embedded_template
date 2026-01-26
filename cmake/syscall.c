@@ -1,75 +1,11 @@
-/* Support files for GNU libc.  Files in the system namespace go here.
-   Files in the C namespace (ie those that do not start with an
-   underscore) go in .c.  */
-
-//#include <_ansi.h>
 // ReSharper disable CppParameterMayBeConstPtrOrRef
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/fcntl.h>
 #include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <sys/time.h>
-#include <sys/times.h>
-#include <errno.h>
-//#include <reent.h>
-#include <unistd.h>
-#include <sys/wait.h>
 
-#include "cmsis_gcc.h"
 #include "SEGGER_RTT.h"
 
-//#undef errno
-//extern int errno;
-
 #define MAX_STACK_SIZE 0x2000
-
-#ifndef FreeRTOS
-char* stack_ptr asm("sp");
-#endif
-
-unsigned int __atomic_fetch_add_4(volatile void* ptr, unsigned int val, int memmodel) {
-    (void)memmodel;
-    const unsigned int tmp = *(volatile unsigned int*)ptr;
-    __disable_irq();
-    *(volatile unsigned int*)ptr = tmp + val;
-    __enable_irq();
-    return tmp;
-}
-
-caddr_t _sbrk(const int incr) {
-    extern char  end asm("end");
-    static char* heap_end;
-
-    if (heap_end == 0) {
-        heap_end = &end;
-    }
-
-    char* prev_heap_end = heap_end;
-
-#ifdef FreeRTOS
-    char* min_stack_ptr;
-    /* Use the NVIC offset register to locate the main stack pointer. */
-    min_stack_ptr = (char*)(*(unsigned int*)*(unsigned int*)0xE000ED08);
-    /* Locate the STACK bottom address */
-    min_stack_ptr -= MAX_STACK_SIZE;
-
-    if (heap_end + incr > min_stack_ptr)
-#else
-    if (heap_end + incr > stack_ptr)
-#endif
-    {
-        //		write(1, "Heap and stack collision\n", 25);
-        //		abort();
-        errno = ENOMEM;
-        return (caddr_t)-1;
-    }
-
-    heap_end += incr;
-
-    return (caddr_t)prev_heap_end;
-}
 
 // 检查是否使用了 FDEV_SETUP_STREAM (Picolibc 特有宏)
 #if defined(FDEV_SETUP_STREAM) && defined(SEGGER_RTT) && defined(STDIO_PRINT)
