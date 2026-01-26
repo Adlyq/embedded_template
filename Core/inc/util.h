@@ -8,7 +8,6 @@ EXTERN_C_BEGIN
 
 #include <stdint.h>
 #include <n32g031_tim.h>
-#include <stdlib.h>
 
 #define STR_HELPER(s) #s
 #define STR(s) STR_HELPER(s)
@@ -33,32 +32,15 @@ EXTERN_C_BEGIN
 #endif
 
 #ifdef SEGGER_RTT
-#include <stdarg.h>
-#ifdef SEGGER_PRINT
-// ReSharper disable once CppUnusedIncludeDirective
-#include "SEGGER_RTT.h"
-#define m_printf(...)           SEGGER_RTT_printf(0, __VA_ARGS__)
-#define m_vprintf(fmt, va)      SEGGER_RTT_vprintf(0, fmt, &(va))
-#elif PALAND_PRINT
-// ReSharper disable once CppUnusedIncludeDirective
-#include "printf.h"
-#define m_printf(...)           printf_(__VA_ARGS__)
-#define m_vprintf(fmt, va)      vprintf_(fmt, va)
-#else
-// ReSharper disable once CppUnusedIncludeDirective
 #include <stdio.h>
-#define m_printf(...)           printf(__VA_ARGS__)
-#define m_vprintf(fmt, va)      vprintf(fmt, va)
-#endif
 
 #define FUNCTION_NAME_LEN 8
-#define LOG(fmt, ...)      m_printf("[%-" STR(FUNCTION_NAME_LEN) "." STR(FUNCTION_NAME_LEN) "s] "    \
+#define LOG(fmt, ...)      printf("[%-" STR(FUNCTION_NAME_LEN) "." STR(FUNCTION_NAME_LEN) "s] "    \
                 fmt "\n", __func__, ##__VA_ARGS__)
 
-#define LOG_RAW(fmt, ...)  m_printf("[%-" STR(FUNCTION_NAME_LEN) "." STR(FUNCTION_NAME_LEN) "s] "    \
-                fmt, __func__, ##__VA_ARGS__)
+#define LOG_RAW(fmt, ...)  printf(fmt, ##__VA_ARGS__)
 
-#define LOG_ERR(fmt, ...)  m_printf(__FILE_NAME__ ":" STR(__LINE__) "\033[31m"                       \
+#define LOG_ERR(fmt, ...)  printf(__FILE_NAME__ ":" STR(__LINE__) "\033[31m"                       \
                 "[%-" STR(FUNCTION_NAME_LEN) "." STR(FUNCTION_NAME_LEN) "s] " fmt "\033[0m" "\n",    \
                 __func__, ##__VA_ARGS__)
 #else

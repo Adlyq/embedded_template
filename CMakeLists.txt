@@ -28,12 +28,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Building in Debug mode")
     add_compile_definitions(DEBUG)
     add_compile_definitions(SEGGER_RTT)
-
-    # 三种打印方式选择其一
-    add_compile_definitions(SEGGER_PRINT)
-#    add_compile_definitions(PALAND_PRINT)
-#    add_compile_definitions(STDIO_PRINT) # default
-
 else ()
     message(STATUS "Building in Release mode")
     add_compile_definitions(RELEASE)

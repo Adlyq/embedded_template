@@ -8,7 +8,7 @@
 #define MAX_STACK_SIZE 0x2000
 
 // 检查是否使用了 FDEV_SETUP_STREAM (Picolibc 特有宏)
-#if defined(FDEV_SETUP_STREAM) && defined(SEGGER_RTT) && defined(STDIO_PRINT)
+#ifdef FDEV_SETUP_STREAM
 
 static int picolibc_rtt_put(const char c, FILE* file) {
     (void)file;
@@ -28,13 +28,11 @@ FILE* const stdout = &__stdio;
 FILE* const stderr = &__stdio;
 FILE* const stdin  = &__stdio;
 
-#endif
 
-// ----------------------------------------------------------------------------
-// Newlib Stdout 重定向 (适用于标准 GCC + Newlib/Nano)
-// ----------------------------------------------------------------------------
-// 如果不是 Picolibc，通常是 Newlib，需要实现 _write 等函数
-#ifndef FDEV_SETUP_STREAM
+void _init(void) {
+}
+
+#else
 
 #include <sys/stat.h>
 
@@ -74,6 +72,3 @@ __attribute__((weak)) int _read(int file, char* ptr, int len) {
 }
 
 #endif
-
-void _init(void) {
-}

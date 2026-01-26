@@ -390,11 +390,6 @@
               <FilePath>../Core/src/SEGGER_RTT.c</FilePath>
             </File>
             <File>
-              <FileName>SEGGER_RTT_printf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/src/SEGGER_RTT_printf.c</FilePath>
-            </File>
-            <File>
               <FileName>iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/iwdg.c</FilePath>
@@ -418,11 +413,6 @@
               <FileName>output.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/src/output.c</FilePath>
-            </File>
-            <File>
-              <FileName>printf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/src/printf.c</FilePath>
             </File>
             <File>
               <FileName>short_circuit_protection.c</FileName>
