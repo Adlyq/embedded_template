@@ -12,13 +12,22 @@
 
 static int picolibc_rtt_put(const char c, FILE* file) {
     (void)file;
+
+#ifdef SEGGER_RTT
     SEGGER_RTT_PutCharSkip(0, c);
+#endif
+
     return c;
 }
 
 static int picolibc_rtt_get(FILE* file) {
     (void)file;
+
+#ifdef SEGGER_RTT
     return SEGGER_RTT_WaitKey();
+#else
+    return -1;
+#endif
 }
 
 static FILE __stdio = FDEV_SETUP_STREAM(picolibc_rtt_put, picolibc_rtt_get, NULL, _FDEV_SETUP_RW); // NOLINT(*-non-copyable-objects, *-reserved-identifier)
