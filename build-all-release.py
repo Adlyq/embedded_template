@@ -10,6 +10,7 @@ build_dir = os.path.join(script_dir, 'build/cmake-build-release-all')
 
 CMAKE_C_COMPILER='/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang'
 CMAKE_CXX_COMPILER='/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang++'
+CMAKE_ASM_COMPILER='/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang'
 
 def get_params() -> dict[str, list[str]]:
     return {
@@ -51,6 +52,7 @@ def main(params: dict[str, list[str]]):
             f'-DCMAKE_MAKE_PROGRAM=ninja '
             f'-DCMAKE_C_COMPILER={CMAKE_C_COMPILER} '
             f'-DCMAKE_CXX_COMPILER={CMAKE_CXX_COMPILER} '
+            f'-DCMAKE_ASM_COMPILER={CMAKE_ASM_COMPILER} '
             f'-DCMAKE_TOOLCHAIN_FILE=cmake/toolchain.cmake '
             f'-G Ninja '
             f'-DOutput="{output_val}" '

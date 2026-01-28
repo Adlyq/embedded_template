@@ -2,15 +2,31 @@
   "version": 3,
   "configurePresets": [
     {
+      "name": "compiler-llvm",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang",
+        "CMAKE_CXX_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang++",
+        "CMAKE_ASM_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang"
+      }
+    },
+    {
+      "name": "compiler-gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "arm-none-eabi-gcc",
+        "CMAKE_CXX_COMPILER": "arm-none-eabi-g++",
+        "CMAKE_ASM_COMPILER": "arm-none-eabi-gcc"
+      }
+    },
+    {
       "name": "base",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "${sourceDir}/cmake/toolchain.cmake",
+      "inherits": ["compiler-llvm"],
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain.cmake",
-        "CMAKE_C_COMPILER": "arm-none-eabi-gcc",
-        "CMAKE_CXX_COMPILER": "arm-none-eabi-g++",
-        "CMAKE_ASM_COMPILER": "arm-none-eabi-gcc",
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
@@ -35,7 +51,7 @@
       "displayName": "Debug PNP Normal Open",
       "inherits": "base",
       "cacheVariables": {
-        "Output": "PO;LIGHT_CLOSE"
+        "Output": "PNP;LIGHT_OPEN"
       }
     },
     {
@@ -43,7 +59,7 @@
       "displayName": "Debug PNP Normal Close",
       "inherits": "base",
       "cacheVariables": {
-        "Output": "PC;LIGHT_CLOSE"
+        "Output": "PNP;LIGHT_CLOSE"
       }
     }
   ]
