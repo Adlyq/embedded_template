@@ -53,7 +53,7 @@ def main(params: dict[str, list[str]]):
             f'-DCMAKE_C_COMPILER={CMAKE_C_COMPILER} '
             f'-DCMAKE_CXX_COMPILER={CMAKE_CXX_COMPILER} '
             f'-DCMAKE_ASM_COMPILER={CMAKE_ASM_COMPILER} '
-            f'-DCMAKE_TOOLCHAIN_FILE=cmake/toolchain.cmake '
+            f'--toolchain=cmake/toolchain.cmake '
             f'-G Ninja '
             f'-DOutput="{output_val}" '
             f'{f'-DFILE_NAME={base_file_name} ' if base_file_name else ''}'
@@ -81,6 +81,9 @@ def main(params: dict[str, list[str]]):
                 os.rmdir(dir_path)
             except OSError:
                 pass
+
+    subprocess.run(f'hex-hash -anq {build_dir}', shell=True, check=True)
+
     print("全部release版本已构建完成。")
 
 
