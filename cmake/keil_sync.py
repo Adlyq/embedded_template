@@ -21,21 +21,32 @@ KEIL_DIR = normalize_path(f'{os.getcwd()}/keil')
 DEFAULT_FILE_TYPE = 9
 FILE_TYPE = {'c': 1, 'cpp': 8, 's': 2, 'h': 5, 'txt': 5}
 
-argInc, argSrc = [], []
-flag = True
+argInc, argSrc, argDef = [], [], []
+mode = 'inc'
 for arg in sys.argv[1:]:
     if arg == '-i':
-        flag = True
+        mode = 'inc'
     elif arg == '-s':
-        flag = False
+        mode = 'src'
+    elif arg == '-d':
+        mode = 'def'
     else:
-        (argInc if flag else argSrc).append(normalize_path(arg))
+        if mode == 'inc':
+            argInc.append(normalize_path(arg))
+        elif mode == 'src':
+            argSrc.append(normalize_path(arg))
+        elif mode == 'def':
+            argDef.append(arg)
 
 tree = et.parse('keil/keil.uvprojx')
 root = tree.getroot()
 
 target = root.find(f'.//Targets/Target[TargetName="{TARGET_NAME}"]')
-incdir = target.find('.//VariousControls/IncludePath')
+various_controls = target.find('.//VariousControls')
+incdir = various_controls.find('IncludePath')
+define_tag = various_controls.find('Define')
+
+define_tag.text = ','.join(sorted(set(argDef)))
 
 group = target.find(f'.//Groups/Group[GroupName="{GROUP_NAME}"]')
 groupFiles = group.find('Files') if group is not None else None

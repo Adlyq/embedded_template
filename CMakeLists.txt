@@ -7,68 +7,79 @@ enable_language(C)
 enable_language(CXX)
 enable_language(ASM)
 
-# Add project sources
-aux_source_directory(Core/src SRC_LIST)
-add_executable(${PROJECT_NAME}
-        cmake/syscall.c
-        ${SRC_LIST}
-)
+# --- SDK & Library Configuration ---
 add_library(BSP_LIB INTERFACE)
-target_link_libraries(${PROJECT_NAME} PRIVATE BSP_LIB)
-
-# Add N32G031 SDK
 add_subdirectory(sdk)
 
+# --- Application Sources ---
+aux_source_directory(Core/src SRC_LIST)
+list(APPEND APP_SRCS
+    cmake/syscall.c
+    ${SRC_LIST}
+)
+
+# --- Executable Definition ---
+add_executable(${PROJECT_NAME} ${APP_SRCS})
+target_link_libraries(${PROJECT_NAME} PRIVATE BSP_LIB)
+target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
+
+# --- Compile Options & Definitions ---
+target_compile_options(${PROJECT_NAME} PRIVATE 
+    -Werror -Wextra -Wsign-conversion
+    $<$<CONFIG:Debug>:-Wno-unused-variable -Wno-unused-function>
+)
+set_source_files_properties(cmake/syscall.c PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
+
+# Handle Output Configuration from Presets
 foreach (def IN LISTS Output)
-    message("Using ${def} output")
+    message(STATUS "[Config] Using ${def} output")
     target_compile_definitions(${PROJECT_NAME} PRIVATE Output_${def})
 endforeach ()
 
+# Build Type Specific Definitions
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "Building in Debug mode")
-    add_compile_definitions(DEBUG)
-    add_compile_definitions(SEGGER_RTT)
+    message(STATUS "[Config] Building in Debug mode")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG SEGGER_RTT)
 else ()
-    message(STATUS "Building in Release mode")
-    add_compile_definitions(RELEASE)
+    message(STATUS "[Config] Building in Release mode")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE RELEASE)
 endif ()
 
-target_include_directories(${PROJECT_NAME} PUBLIC Core/inc)
-
-set_source_files_properties(cmake/syscall.c PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
-target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wextra -Wsign-conversion)
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-unused-variable -Wno-unused-function)
-endif ()
-
+# --- Keil Project Synchronization ---
 get_target_property(INC_DIRS ${PROJECT_NAME} INCLUDE_DIRECTORIES)
-gen_keil_proj(-i ${INC_DIRS} -s ${SRC_LIST})
+get_target_property(COMPILE_DEFS ${PROJECT_NAME} COMPILE_DEFINITIONS)
+if(NOT COMPILE_DEFS)
+    set(COMPILE_DEFS "")
+endif()
+gen_keil_proj(-i ${INC_DIRS} -s ${SRC_LIST} -d ${COMPILE_DEFS})
 
-# Set the file name based on the output type ->
+# --- Binary Artifacts & Naming ---
 if (NOT FILE_NAME)
     set(FILE_NAME ${PROJECT_NAME})
 endif ()
+
 if ("PNP" IN_LIST Output)
-    set(FILE_NAME ${FILE_NAME}P)
+    string(APPEND FILE_NAME "P")
 elseif ("NPN" IN_LIST Output)
-    set(FILE_NAME ${FILE_NAME}N)
+    string(APPEND FILE_NAME "N")
 endif ()
 
 if ("LIGHT_CLOSE" IN_LIST Output)
-    set(FILE_NAME ${FILE_NAME}C)
+    string(APPEND FILE_NAME "C")
 elseif ("LIGHT_OPEN" IN_LIST Output)
-    set(FILE_NAME ${FILE_NAME}O)
+    string(APPEND FILE_NAME "O")
 endif ()
 
 if (DEFINED VERSION)
-    set(FILE_NAME ${FILE_NAME}_V${VERSION})
+    string(APPEND FILE_NAME "_V${VERSION}")
 endif ()
-# Set the file name based on the output type <-
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.bin)
+
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}> ${HEX_FILE}
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}> ${BIN_FILE}
-        COMMENT "Building ${HEX_FILE} ${BIN_FILE}"
+        COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${PROJECT_NAME}>
+        COMMENT "Generating Artifacts: ${HEX_FILE}, ${BIN_FILE}"
 )
