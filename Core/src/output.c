@@ -9,9 +9,9 @@
 #include <util.h>
 
 /**
- * @brief 输出控制所需的外设定义
+ * @brief 输出控制及短路保护所需的外设定义
  */
-#define RCC_NEED_APB2       (RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_GPIOB)
+#define RCC_NEED_APB2       (RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_GPIOB | RCC_APB2_PERIPH_AFIO)
 
 #define OUTPUT_LED_PORT      GPIOA
 #define OUTPUT_LED_PIN       GPIO_PIN_4
@@ -20,74 +20,23 @@
 #define OUTPUT_DO_PORT       GPIOB // 白色引脚
 #define OUTPUT_DO_PIN        GPIO_PIN_6
 
-// 短路计数器，用于短路恢复
-static u8 shortCircuit = 0;
-// 短路标志
-static bool flag = false;
-// 当前输出状态
+#define SCP_PORT             GPIOA
+#define SCP_PIN              GPIO_PIN_5
+
+// 当前短路标志
+static bool shortFlag = false;
+// 恢复计数器 (0表示正常运行)
+static uint8_t recoveryCounter = 0;
+// 逻辑输出电平
 volatile bool outputting = false;
-
-/**
- * @brief 初始化输出控制引脚
- */
-void outputInit(void) {
-    // 使能所需的时钟
-    RCC_EnableAPB2PeriphClk(RCC_NEED_APB2, ENABLE);
-
-    // 配置LED输出引脚
-    GPIO_InitType gpioInit;
-    GPIO_InitStruct(&gpioInit);
-    gpioInit.Pin       = OUTPUT_LED_PIN;
-    gpioInit.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
-    gpioInit.GPIO_Pull = GPIO_PULL_DOWN;
-    GPIO_InitPeripheral(OUTPUT_LED_PORT, &gpioInit);
-
-    // 配置LO输出引脚
-    GPIO_InitStruct(&gpioInit);
-    gpioInit.Pin       = OUTPUT_LO_PIN;
-    gpioInit.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
-    gpioInit.GPIO_Pull = GPIO_PULL_DOWN;
-    GPIO_InitPeripheral(OUTPUT_LO_PORT, &gpioInit);
-
-#ifdef OUTPUT_DO_PORT
-    // 配置DO输出引脚(如果启用)
-    GPIO_InitStruct(&gpioInit);
-    gpioInit.Pin       = OUTPUT_DO_PIN;
-    gpioInit.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
-    gpioInit.GPIO_Pull = GPIO_PULL_DOWN;
-    GPIO_InitPeripheral(OUTPUT_DO_PORT, &gpioInit);
-#endif
-}
-
-/**
- * @brief 逻辑反转状态
- */
+// 逻辑方向
 static bool ld = false;
 
 /**
- * @brief 设置输出逻辑方向
- * @param state 逻辑方向状态
+ * @brief 内部函数：物理硬件输出控制
  */
-void outputLDSet(const bool state) {
-    ld = !state;
-}
-
-/**
- * @brief 设置输出状态
- * @param state 输出状态(true:开启, false:关闭)
- * @note 考虑逻辑方向和短路保护
- */
-void outputSet(const bool state) {
-    // 短路状态下不执行输出
-    if (shortCircuit != 0) return;
-    outputting = state; // 记录当前输出状态
-
-    // 根据逻辑方向决定实际输出状态
-#ifdef OUTPUT_DO_PORT
+static void setHardwareOutput(bool state) {
     if (state) {
-#else
-    if (state ^ ld) {
-#endif
         GPIO_SetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
         GPIO_SetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
 #ifdef OUTPUT_DO_PORT
@@ -102,54 +51,101 @@ void outputSet(const bool state) {
     }
 }
 
-/**
- * @brief 短路事件处理函数
- * @note 设置短路计数，关闭所有输出
- */
-void onShortCircuit() {
-    shortCircuit = 5; // 设置短路恢复计数
-    flag         = true;
-    // 关闭所有输出
-    GPIO_ResetBits(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
-    GPIO_ResetBits(OUTPUT_LO_PORT, OUTPUT_LO_PIN);
+void outputInit(void) {
+    RCC_EnableAPB2PeriphClk(RCC_NEED_APB2, ENABLE);
+
+    GPIO_InitType gpioInit;
+    GPIO_InitStruct(&gpioInit);
+
+    // 配置输出引脚 (LED, LO, DO)
+    gpioInit.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
+    gpioInit.GPIO_Pull = GPIO_PULL_DOWN;
+    gpioInit.Pin       = OUTPUT_LED_PIN;
+    GPIO_InitPeripheral(OUTPUT_LED_PORT, &gpioInit);
+
+    gpioInit.Pin = OUTPUT_LO_PIN;
+    GPIO_InitPeripheral(OUTPUT_LO_PORT, &gpioInit);
+
 #ifdef OUTPUT_DO_PORT
-    GPIO_ResetBits(OUTPUT_DO_PORT, OUTPUT_DO_PIN);
+    gpioInit.Pin = OUTPUT_DO_PIN;
+    GPIO_InitPeripheral(OUTPUT_DO_PORT, &gpioInit);
+#endif
+
+    // 配置短路检测引脚 (上拉输入)
+    gpioInit.Pin       = SCP_PIN;
+    gpioInit.GPIO_Mode = GPIO_MODE_INPUT;
+    gpioInit.GPIO_Pull = GPIO_PULL_UP;
+    GPIO_InitPeripheral(SCP_PORT, &gpioInit);
+}
+
+void outputLDSet(const bool state) {
+    ld = !state;
+}
+
+void outputSet(const bool state) {
+    outputting = state;
+    if (shortFlag) return;
+
+#ifdef OUTPUT_DO_PORT
+    setHardwareOutput(state);
+#else
+    setHardwareOutput(state ^ ld);
 #endif
 }
 
-/**
- * @brief 非短路事件处理函数
- */
-void onNotShortCircuit() {
-    flag = false;
+bool outputGet(void) {
+    return outputting;
 }
 
 /**
- * @brief 获取当前短路状态
- * @return 是否处于短路状态
+ * @brief 检测引脚电平。如果是低电平，并经过多次连续确认，则立即设置短路标志。
  */
-bool isShortCircuit() {
-    return shortCircuit != 0;
+void outputCheckShort(void) {
+    // 硬件初步检测到低电平 (短路)
+    if (GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN) == Bit_RESET) {
+        // 多次连续检测防误判
+        for (int i = 0; i < 20; ++i) {
+            if (GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN) != Bit_RESET) return;
+            delayUs(50);
+        }
+
+        if (!shortFlag) {
+            shortFlag = true;
+            setHardwareOutput(false); // 立即切断输出
+        }
+        recoveryCounter = 5; // 重置恢复倒计时
+    }
+}
+
+bool isShortCircuit(void) {
+    return shortFlag;
 }
 
 /**
- * @brief LED闪烁函数，用于短路提示
- * @note 同时递减短路计数器
+ * @brief 短路时闪烁提示，并根据物理状态递减恢复计数。
  */
 void outputFlash(void) {
-    static u32 nextToggle = 0;
+    static uint32_t nextToggle = 0;
+    if ((int32_t)(timestamp - nextToggle) < 0) return;
+    nextToggle = timestamp + 200;
 
-    if (nextToggle == 0) {
-        nextToggle = timestamp + 200;
+    // 如果初步读取到物理电平已恢复为高 (不短路了)
+    if (GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN) == Bit_SET) {
+        // 恢复时同样进行多次检测防误判
+        for (int i = 0; i < 20; ++i) {
+            if (GPIO_ReadInputDataBit(SCP_PORT, SCP_PIN) != Bit_SET) {
+                recoveryCounter = 5;
+                return;
+            }
+            delayUs(50);
+        }
+
+        if (recoveryCounter > 0) recoveryCounter--;
+        else shortFlag = false; // 稳定恢复，清除短路标志
+    } else {
+        recoveryCounter = 5; // 如果物理电平依然是低，强制重置倒计时
     }
 
-    if ((i32)(nextToggle - timestamp) > 0) return;
-
-    // 如果短路计数器大于短路标志，则递减
-    if (shortCircuit > flag) shortCircuit--;
-
-    // LED闪烁，200ms亮，200ms灭
-    GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN); // LED翻转
-    nextToggle = timestamp + 200;
+    GPIO_TogglePin(OUTPUT_LED_PORT, OUTPUT_LED_PIN);
 }
 
