@@ -1,91 +1,95 @@
 #!/usr/bin/env python3
 import itertools
-import os
-import shutil
 import subprocess
+import shutil
+from pathlib import Path
+import time
 
-script_dir = os.path.dirname(__file__)
+# --- 配置区 ---
+SCRIPT_DIR = Path(__file__).parent.absolute()
+BUILD_ROOT = SCRIPT_DIR / "build" / "release_all"
+DIST_DIR = SCRIPT_DIR / "dist"
 
-build_dir = os.path.join(script_dir, 'build/cmake-build-release-all')
-
-CMAKE_C_COMPILER='/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang'
-CMAKE_CXX_COMPILER='/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang++'
-CMAKE_ASM_COMPILER='/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang'
+# 编译器路径 (与 CMakePresets.json 保持一致)
+COMPILERS = {
+    "CMAKE_C_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang",
+    "CMAKE_CXX_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang++",
+    "CMAKE_ASM_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang",
+}
 
 def get_params() -> dict[str, list[str]]:
     return {
         "type": ["PNP", "NPN"],
         "mode": ["LIGHT_CLOSE", "LIGHT_OPEN"],
-        # 以后可继续添加参数，如 "feature": ["A", "B"]
     }
 
-
-def base_name(combo_dict: dict[str, str]) -> str | None:
-    return None
-
-
-def main(params: dict[str, list[str]]):
-    """
-    构建所有参数组合的 release 版本
-    :param params: 参数字典，键为参数名，值为参数取值列表
-    :return: None
-    """
-    # 生成所有排列组合
+def main():
+    params = get_params()
     keys = list(params.keys())
     combinations = list(itertools.product(*params.values()))
 
-    if os.path.exists(build_dir):
-        shutil.rmtree(build_dir)
-
-    os.makedirs(build_dir, exist_ok=True)
+    # 准备目录 (保留构建根目录，清空产物输出目录)
+    if DIST_DIR.exists():
+        shutil.rmtree(DIST_DIR)
+    DIST_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # 第一次运行建议清空构建根目录，或者保留它进行增量更新
+    # if BUILD_ROOT.exists(): shutil.rmtree(BUILD_ROOT)
+    
+    print(f"🚀 开始构建所有组合 (共 {len(combinations)} 个)...")
+    start_time = time.time()
 
     for combo in combinations:
-        combo_dict = dict(zip(keys, combo))
-        # 构建 Output 变量，分号分隔
+        # combo = ('PNP', 'LIGHT_CLOSE')
+        combo_id = "_".join(combo)
+        # 为每个组合创建独立的子构建目录，支持增量编译且不互干扰
+        combo_build_dir = BUILD_ROOT / combo_id
+        
+        # 构造 Output 宏变量 (分号分隔)
         output_val = ";".join(combo)
+        
+        print(f"\n📦 构建组合: {combo_id}")
 
-        base_file_name = base_name(combo_dict)
+        # 1. CMake 配置
+        config_cmd = [
+            "cmake",
+            "-S", str(SCRIPT_DIR),
+            "-B", str(combo_build_dir),
+            "-G", "Ninja",
+            "-DCMAKE_BUILD_TYPE=Release",
+            f"-DOutput={output_val}",
+            "-DCMAKE_C_FLAGS=-DLOCK_MCU",
+            "-DCMAKE_CXX_FLAGS=-DLOCK_MCU",
+            "--toolchain=cmake/toolchain.cmake",
+        ]
+        # 添加编译器路径
+        for k, v in COMPILERS.items():
+            config_cmd.append(f"-D{k}={v}")
 
-        # STM32 特定的 CMake 配置命令
-        cmake_config_cmd = (
-            f'cmake -DCMAKE_BUILD_TYPE=Release '
-            f'-DCMAKE_MAKE_PROGRAM=ninja '
-            f'-DCMAKE_C_COMPILER={CMAKE_C_COMPILER} '
-            f'-DCMAKE_CXX_COMPILER={CMAKE_CXX_COMPILER} '
-            f'-DCMAKE_ASM_COMPILER={CMAKE_ASM_COMPILER} '
-            f'--toolchain=cmake/toolchain.cmake '
-            f'-G Ninja '
-            f'-DOutput="{output_val}" '
-            f'{f'-DFILE_NAME={base_file_name} ' if base_file_name else ''}'
-            f'-DCMAKE_C_FLAGS="-DLOCK_MCU" '
-            f'-DCMAKE_CXX_FLAGS="-DLOCK_MCU" '
-            f'-S . -B {build_dir}'
-        )
+        subprocess.run(config_cmd, check=True)
 
-        # STM32 特定的构建命令
-        cmake_build_cmd = f'cmake --build {build_dir} -j 14'
+        # 2. CMake 构建
+        build_cmd = ["cmake", "--build", str(combo_build_dir), "-j", "14"]
+        subprocess.run(build_cmd, check=True)
 
-        # 执行配置
-        subprocess.run(cmake_config_cmd, shell=True, check=True)
+        # 3. 收集产物
+        # 扫描构建目录下的 .hex 文件 (CMakeLists.txt 已根据 Output 修改了文件名)
+        hex_files = list(combo_build_dir.glob("*.hex"))
+        for hf in hex_files:
+            shutil.copy2(hf, DIST_DIR / hf.name)
+            print(f"  ✅ 产物已拷贝: {hf.name}")
 
-        # 执行构建
-        subprocess.run(cmake_build_cmd, shell=True, check=True)
+    print("\n" + "="*40)
+    # 4. 后处理 (Hash 计算)
+    try:
+        # 尝试运行 hex-hash
+        subprocess.run(f"hex-hash -anq {DIST_DIR}", shell=True, check=True)
+    except Exception:
+        print("💡 提示: hex-hash 执行失败或未找到工具，跳过 Hash 计算。")
 
-    for root, dirs, files in os.walk(build_dir, topdown=False):
-        for name in files:
-            if not name.endswith(".hex"):
-                os.remove(os.path.join(root, name))
-        for name in dirs:
-            dir_path = os.path.join(root, name)
-            try:
-                os.rmdir(dir_path)
-            except OSError:
-                pass
-
-    subprocess.run(f'hex-hash -anq {build_dir}', shell=True, check=True)
-
-    print("全部release版本已构建完成。")
-
+    end_time = time.time()
+    print(f"🎉 全部版本构建完成！耗时: {end_time - start_time:.2f}s")
+    print(f"📂 最终产物存放在: {DIST_DIR}")
 
 if __name__ == "__main__":
-    main(params=get_params())
+    main()
