@@ -79,10 +79,13 @@ void outputInit(void) {
 }
 
 void outputLDSet(const bool state) {
-    ld = !state;
+    const bool new_ld = !state;
+    if (new_ld != ld) outputSet(outputting); // 更新输出状态以反映新的逻辑方向
+    ld = new_ld;
 }
 
 void outputSet(const bool state) {
+    if (outputting == state) return;
     outputting = state;
     if (shortFlag) return;
 
