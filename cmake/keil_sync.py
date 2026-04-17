@@ -38,7 +38,7 @@ for arg in sys.argv[1:]:
         elif mode == 'def':
             argDef.append(arg)
 
-tree = et.parse('keil/keil.uvprojx')
+tree = et.parse('cmake/keil.uvprojx')
 root = tree.getroot()
 
 target = root.find(f'.//Targets/Target[TargetName="{TARGET_NAME}"]')
@@ -46,7 +46,9 @@ various_controls = target.find('.//VariousControls')
 incdir = various_controls.find('IncludePath')
 define_tag = various_controls.find('Define')
 
-define_tag.text = ','.join(sorted(set(argDef)))
+# 对宏定义中的双引号进行转义，以兼容 Keil
+escaped_defs = [d.replace('"', '\\"') for d in argDef]
+define_tag.text = ','.join(sorted(set(escaped_defs)))
 
 group = target.find(f'.//Groups/Group[GroupName="{GROUP_NAME}"]')
 groupFiles = group.find('Files') if group is not None else None
@@ -97,8 +99,12 @@ for file in newFiles:
     groupFiles.append(fileElem)
 et.indent(group, space='  ', level=4)
 
-with open('keil/keil.uvprojx', 'r') as f:
-    backup = f.read()
+dst_path = 'keil/keil.uvprojx'
+try:
+    with open(dst_path, 'r') as f:
+        backup = f.read()
+except FileNotFoundError:
+    backup = ""
 
 output = f'''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
@@ -115,5 +121,10 @@ if output == backup:
     print('No changes detected.')
     sys.exit(0)
 
-with open('keil/keil.uvprojx', 'w') as f:
+dir_name = os.path.dirname(dst_path)
+if dir_name and not os.path.exists(dir_name):
+    # exist_ok=True: 如果目录已存在，不会抛出错误
+    os.makedirs(dir_name, exist_ok=True)
+
+with open(dst_path, 'w') as f:
     f.write(output)
