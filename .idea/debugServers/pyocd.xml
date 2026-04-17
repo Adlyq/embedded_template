@@ -1,0 +1,14 @@
+<component name="DebugServers">
+  <generic-debug-target name="pyocd" uniqueID="b30faaed-2c5f-41d7-be9c-bc8915195b1c">
+    <debugger version="1">
+      <debugger toolchainName="embdded-gcc" />
+      <env />
+    </debugger>
+    <gdbserver exe="pyocd" args="gdbserver -t N32G031K8 -f 10MHz" live-watches-enabled="true">
+      <env script="" />
+    </gdbserver>
+    <console port="4444" />
+    <target reset-command="monitor reset halt" reset-after="false" />
+    <connection extended-remote="false" remote-string="tcp::3333" custom-script="echo Connecting to target...\n&#10;$GDBTargetCommand$&#10;echo Connected to target!\n" />
+  </generic-debug-target>
+</component>
