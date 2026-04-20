@@ -31,6 +31,15 @@
       }
     },
     {
+      "name": "release-base",
+      "hidden": true,
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "LOCK_MCU": "ON"
+      }
+    },
+    {
       "name": "Debug-stm32-NO",
       "displayName": "Debug NPN Normal Open",
       "inherits": "base",
