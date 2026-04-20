@@ -1,95 +1,81 @@
 #!/usr/bin/env python3
-import itertools
-import subprocess
+import json
+import os
 import shutil
-from pathlib import Path
-import time
+import subprocess
 
-# --- 配置区 ---
-SCRIPT_DIR = Path(__file__).parent.absolute()
-BUILD_ROOT = SCRIPT_DIR / "build" / "release_all"
-DIST_DIR = SCRIPT_DIR / "dist"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+presets_path = os.path.join(script_dir, 'CMakePresets.json')
+dist_dir = os.path.join(script_dir, 'build/release-dist')
 
-# 编译器路径 (与 CMakePresets.json 保持一致)
-COMPILERS = {
-    "CMAKE_C_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang",
-    "CMAKE_CXX_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang++",
-    "CMAKE_ASM_COMPILER": "/home/adlyq/.local/share/LLVM-ET-Arm/bin/clang",
-}
+def get_release_presets() -> list[str]:
+    """从 CMakePresets.json 中解析所有非隐藏的 Release 预设"""
+    with open(presets_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
 
-def get_params() -> dict[str, list[str]]:
-    return {
-        "type": ["PNP", "NPN"],
-        "mode": ["LIGHT_CLOSE", "LIGHT_OPEN"],
-    }
+    presets = []
+    for preset in data.get('configurePresets', []):
+        name = preset.get('name', '')
+        # 获取所有以 Release- 开头且非隐藏的预设
+        if name.startswith('Release-') and not preset.get('hidden', False):
+            presets.append(name)
+    return presets
 
 def main():
-    params = get_params()
-    keys = list(params.keys())
-    combinations = list(itertools.product(*params.values()))
+    """
+    使用 CMake Presets 构建所有 Release 版本预设
+    """
+    presets = get_release_presets()
+    if not presets:
+        print("未在 CMakePresets.json 中找到任何匹配的 Release 预设。")
+        return
 
-    # 准备目录 (保留构建根目录，清空产物输出目录)
-    if DIST_DIR.exists():
-        shutil.rmtree(DIST_DIR)
-    DIST_DIR.mkdir(parents=True, exist_ok=True)
-    
-    # 第一次运行建议清空构建根目录，或者保留它进行增量更新
-    # if BUILD_ROOT.exists(): shutil.rmtree(BUILD_ROOT)
-    
-    print(f"🚀 开始构建所有组合 (共 {len(combinations)} 个)...")
-    start_time = time.time()
+    if os.path.exists(dist_dir):
+        shutil.rmtree(dist_dir)
+    os.makedirs(dist_dir, exist_ok=True)
 
-    for combo in combinations:
-        # combo = ('PNP', 'LIGHT_CLOSE')
-        combo_id = "_".join(combo)
-        # 为每个组合创建独立的子构建目录，支持增量编译且不互干扰
-        combo_build_dir = BUILD_ROOT / combo_id
-        
-        # 构造 Output 宏变量 (分号分隔)
-        output_val = ";".join(combo)
-        
-        print(f"\n📦 构建组合: {combo_id}")
+    print(f"找到以下预设: {', '.join(presets)}")
 
-        # 1. CMake 配置
-        config_cmd = [
-            "cmake",
-            "-S", str(SCRIPT_DIR),
-            "-B", str(combo_build_dir),
-            "-G", "Ninja",
-            "-DCMAKE_BUILD_TYPE=Release",
-            f"-DOutput={output_val}",
-            "-DCMAKE_C_FLAGS=-DLOCK_MCU",
-            "-DCMAKE_CXX_FLAGS=-DLOCK_MCU",
-            "--toolchain=cmake/toolchain.cmake",
-        ]
-        # 添加编译器路径
-        for k, v in COMPILERS.items():
-            config_cmd.append(f"-D{k}={v}")
+    for preset in presets:
+        print(f"\n>>> 正在构建预设: {preset}")
 
-        subprocess.run(config_cmd, check=True)
+        # 1. 配置预设
+        config_cmd = f'cmake --preset {preset}'
+        try:
+            subprocess.run(config_cmd, shell=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"`{config_cmd}` run fail")
+            print(f"配置预设 {preset} 失败: {e}")
+            exit(1)
 
-        # 2. CMake 构建
-        build_cmd = ["cmake", "--build", str(combo_build_dir), "-j", "14"]
-        subprocess.run(build_cmd, check=True)
+        # 2. 执行构建
+        # 注意：构建预设如果未定义，可以直接指定构建目录
+        # 这里假设 binaryDir 在 presets 中已定义为 build/{presetName}
+        build_path = os.path.join(script_dir, 'build', preset)
+        build_cmd = f'cmake --build {build_path} -j 14'
+        try:
+            subprocess.run(build_cmd, shell=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"`{build_cmd}` run fail")
+            print(f"构建预设 {preset} 失败: {e}")
+            exit(1)
 
-        # 3. 收集产物
-        # 扫描构建目录下的 .hex 文件 (CMakeLists.txt 已根据 Output 修改了文件名)
-        hex_files = list(combo_build_dir.glob("*.hex"))
-        for hf in hex_files:
-            shutil.copy2(hf, DIST_DIR / hf.name)
-            print(f"  ✅ 产物已拷贝: {hf.name}")
+        # 3. 收集产物 (.hex 文件)
+        # 查找构建目录下的所有 hex 文件并复制到发布目录
+        for root, _, files in os.walk(build_path):
+            for name in files:
+                if name.endswith(".hex"):
+                    src_file = os.path.join(root, name)
+                    shutil.copy(src_file, dist_dir)
+                    print(f"已收集产物: {name}")
 
-    print("\n" + "="*40)
-    # 4. 后处理 (Hash 计算)
+    # 4. 执行哈希校验 (可选)
     try:
-        # 尝试运行 hex-hash
-        subprocess.run(f"hex-hash -anq {DIST_DIR}", shell=True, check=True)
+        subprocess.run(f'hex-hash -anq {dist_dir}', shell=True, check=True)
     except Exception:
-        print("💡 提示: hex-hash 执行失败或未找到工具，跳过 Hash 计算。")
+        print("提示: 未能运行 hex-hash，请确保已安装该工具。")
 
-    end_time = time.time()
-    print(f"🎉 全部版本构建完成！耗时: {end_time - start_time:.2f}s")
-    print(f"📂 最终产物存放在: {DIST_DIR}")
+    print(f"\n全部 Release 版本已构建完成，产物位于: {dist_dir}")
 
 if __name__ == "__main__":
     main()

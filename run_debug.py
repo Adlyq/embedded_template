@@ -25,9 +25,9 @@ def get_project_name() -> str:
         # 降级寻找 add_executable
         match = re.search(r'add_executable\s*\(\s*\${PROJECT_NAME}', content, re.IGNORECASE)
         if not match:
-             match = re.search(r'add_executable\s*\(\s*(\w+)', content, re.IGNORECASE)
-             if match:
-                 return match.group(1)
+            match = re.search(r'add_executable\s*\(\s*(\w+)', content, re.IGNORECASE)
+            if match:
+                return match.group(1)
 
     return "project"
 
@@ -88,6 +88,8 @@ def main():
     # 不指定 target，编译默认 target (通常就是可执行文件)
     build_cmd = f'cmake --build {build_path} -j 14'
     subprocess.run(build_cmd, shell=True, check=True)
+
+    if '-k' in sys.argv or '--skip' in sys.argv: return
 
     # 3. 寻找生成的二进制文件
     # 策略：在构建根目录下寻找与项目名同名的文件 (不带后缀或带 .elf)
