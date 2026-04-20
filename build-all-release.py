@@ -3,10 +3,12 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 presets_path = os.path.join(script_dir, 'CMakePresets.json')
 dist_dir = os.path.join(script_dir, 'build/release-dist')
+
 
 def get_release_presets() -> list[str]:
     """从 CMakePresets.json 中解析所有非隐藏的 Release 预设"""
@@ -21,10 +23,34 @@ def get_release_presets() -> list[str]:
             presets.append(name)
     return presets
 
-def main():
+
+def has_uncommitted_changes():
+    try:
+        # 运行 git status --porcelain
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True
+        )
+        # 如果输出不为空，则说明有未提交的变更
+        return len(result.stdout.strip()) > 0
+    except subprocess.CalledProcessError:
+        # 如果不是git目录或者git命令不存在
+        print("Not a git repository or git not installed.")
+        exit(1)
+
+
+def main(args: Arguments):
     """
     使用 CMake Presets 构建所有 Release 版本预设
     """
+
+    if not args.skip_git_check and has_uncommitted_changes():
+        print("检测到未提交的变更，请先提交或暂存这些变更后再运行此脚本。")
+        exit(1)
+
     presets = get_release_presets()
     if not presets:
         print("未在 CMakePresets.json 中找到任何匹配的 Release 预设。")
@@ -39,6 +65,10 @@ def main():
     for preset in presets:
         print(f"\n>>> 正在构建预设: {preset}")
 
+        build_path = os.path.join(script_dir, 'build', preset)
+        if os.path.exists(build_path):
+            shutil.rmtree(build_path)
+
         # 1. 配置预设
         config_cmd = f'cmake --preset {preset}'
         try:
@@ -51,7 +81,6 @@ def main():
         # 2. 执行构建
         # 注意：构建预设如果未定义，可以直接指定构建目录
         # 这里假设 binaryDir 在 presets 中已定义为 build/{presetName}
-        build_path = os.path.join(script_dir, 'build', preset)
         build_cmd = f'cmake --build {build_path} -j 14'
         try:
             subprocess.run(build_cmd, shell=True, check=True)
@@ -77,5 +106,15 @@ def main():
 
     print(f"\n全部 Release 版本已构建完成，产物位于: {dist_dir}")
 
+
+class Arguments:
+    def __init__(self):
+        for arg in sys.argv:
+            if arg == '--skip-git-check' or arg == '-k':
+                self.skip_git_check = True
+
+    skip_git_check = False
+
+
 if __name__ == "__main__":
-    main()
+    main(args=Arguments())

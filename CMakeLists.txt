@@ -1,11 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(n32g031_template)
-set(VERSION 2.0)
+execute_process(
+        COMMAND git rev-parse --short HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_HASH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+string(TIMESTAMP VERSION_TIME "%y.%m.%d")
 
-enable_language(C)
-enable_language(CXX)
-enable_language(ASM)
+project(n32g031_template
+        VERSION ${VERSION_TIME}
+        LANGUAGES C CXX ASM
+)
 
 # --- SDK & Library Configuration ---
 add_library(BSP_LIB INTERFACE)
@@ -70,16 +76,18 @@ elseif ("LIGHT_OPEN" IN_LIST Output)
     string(APPEND FILE_NAME "O")
 endif ()
 
-if (DEFINED VERSION)
-    string(APPEND FILE_NAME "_V${VERSION}")
+if (DEFINED PROJECT_VERSION)
+    string(APPEND FILE_NAME "_V${PROJECT_VERSION}.${GIT_HASH}")
 endif ()
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${FILE_NAME}.bin)
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}> ${HEX_FILE}
-        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}> ${BIN_FILE}
-        COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${PROJECT_NAME}>
-        COMMENT "Generating Artifacts: ${HEX_FILE}, ${BIN_FILE}"
-)
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}> ${HEX_FILE}
+            COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}> ${BIN_FILE}
+            COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${PROJECT_NAME}>
+            COMMENT "Generating Artifacts: ${HEX_FILE}, ${BIN_FILE}"
+    )
+endif ()

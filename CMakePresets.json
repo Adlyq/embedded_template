@@ -48,14 +48,6 @@
       }
     },
     {
-      "name": "Debug-stm32-NC",
-      "displayName": "Debug NPN Normal Close",
-      "inherits": "base",
-      "cacheVariables": {
-        "Output": "NPN;LIGHT_CLOSE"
-      }
-    },
-    {
       "name": "Debug-stm32-PO",
       "displayName": "Debug PNP Normal Open",
       "inherits": "base",
@@ -64,9 +56,9 @@
       }
     },
     {
-      "name": "Debug-stm32-PC",
+      "name": "Release-stm32-PC",
       "displayName": "Debug PNP Normal Close",
-      "inherits": "base",
+      "inherits": "release-base",
       "cacheVariables": {
         "Output": "PNP;LIGHT_CLOSE"
       }
